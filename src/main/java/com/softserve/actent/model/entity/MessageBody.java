@@ -30,6 +30,7 @@ public class MessageBody {
     @Column(nullable = false)
     private String text;
 
+    @NonNull
     @OneToMany(mappedBy = "messageBody")
     private Set<Image> images = new HashSet<>();
 }
