@@ -33,4 +33,7 @@ public class Message {
     @ManyToOne(fetch = FetchType.LAZY)
     private User sender;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Chat chat;
+
 }
