@@ -6,7 +6,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -30,10 +35,4 @@ public class User {
     // TODO: make unique
     @NonNull
     private String login;
-//
-//    @NonNull
-//    private String password;
-//
-//    @ManyToOne
-//    private Chat chat;
 }
