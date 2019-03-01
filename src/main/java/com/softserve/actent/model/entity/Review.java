@@ -5,12 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -32,6 +27,12 @@ public class Review {
     @NotNull(message = StringConstants.NO_REVIEW_SCORE)
     @Column(nullable = false)
     private Integer score;
+
+    @ManyToOne
+    private Event event;
+
+    @ManyToOne
+    private User user;
 }
 
 
