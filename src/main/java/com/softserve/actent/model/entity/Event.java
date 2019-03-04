@@ -1,6 +1,5 @@
 package com.softserve.actent.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.softserve.actent.constant.StringConstants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -90,7 +89,6 @@ public class Event {
             inverseJoinColumns = {@JoinColumn(name = "participant_id", nullable = false)},
             foreignKey = @ForeignKey(name = "FK_event_to_participant_id"),
             inverseForeignKey = @ForeignKey(name = "FK_participant_to_event_id"))
-    @JsonManagedReference
     private List<User> participants;
 
     @ManyToMany
@@ -99,7 +97,6 @@ public class Event {
             inverseJoinColumns = {@JoinColumn(name = "spectators_id", nullable = false)},
             foreignKey = @ForeignKey(name = "FK_event_to_spectator_id"),
             inverseForeignKey = @ForeignKey(name = "FK_spectator_to_event_id"))
-    @JsonManagedReference
     private List<User> spectators;
 
     @NonNull
