@@ -4,11 +4,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -33,4 +36,7 @@ public class Image {
     @Column(nullable = false, unique = true, length = 256)
     @Length(min = 256, max = 256, message = "Hash must be of exact length 256")
     private String hash;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MessageBody messageBody;
 }
