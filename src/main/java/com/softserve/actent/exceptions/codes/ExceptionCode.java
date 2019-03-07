@@ -120,7 +120,7 @@ public enum ExceptionCode {
      * ++-----------------------------------------------------------------------
      */
 
-    USER_NOT_FOUND(2010),
+    NOT_FOUND(2010),
 
     USER_PIC_NOT_FOUND(2011),
 
