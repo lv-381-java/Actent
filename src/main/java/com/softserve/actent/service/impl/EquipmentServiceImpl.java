@@ -1,5 +1,8 @@
 package com.softserve.actent.service.impl;
 
+import com.softserve.actent.constant.ExceptionMessages;
+import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Equipment;
 import com.softserve.actent.repository.EquipmentRepository;
 import com.softserve.actent.service.EquipmentService;
@@ -33,10 +36,10 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Transactional
     @Override
     public Equipment update(Equipment entity, Long id) {
-        if(equipmentRepository.findById(id).isPresent()){
+        if (equipmentRepository.findById(id).isPresent()) {
             entity.setId(id);
             return equipmentRepository.save(entity);
-        }else{
+        } else {
 
             // TODO: else throw exception or so
             return null;
@@ -47,15 +50,29 @@ public class EquipmentServiceImpl implements EquipmentService {
     public Equipment get(Long id) {
 
         Optional<Equipment> optionalEquipment = equipmentRepository.findById(id);
-        return optionalEquipment.orElse(null);
-        // TODO: or else throw exception
+
+        return optionalEquipment.orElseThrow(()
+                -> new ResourceNotFoundException(
+                ExceptionMessages.EQUIPMENT_BY_THIS_ID_IS_NOT_FOUND,
+                ExceptionCode.NOT_FOUND
+        ));
     }
 
     @Override
     public List<Equipment> getAll() {
 
-        return equipmentRepository.findAll();
-        // TODO: throw exception
+        List<Equipment> equipmentList = equipmentRepository.findAll();
+
+        if (equipmentList.isEmpty()) {
+
+            throw new ResourceNotFoundException(
+                    ExceptionMessages.EQUIPMENTS_ARE_NOT_FOUND,
+                    ExceptionCode.NOT_FOUND
+            );
+        } else {
+
+            return equipmentList;
+        }
     }
 
     @Transactional
@@ -63,10 +80,16 @@ public class EquipmentServiceImpl implements EquipmentService {
     public void delete(Long id) {
 
         Optional<Equipment> optionalEquipment = equipmentRepository.findById(id);
-        if(optionalEquipment.isPresent()) {
-            equipmentRepository.deleteById(id);
-        }
 
-        // TODO: else throw exception or so
+        if (optionalEquipment.isPresent()) {
+
+            equipmentRepository.deleteById(id);
+        } else {
+
+            throw new ResourceNotFoundException(
+                    ExceptionMessages.EQUIPMENT_BY_THIS_ID_IS_NOT_FOUND,
+                    ExceptionCode.NOT_FOUND
+            );
+        }
     }
 }

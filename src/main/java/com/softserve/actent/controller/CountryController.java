@@ -2,7 +2,6 @@ package com.softserve.actent.controller;
 
 import com.softserve.actent.model.dto.CountryDto;
 import com.softserve.actent.model.dto.IdDto;
-import com.softserve.actent.model.dto.converter.CountryConverter;
 import com.softserve.actent.model.entity.Country;
 import com.softserve.actent.service.CountryService;
 import org.modelmapper.ModelMapper;
@@ -19,25 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/countries")
+@RequestMapping("/api/v1")
 public class CountryController {
 
     private final CountryService countryService;
 
-    private final CountryConverter countryConverter;
-
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CountryController(CountryService countryService, CountryConverter countryConverter, ModelMapper modelMapper) {
+    public CountryController(CountryService countryService, ModelMapper modelMapper) {
         this.countryService = countryService;
-        this.countryConverter = countryConverter;
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/countries/{id}")
     public ResponseEntity<CountryDto> get(@PathVariable Long id) {
         if (id == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -46,32 +43,36 @@ public class CountryController {
         if (country == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(countryConverter.convertToDto(country), HttpStatus.OK);
+        CountryDto countryDto = modelMapper.map(country, CountryDto.class);
+        return new ResponseEntity<>(countryDto, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(value = "/countries")
     public ResponseEntity<List<CountryDto>> getAll() {
         List<Country> countries = countryService.getAll();
         if (countries == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(countryConverter.convertToDto(countries), HttpStatus.OK);
+        List<CountryDto> countryDtos = countries.stream()
+                .map(country -> modelMapper.map(country, CountryDto.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(countryDtos, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<IdDto> add(@RequestBody CountryDto countryDto) {
-        Country country = countryConverter.convertToEntity(countryDto);
+    @PostMapping(value = "/countries")
+    public ResponseEntity<CountryDto> add(@RequestBody CountryDto countryDto) {
+        Country country = modelMapper.map(countryDto, Country.class);
         countryService.add(country);
-        return new ResponseEntity<>(new IdDto(country.getId()), HttpStatus.CREATED);
+        return new ResponseEntity<>(countryDto, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<IdDto> update(@PathVariable Long id, @RequestBody CountryDto countryDto) {
+    @PutMapping(value = "/countries/{id}")
+    public ResponseEntity<CountryDto> update(@PathVariable Long id, @RequestBody CountryDto countryDto) {
         Country country = countryService.update(modelMapper.map(countryDto, Country.class), id);
-        return new ResponseEntity<>(new IdDto(country.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(modelMapper.map(country, CountryDto.class), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/countries/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         Country country = countryService.get(id);
         if (country == null) {

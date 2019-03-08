@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public User registerUser(User user) {
+    public User add(User user) {
         if (!userRepository.existsByEmail(user.getEmail())) {
             return userRepository.save(user);
         } else {
@@ -41,24 +41,24 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public User saveUserSettings(User user, Long id) {
+    public User update(User user, Long id) {
         if (userRepository.existsById(id)) {
             user.setId(id);
             return userRepository.save(user);
         } else {
-            throw new AccessDeniedException("User not registered", ExceptionCode.USER_NOT_FOUND);
+            throw new AccessDeniedException("User not registered", ExceptionCode.NOT_FOUND);
         }
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User get(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found", ExceptionCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found", ExceptionCode.NOT_FOUND));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService{
 
     @Transactional
     @Override
-    public void deleteUserById(Long id) {
+    public void delete(Long id) {
 
         userRepository.deleteById(id);
     }

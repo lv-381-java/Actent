@@ -1,4 +1,4 @@
-package com.softserve.actent.model.dto;
+package com.softserve.actent.model.dto.event;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,10 +6,9 @@ import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
-public class LocationDto {
-    @NonNull
-    private String address;
+class LocationForEventDto {
 
     @NonNull
     private Long cityId;
+    private String address;
 }

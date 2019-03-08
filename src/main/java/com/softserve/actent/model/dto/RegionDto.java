@@ -9,4 +9,7 @@ import lombok.NonNull;
 public class RegionDto {
     @NonNull
     private String name;
+
+    @NonNull
+    private Long countryId;
 }

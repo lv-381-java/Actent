@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface LocationService extends BaseCrudService<Location> {
     List<Location> getByCityId(Long cityId);
-
 }
+

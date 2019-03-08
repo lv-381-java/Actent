@@ -31,7 +31,7 @@ public class TextMessageConvert implements IModelMapperConverter<Message, Create
     @Override
     public Message convertToEntity(CreateTextMessageDto dto) {
         Message message = modelMapper.map(dto, Message.class);
-        message.setSender(userService.getUserById(dto.getSenderId()));
+        message.setSender(userService.get(dto.getSenderId()));
         message.setChat(chatService.getChatById(dto.getChatId()));
         return message;
     }

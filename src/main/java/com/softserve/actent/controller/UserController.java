@@ -18,45 +18,44 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class UserController {
 
-    @Autowired
-    ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    private final UserService userService;
 
     @Autowired
-    UserService userService;
+    public UserController(ModelMapper modelMapper, UserService userService) {
+        this.modelMapper = modelMapper;
+        this.userService = userService;
+    }
 
     @PostMapping(value = "/users")
-    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
-        User user = userService.registerUser(registerUserDtoToEntity(registerUserDto));
+    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterUserDto registerUserDto) {
+        User user = userService.add(registerUserDtoToEntity(registerUserDto));
         UserDto userDto = registerUserEntityToDto(user);
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/users/{id}")
-    public ResponseEntity<UserDto> saveUserSetting(@Valid @RequestBody UserSettingsDto userSettingsDto, @PathVariable Long id) {
-        User user = userService.saveUserSettings(userSettingsToEntity(userSettingsDto), id);
+    public ResponseEntity<UserDto> saveUserSetting(@RequestBody UserSettingsDto userSettingsDto, @PathVariable Long id) {
+        User user = userService.update(userSettingsToEntity(userSettingsDto), id);
         UserDto userDto = userSettingsEntityToDto(user);
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/users")
     public ResponseEntity<List<User>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/users/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        return new ResponseEntity<>(userSettingsEntityToDto(userService.getUserById(id)), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/users/{email}")
-    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email){
-        return new ResponseEntity<>(userSettingsEntityToDto(userService.getUserByEmail(email)), HttpStatus.OK);
+        return new ResponseEntity<>(userSettingsEntityToDto(userService.get(id)), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/users/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
 
-        userService.deleteUserById(id);
+        userService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

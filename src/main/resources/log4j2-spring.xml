@@ -41,8 +41,11 @@
             <AppenderRef ref="RollingFile"/>
         </Root>
 
-        <!-- LOG "com.baeldung*" at TRACE level -->
-        <Logger name="com.baeldung" level="trace"></Logger>
+        <!-- LOG "com.softserve.actent*" at TRACE level -->
+        <Logger name="com.softserve.actent" level="trace">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
     </Loggers>
+
 
 </Configuration>

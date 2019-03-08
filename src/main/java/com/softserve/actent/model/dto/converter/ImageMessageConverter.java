@@ -31,7 +31,7 @@ public class ImageMessageConverter implements IModelMapperConverter<Message, Cre
     @Override
     public Message convertToEntity(CreateImageMessageDto createImageMessageDto) {
         Message message = modelMapper.map(createImageMessageDto, Message.class);
-        message.setSender(userService.getUserById(createImageMessageDto.getSenderId()));
+        message.setSender(userService.get(createImageMessageDto.getSenderId()));
         message.setChat(chatService.getChatById(createImageMessageDto.getChatId()));
         return message;
     }
