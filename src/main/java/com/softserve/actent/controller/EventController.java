@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     private final EventService eventService;
+    
     private final EventConverter eventConverter;
 
     @Autowired
