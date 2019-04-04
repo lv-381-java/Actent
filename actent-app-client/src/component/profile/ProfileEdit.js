@@ -78,10 +78,12 @@ export default class ProfileEdit extends React.Component {
 
     handleBirthday = (event, date) => {
         this.setState({ birthday: date });
+        console.log(date);
+        console.log(event);
     };
 
     handleBio = event => {
-        if (event.target.length < 500) {
+        if (event.target.value.length < 500) {
             this.setState({ bio: event.target.value, errorBio: '' });
         } else {
             this.setState({ errorBio: 'Bio must be up to 500 symbols' });
@@ -116,11 +118,11 @@ export default class ProfileEdit extends React.Component {
     };
 
     handleDigitsInDate = i => {
-        return i < 10 ? `0 + ${i}` : i;
+        return i < 10 ? `0${i}` : i;
     };
 
     handleDigitsInMonth = i => {
-        return i < 10 ? `0 + ${i + 1}` : i;
+        return i < 10 ? `0${i + 1}` : i;
     };
 
     saveUserSettings = () => {
@@ -239,7 +241,7 @@ export default class ProfileEdit extends React.Component {
                             rowsMax={3}
                             value={this.state.login}
                         />
-                        <TextField
+                        {/* <TextField
                             id='tv_address'
                             label='Address'
                             onChange={this.handleAddress}
@@ -247,11 +249,11 @@ export default class ProfileEdit extends React.Component {
                             multiline
                             rowsMax={3}
                             value={this.state.address !== null ? this.state.address.name : ''}
-                        />
+                        /> */}
                         <TextField
                             id='tv_phone'
                             label='Phone'
-                            onChange={this.handlePhone}
+                            // onChange={this.handlePhone}
                             fullWidth={true}
                             error={!!this.state.errorPhone}
                             helperText={this.state.errorPhone}
@@ -273,6 +275,7 @@ export default class ProfileEdit extends React.Component {
                             mode='landscape'
                             openToYearSelection={true}
                             fullWidth={true}
+                            format={'yyyy-MM-dd'}
                             onChange={this.handleBirthday}
                             value={this.state.birthday}
                         />
@@ -285,6 +288,8 @@ export default class ProfileEdit extends React.Component {
                             multiline
                             rowsMax={3}
                             value={this.state.bio !== null ? this.state.bio : ''}
+                            error={!!this.state.errorEmail}
+                            helperText={this.state.errorEmail}
                         />
                     </div>
                     <div className='styleButtons'>
