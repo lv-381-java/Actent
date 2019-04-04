@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.css';
 import { Redirect } from 'react-router-dom';
+import { Route, Link, NavLink, BrowserRouter } from 'react-router-dom';
 
 export const s3Root = 'https://s3.ap-south-1.amazonaws.com/';
 
@@ -41,9 +42,11 @@ export default class ProfileView extends React.Component {
         );
 
         const userEvents = this.props.isMyProfile ? (
-            <Button label='My events' color='primary' variant='contained' disabled={this.props.profileData.id === ''}>
+            <NavLink to={`userEvents`}>
+            <Button  label='My events' color='primary' variant='contained' disabled={this.props.profileData.id === ''}>
                 My Events
             </Button>
+            </NavLink>
         ) : null;
 
         const img =

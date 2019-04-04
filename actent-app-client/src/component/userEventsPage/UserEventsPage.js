@@ -37,11 +37,11 @@ export default class UserEventsPage extends React.Component {
     getEvents() {
         let url = '/eventsUsers/';
         if (this.state.selectTab === 0) {
-            url += `allEvents/${this.props.userId}`;
+            url += `allEvents/1`;
         } else if (this.state.selectTab === 1) {
-            url += `futureEvents/${this.props.userId}`;
+            url += `futureEvents/1`;
         } else if (this.state.selectTab === 2) {
-            url += `pastEvents/${this.props.userId}`;
+            url += `pastEvents/1`;
         }
         if (this.state.filterCategory || this.state.filterCityName || this.state.filterUserType) {
             url += '?';

@@ -112,6 +112,7 @@ export default class Profile extends React.Component {
             <ProfileEdit profileData={profileData} onCloseClick={this.handleClose} />
         ) : (
             <ProfileView
+                userId={this.state.userId}
                 profileData={profileData}
                 isMyProfile={this.state.isMyProfile}
                 onEditClick={this.handleEditClick}
