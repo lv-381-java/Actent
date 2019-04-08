@@ -1,19 +1,23 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.DuplicateValueException;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.exceptions.security.AccessDeniedException;
 import com.softserve.actent.exceptions.validation.IncorrectEmailException;
 import com.softserve.actent.model.entity.User;
 import com.softserve.actent.repository.UserRepository;
+import com.softserve.actent.service.CityService;
 import com.softserve.actent.service.ImageService;
 import com.softserve.actent.service.LocationService;
 import com.softserve.actent.service.UserService;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -22,16 +26,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final LocationService locationService;
+    private final CityService cityService;
     private final ImageService imageService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           LocationService locationService,
+                           CityService cityService,
                            ImageService imageService) {
 
         this.userRepository = userRepository;
-        this.locationService = locationService;
+        this.cityService = cityService;
         this.imageService = imageService;
     }
 
@@ -51,14 +55,32 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Transactional
     @Override
     public User update(User user, Long id) {
+
         if (userRepository.existsById(id)) {
-            user.setId(id);
-            user.setLocation(locationService.get(user.getLocation().getId()));
-            user.setAvatar(imageService.get(user.getAvatar().getId()));
-            return userRepository.save(user);
+
+            User existingUser = this.get(id);
+            existingUser.setFirstName(user.getFirstName());
+            existingUser.setLastName(user.getLastName());
+            existingUser.setLogin(user.getLogin());
+            existingUser.setPhone(user.getPhone());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setBirthDate(user.getBirthDate());
+            existingUser.setBio(user.getBio());
+
+            if (user.getLocation() != null){
+                existingUser.setLocation(cityService.get(user.getLocation().getId()));
+            }
+            if (user.getAvatar() != null){
+                existingUser.setAvatar(imageService.get(user.getAvatar().getId()));
+            }
+            return userRepository.save(existingUser);
+
         } else {
             throw new AccessDeniedException(ExceptionMessages.USER_NOT_REGISTRED, ExceptionCode.NOT_FOUND);
         }
@@ -83,13 +105,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User get(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND, ExceptionCode.NOT_FOUND));
+                .orElseThrow(() -> new DataNotFoundException(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND, ExceptionCode.NOT_FOUND));
     }
 
     @Override
     public User getUserByEmail(String email) {
         return userRepository.findUserByEmail(email).orElseThrow(() ->
-                new ResourceNotFoundException(ExceptionMessages.USER_BY_THIS_EMAIL_IS_NOT_FOUND, ExceptionCode.NOT_FOUND));
+                new DataNotFoundException(ExceptionMessages.USER_BY_THIS_EMAIL_IS_NOT_FOUND, ExceptionCode.NOT_FOUND));
     }
 
     @Transactional
@@ -100,13 +122,13 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isPresent()) {
             userRepository.deleteById(id);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
         }
     }
 
     @Override
     public User getUserByLogin(String login) {
         return userRepository.findUserByLogin(login).orElseThrow(() ->
-                new ResourceNotFoundException(ExceptionMessages.USER_BY_THIS_LOGIN_IS_NOT_FOUND, ExceptionCode.NOT_FOUND));
+                new DataNotFoundException(ExceptionMessages.USER_BY_THIS_LOGIN_IS_NOT_FOUND, ExceptionCode.NOT_FOUND));
     }
 }

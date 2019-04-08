@@ -6,11 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
 public class CategoryDto {
+
+    @Positive(message = StringConstants.CATEGORY_ID_MUST_BE_POSITIVE)
+    private Long id;
 
     @NotBlank(message = StringConstants.CATEGORY_NOT_BE_BLANK)
     @Size(min = NumberConstants.MIN_VALUE_FOR_CATEGORY_NAME, max = NumberConstants.MAX_VALUE_FOR_CATEGORY_NAME,
@@ -18,3 +22,4 @@ public class CategoryDto {
     private String name;
 
 }
+

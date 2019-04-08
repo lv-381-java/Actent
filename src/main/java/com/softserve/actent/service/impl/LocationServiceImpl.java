@@ -1,7 +1,7 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Location;
 import com.softserve.actent.repository.CityRepository;
@@ -36,7 +36,7 @@ public class LocationServiceImpl implements LocationService {
             newLocation.setCity(location.getCity());
             return locationRepository.save(newLocation);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.CITY_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }
@@ -51,7 +51,7 @@ public class LocationServiceImpl implements LocationService {
             dbLocation.setAddress(location.getAddress());
             return locationRepository.save(dbLocation);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.LOCATION_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }
@@ -60,7 +60,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Location get(Long locationId) {
         return locationRepository.findById(locationId)
-                .orElseThrow(() -> new ResourceNotFoundException(
+                .orElseThrow(() -> new DataNotFoundException(
                         ExceptionMessages.LOCATION_NOT_FOUND,
                         ExceptionCode.NOT_FOUND));
     }
@@ -77,7 +77,7 @@ public class LocationServiceImpl implements LocationService {
         if ((location.isPresent())) {
             locationRepository.deleteById(locationId);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.LOCATION_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }

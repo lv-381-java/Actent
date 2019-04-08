@@ -1,7 +1,7 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Equipment;
 import com.softserve.actent.repository.EquipmentRepository;
@@ -35,19 +35,19 @@ public class EquipmentServiceImpl implements EquipmentService {
 
         if (entity.getAssignedEvent() == null) {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.ASSIGNED_EVENT_EMPTY,
                     ExceptionCode.NOT_FOUND
             );
         } else if (!eventRepository.existsById(entity.getAssignedEvent().getId())) {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.EVENT_BY_THIS_ID_IS_NOT_FOUND,
                     ExceptionCode.NOT_FOUND
             );
         } else if (entity.getAssignedUser() != null && !userRepository.existsById(entity.getAssignedUser().getId())) {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND,
                     ExceptionCode.NOT_FOUND
             );
@@ -63,19 +63,19 @@ public class EquipmentServiceImpl implements EquipmentService {
 
         if (!equipmentRepository.existsById(id)) {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.EQUIPMENT_BY_THIS_ID_IS_NOT_FOUND,
                     ExceptionCode.NOT_FOUND
             );
         } else if (!eventRepository.existsById(entity.getAssignedEvent().getId())) {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.EVENT_BY_THIS_ID_IS_NOT_FOUND,
                     ExceptionCode.NOT_FOUND
             );
         } else if (entity.getAssignedUser() != null && !userRepository.existsById(entity.getAssignedUser().getId())) {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND,
                     ExceptionCode.NOT_FOUND
             );
@@ -92,7 +92,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         Optional<Equipment> optionalEquipment = equipmentRepository.findById(id);
 
         return optionalEquipment.orElseThrow(()
-                -> new ResourceNotFoundException(
+                -> new DataNotFoundException(
                 ExceptionMessages.EQUIPMENT_BY_THIS_ID_IS_NOT_FOUND,
                 ExceptionCode.NOT_FOUND
         ));
@@ -105,7 +105,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
         if (equipmentList.isEmpty()) {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.EQUIPMENTS_ARE_NOT_FOUND,
                     ExceptionCode.NOT_FOUND
             );
@@ -126,10 +126,26 @@ public class EquipmentServiceImpl implements EquipmentService {
             equipmentRepository.deleteById(id);
         } else {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.EQUIPMENT_BY_THIS_ID_IS_NOT_FOUND,
                     ExceptionCode.NOT_FOUND
             );
+        }
+    }
+
+    @Override
+    public List<Equipment> getByAssignedEventId(Long assignedEvent_id) {
+
+        List<Equipment> equipments = equipmentRepository.findAllByAssignedEventId(assignedEvent_id);
+        if (equipments.isEmpty()) {
+
+            throw new DataNotFoundException(
+                    ExceptionMessages.EQUIPMENTS_ARE_NOT_FOUND,
+                    ExceptionCode.NOT_FOUND
+            );
+        } else {
+
+            return equipments;
         }
     }
 }

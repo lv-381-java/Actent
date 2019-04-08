@@ -19,8 +19,4 @@ public class CreateImageMessageDto {
     @Length(max = 256, message = StringConstants.TOO_LONG)
     private String imageFilePath;
 
-    @NotBlank(message = StringConstants.IMAGE_HASH_SHOULD_NOT_BE_BLANK)
-    @Length(min = 64, max = 64, message = StringConstants.IMAGE_HASH_MUST_BE_OF_EXACT_LENGHT_256)
-    private String imageHash;
-
 }

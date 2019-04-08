@@ -1,7 +1,7 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Category;
 import com.softserve.actent.repository.CategoryRepository;
@@ -36,14 +36,14 @@ public class CategoryServiceImpl implements CategoryService {
             category.setId(id);
             return categoryRepository.save(category);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
         }
     }
 
     @Override
     public Category get(Long id) {
         Optional<Category> optionalCategory = categoryRepository.findById(id);
-        return optionalCategory.orElseThrow(() -> new ResourceNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND));
+        return optionalCategory.orElseThrow(() -> new DataNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
         if (optionalCategory.isPresent()) {
             categoryRepository.deleteById(id);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
         }
     }
 
@@ -73,7 +73,16 @@ public class CategoryServiceImpl implements CategoryService {
         if (parent != null) {
             return categoryRepository.findAllByParent(parent);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.NO_SUBCATEGORIES_FOUND, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.NO_SUBCATEGORIES_FOUND, ExceptionCode.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public List<Category> getParentCategories(Category parent) {
+        if (parent == null) {
+            return categoryRepository.findAllByParent(parent);
+        } else {
+            throw new DataNotFoundException(ExceptionMessages.NO_SUBCATEGORIES_FOUND, ExceptionCode.NOT_FOUND);
         }
     }
 
@@ -81,7 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getParentByName(String name) {
         Category category = categoryRepository.findByName(name);
         if (category == null) {
-            throw new ResourceNotFoundException(ExceptionMessages.NO_SUBCATEGORIES_FOUND, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.NO_SUBCATEGORIES_FOUND, ExceptionCode.NOT_FOUND);
         }
         return category;
     }

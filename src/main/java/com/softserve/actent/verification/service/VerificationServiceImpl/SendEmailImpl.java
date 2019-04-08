@@ -23,7 +23,7 @@ public class SendEmailImpl implements SendEmail {
 
     @Override
     public boolean sendSimpleEmail(String email, User user) {
-        String confirmUrl = "http://localhost/confirm?login=" + user.getLogin() + "&uuid=" + user.getUuid();
+        String confirmUrl = "http://localhost:3000/confirm?login=" + user.getLogin() + "&uuid=" + user.getUuid();
 
         final Properties properties = new Properties();
         try {

@@ -73,6 +73,7 @@ public class ChatController {
     }
 
     @GetMapping(value = "/chats/{chatId}/info")
+    @PreAuthorize("hasRole=('USER')")
     @ResponseStatus(HttpStatus.OK)
     public ChatInfoDto getChatInfo(@PathVariable(value = "chatId") @NotNull @Positive Long chatId){
         ChatInfoDto chatInfoDto = chatInfoConverter.convertToDto(chatService.getChatById(chatId));

@@ -11,15 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -32,6 +24,7 @@ import static com.softserve.actent.constant.UrlConstants.EQUIPMENTS;
 @Validated
 @RestController
 @RequestMapping(API_V1 + EQUIPMENTS)
+@PreAuthorize("permitAll()")
 public class EquipmentController {
 
     private final EquipmentService equipmentService;
@@ -55,7 +48,7 @@ public class EquipmentController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public EquipmentDto getEquipmentById(@PathVariable
                                          @NotNull
@@ -67,7 +60,7 @@ public class EquipmentController {
     }
 
     @PostMapping()
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addEquipment(@Validated @RequestBody EquipmentCreateDto equipmentCreateDto) {
 
@@ -75,8 +68,8 @@ public class EquipmentController {
         return new IdDto(equipment.getId());
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping(value = "/{id}")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEquipmentById(@PathVariable
                                     @NotNull
@@ -86,8 +79,8 @@ public class EquipmentController {
         equipmentService.delete(id);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PutMapping(value = "/{id}")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public EquipmentCreateDto updateEquipmentById(@PathVariable
                                                   @NotNull
@@ -97,5 +90,19 @@ public class EquipmentController {
 
         Equipment equipment = equipmentService.update(modelMapper.map(equipmentCreateDto, Equipment.class), id);
         return modelMapper.map(equipment, EquipmentCreateDto.class);
+    }
+
+    @GetMapping(value = "/event/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<EquipmentDto> getByEventId(@PathVariable
+                                           @NotNull
+                                           @Positive(message = StringConstants.ASSIGNED_EVENT_ID_MUST_BE_POSITIVE)
+                                                   Long id) {
+
+        List<Equipment> equipments = equipmentService.getByAssignedEventId(id);
+
+        return equipments.stream()
+                .map(equipment -> modelMapper.map(equipment, EquipmentDto.class))
+                .collect(Collectors.toList());
     }
 }

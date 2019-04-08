@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.box {
+    display: flex;
+    justify-content: center;
+    transition: all 0.3s;
+    margin: 7px;
+    box-shadow: 0 2px 5px;
+    border-radius: 1pc;
+}
+
+.hb:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}

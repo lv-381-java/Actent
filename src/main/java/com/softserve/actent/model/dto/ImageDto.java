@@ -14,6 +14,4 @@ public class ImageDto {
     @NonNull
     private String filePath;
 
-    @NonNull
-    private String hash;
 }

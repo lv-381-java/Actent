@@ -1,6 +1,6 @@
 package com.softserve.actent.service.impl;
 
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.model.entity.Category;
 import com.softserve.actent.repository.CategoryRepository;
 import com.softserve.actent.service.CategoryService;
@@ -83,7 +83,7 @@ public class CategoryServiceImplTest {
         assertThat(categoryService.get(firstCategoryId).getName()).isEqualTo(firstCategoryName);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenNonExistingId_thenExceptionShouldBeThrown() {
         categoryService.get(nonExistingCategoryId);
     }
@@ -93,7 +93,7 @@ public class CategoryServiceImplTest {
         assertThat(categoryService.getParentByName(firstCategoryName)).isEqualTo(firstCategory);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenNonExistingCategoryName_thenExceptionShouldBeThrown() {
         categoryService.getParentByName(nonExistingCategoryName);
     }
@@ -115,7 +115,7 @@ public class CategoryServiceImplTest {
         assertThat(categoryService.update(secondCategory, secondCategoryId).getName()).isEqualTo(secondCategoryName);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenUpdateCAtegoryWithNonExistingId_thenExceptionShouldBeThrown() {
         categoryService.update(firstCategory, nonExistingCategoryId);
     }
@@ -125,12 +125,12 @@ public class CategoryServiceImplTest {
         categoryService.delete(firstCategoryId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenDeleteCategoryWithNonExistingId_thenExceptionShouldBeThrown() {
         categoryService.delete(nonExistingCategoryId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenGetSubcategoriesFromNonExistingParentCategory_thenExceptionShouldBeThrown() {
         categoryService.getSubcategories(nonExistingCategory);
     }

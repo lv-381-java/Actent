@@ -1,6 +1,6 @@
 package com.softserve.actent.service.impl;
 
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.model.entity.Tag;
 import com.softserve.actent.repository.TagRepository;
 import com.softserve.actent.service.TagService;
@@ -77,7 +77,7 @@ public class TagServiceImplTest {
         assertThat(tagService.get(firstTagId).getText()).isEqualTo(firstTagText);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenNonExistingId_thenExceptionShouldBeThrown() {
 
         tagService.get(nonExistingTagId);
@@ -89,7 +89,7 @@ public class TagServiceImplTest {
         assertThat(tagService.getByText(firstTagText)).isEqualTo(firstTag);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenNonExistingName_thenExceptionShouldBeThrown() {
 
         tagService.getByText(nonExistingText);
@@ -115,7 +115,7 @@ public class TagServiceImplTest {
         assertThat(tagService.update(secondTag, secondTagId).getText()).isEqualTo(secondTagText);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenUpdateTagWithNonExistingId_thenExceptionShouldBeThrown() {
 
         tagService.update(firstTag, nonExistingTagId);
@@ -127,7 +127,7 @@ public class TagServiceImplTest {
         tagService.delete(firstTagId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenDeleteTagWithNonExistingId_thenExceptionShouldBeThrown() {
 
         tagService.delete(nonExistingTagId);

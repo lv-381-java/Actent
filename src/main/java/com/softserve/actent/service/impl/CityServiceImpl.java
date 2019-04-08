@@ -1,7 +1,7 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.City;
 import com.softserve.actent.repository.CityRepository;
@@ -36,7 +36,7 @@ public class CityServiceImpl implements CityService {
             newCity.setRegion(city.getRegion());
             return cityRepository.save(newCity);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.REGION_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }
@@ -50,7 +50,7 @@ public class CityServiceImpl implements CityService {
             dbCity.setName(city.getName());
             return cityRepository.save(dbCity);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.CITY_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }
@@ -59,7 +59,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public City get(Long cityId) {
         return cityRepository.findById(cityId)
-                .orElseThrow(() -> new ResourceNotFoundException(
+                .orElseThrow(() -> new DataNotFoundException(
                         ExceptionMessages.CITY_NOT_FOUND,
                         ExceptionCode.NOT_FOUND));
     }
@@ -77,7 +77,7 @@ public class CityServiceImpl implements CityService {
         if (city.isPresent()) {
             cityRepository.deleteById(cityId);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.CITY_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }

@@ -1,0 +1,108 @@
+.chat-container {
+    background-color: #fff;
+    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    height: 100vh;
+    max-height: 100vh;
+    position: relative;
+}
+
+#messageArea {
+    height: 86vh;
+    overflow: auto;
+    overflow-y: scroll;
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    align-self: end;
+}
+
+#chat-page {
+    height: 100vh;
+}
+.input {
+    position:absolute;
+    bottom:0;
+    width: 50vw;
+}
+
+#chat-page ul {
+    list-style-type: none;
+    background-color: #FFF;
+    margin: 0;
+    padding: 0 20px 0px 20px;
+    position:absolute;
+    bottom: 14vh;
+}
+
+#chat-page ul li {
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+#chat-page ul li p {
+    margin: 0;
+}
+
+#chat-page .chat-message {
+    padding-left: 68px;
+    bottom: 0px;
+}
+
+#chat-page .chat-message i {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 18px;
+    line-height: 42px;
+    background-color: black;
+    text-align: center;
+    border-radius: 50%;
+    font-style: normal;
+    text-transform: uppercase;
+}
+
+#chat-page .chat-message span {
+    color: #333;
+    font-weight: 600;
+}
+
+#chat-page .chat-message p {
+    color: #43464b;
+}
+
+#chat-page .chat-message-first {
+    padding-left: 68px;
+    bottom: 0px;
+    margin-top: auto;
+}
+#chat-page .chat-message-first i {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 18px;
+    line-height: 42px;
+    background-color: black;
+    text-align: center;
+    border-radius: 50%;
+    font-style: normal;
+    text-transform: uppercase;
+}
+
+#chat-page .chat-message-first span {
+    color: #333;
+    font-weight: 600;
+}
+
+#chat-page .chat-message-first p {
+    color: #43464b;
+}

@@ -1,6 +1,6 @@
 package com.softserve.actent.service.impl;
 
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.model.entity.Event;
 import com.softserve.actent.model.entity.EventUser;
 import com.softserve.actent.model.entity.EventUserType;
@@ -73,7 +73,7 @@ public class EventUserServiceImplTest {
         assertThat(eventUserService.get(id).getType()).isEqualTo(EventUserType.PARTICIPANT);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void getByWrongIdTest() {
 
         eventUserService.get(wrongId);
@@ -105,46 +105,46 @@ public class EventUserServiceImplTest {
         verify(eventUserRepository).deleteById(id);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void deleteByWrongId() {
 
         eventUserService.delete(wrongId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void addNullTest() {
 
         eventUserService.add(null);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void eventNullAddTest() {
 
         when(eventUser.getEvent()).thenReturn(null).thenReturn(event);
         eventUserService.add(eventUser);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void userNullAddTest() {
 
         when(eventUser.getUser()).thenReturn(null).thenReturn(user);
         eventUserService.add(eventUser);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void typeNullAddTest() {
 
         when(eventUser.getType()).thenReturn(null).thenReturn(EventUserType.PARTICIPANT);
         eventUserService.add(eventUser);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void getByNullTest() {
 
         eventUserService.get(null);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void deleteByNull() {
 
         eventUserService.delete(null);

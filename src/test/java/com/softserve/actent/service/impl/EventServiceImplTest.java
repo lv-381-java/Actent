@@ -1,6 +1,6 @@
 package com.softserve.actent.service.impl;
 
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.model.entity.AccessType;
 import com.softserve.actent.model.entity.Category;
 import com.softserve.actent.model.entity.Chat;
@@ -102,13 +102,13 @@ public class EventServiceImplTest {
         assertThat(eventService.get(id).getAccessType()).isEqualTo(AccessType.PUBLIC);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void getNullTest() {
 
         eventService.get(null);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void getByIdWithExceptionTest() {
 
         eventService.get(wrongId);
@@ -147,53 +147,53 @@ public class EventServiceImplTest {
         verify(eventRepository).deleteById(id);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void deleteByNotExistenceSourceTest() {
 
         eventService.delete(wrongId);
         verify(eventRepository).deleteById(wrongId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void eventNullAddTest() {
 
         eventService.add(null);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void creatorNullAddTest() {
 
         when(event.getCreator()).thenReturn(null).thenReturn(user);
         eventService.add(event);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void locationNullAddTest() {
 
         when(event.getAddress()).thenReturn(null).thenReturn(location);
         eventService.add(event);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void categoryNullAddTest() {
 
         when(event.getCategory()).thenReturn(null).thenReturn(category);
         eventService.add(event);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void deleteNullTest() {
 
         eventService.delete(null);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void eventNullUpdateTest() {
 
         eventService.update(null, id);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void idNullUpdateTest() {
 
         eventService.update(event, null);
@@ -239,7 +239,7 @@ public class EventServiceImplTest {
         assertThat(eventService.update(event, id).getAddress()).isEqualTo(location);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void creatorNotNullUpdateTest() {
 
         when(event.getCreator()).thenReturn(user);

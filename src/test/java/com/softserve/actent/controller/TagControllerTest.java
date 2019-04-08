@@ -3,7 +3,7 @@ package com.softserve.actent.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.actent.constant.ExceptionMessages;
 import com.softserve.actent.constant.UrlConstants;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.dto.CreateTagDto;
 import com.softserve.actent.model.dto.TagDto;
@@ -19,17 +19,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.security.web.FilterChainProxy;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -135,26 +130,26 @@ public class TagControllerTest {
 
         given(tagService.get(firstTagId)).willReturn(firstTag);
         given(tagService.get(secondTagId)).willReturn(secondTag);
-        given(tagService.get(nonExistingTagId)).willThrow(new ResourceNotFoundException(
+        given(tagService.get(nonExistingTagId)).willThrow(new DataNotFoundException(
                 ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND));
 
         given(tagService.getByText(firstTagText)).willReturn(firstTag);
         given(tagService.getByText(secondTagText)).willReturn(secondTag);
-        given(tagService.getByText(nonExistingText)).willThrow(new ResourceNotFoundException(
+        given(tagService.getByText(nonExistingText)).willThrow(new DataNotFoundException(
                 ExceptionMessages.TAG_NOT_FOUND_WITH_TEXT, ExceptionCode.NOT_FOUND));
 
         given(tagService.getAll()).willReturn(tags);
 
         given(tagService.update(firstTagWithoutId, firstTagId)).willReturn(firstTag);
         given(tagService.update(secondTagWithoutId, secondTagId)).willReturn(secondTag);
-        given(tagService.update(firstTagWithoutId, nonExistingTagId)).willThrow(new ResourceNotFoundException(
+        given(tagService.update(firstTagWithoutId, nonExistingTagId)).willThrow(new DataNotFoundException(
                 ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND));
-        given(tagService.update(secondTagWithoutId, nonExistingTagId)).willThrow(new ResourceNotFoundException(
+        given(tagService.update(secondTagWithoutId, nonExistingTagId)).willThrow(new DataNotFoundException(
                 ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND));
 
         Mockito.doNothing().when(tagService).delete(firstTagId);
         Mockito.doNothing().when(tagService).delete(secondTagId);
-        Mockito.doThrow(new ResourceNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND))
+        Mockito.doThrow(new DataNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND))
                 .when(tagService).delete(nonExistingTagId);
 
         given(modelMapper.map(firstTag, TagDto.class)).willReturn(firstTagDto);

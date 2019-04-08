@@ -6,4 +6,6 @@ import java.util.List;
 public interface EventService extends BaseCrudService<Event> {
 
     List<Event> getByTitle(String title);
+
+    List<Event> findActiveEvents();
 }

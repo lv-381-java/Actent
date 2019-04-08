@@ -12,18 +12,21 @@ import com.softserve.actent.service.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @Validated
 @RequestMapping(UrlConstants.API_V1)
+@PreAuthorize("permitAll()")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -38,6 +41,7 @@ public class CategoryController {
 
     @PostMapping(value = "/categories")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("isAuthenticated()")
     public IdDto addCategory(@RequestBody @Validated CreateCategoryDto createCategoryDto) {
         Category parent = categoryService.getParent(createCategoryDto.getParentId());
         Category category = categoryService.add(new Category(createCategoryDto.getName(), parent));
@@ -48,6 +52,25 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.OK)
     public List<ShowCategoryDto> getCategories() {
         List<Category> categories = categoryService.getAll();
+        List<ShowCategoryDto> categoryDtos = new ArrayList<>();
+
+        for (Category category : categories) {
+            ShowCategoryDto showCategoryDto = new ShowCategoryDto();
+            showCategoryDto.setId(category.getId());
+            showCategoryDto.setName(category.getName());
+            Category parent = category.getParent();
+            if (parent != null) {
+                showCategoryDto.setParentId(parent.getId());
+            }
+            categoryDtos.add(showCategoryDto);
+        }
+        return categoryDtos;
+    }
+
+    @GetMapping(value = "/categories/parentsubcategories")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ShowCategoryDto> getParCategories() {
+        List<Category> categories = categoryService.getParentCategories(null);
         return categories.stream()
                 .map(category -> modelMapper.map(category, ShowCategoryDto.class))
                 .collect(Collectors.toList());
@@ -55,22 +78,22 @@ public class CategoryController {
 
     @GetMapping(value = "/categories/subcategories/{parentId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<ShowCategoryDto> getSubCategoriesById(@PathVariable @NotNull @Positive(message = StringConstants.CATEGORY_ID_MUST_BE_POSITIVE) Long parentId) {
+    public List<CategoryDto> getSubCategoriesById(@PathVariable @NotNull @Positive(message = StringConstants.CATEGORY_ID_MUST_BE_POSITIVE) Long parentId) {
         Category parent = categoryService.getParent(parentId);
         List<Category> subcategories = categoryService.getSubcategories(parent);
         return subcategories.stream()
-                .map(category -> modelMapper.map(category, ShowCategoryDto.class))
+                .map(category -> modelMapper.map(category, CategoryDto.class))
                 .collect(Collectors.toList());
     }
 
     @GetMapping(value = "/categories/subcategories")
     @ResponseStatus(HttpStatus.OK)
-    public List<ShowCategoryDto> getSubCategoriesByName(@RequestParam @Size(min = NumberConstants.MIN_VALUE_FOR_CATEGORY_NAME, max = NumberConstants.MAX_VALUE_FOR_CATEGORY_NAME,
+    public List<CategoryDto> getSubCategoriesByName(@RequestParam @Size(min = NumberConstants.MIN_VALUE_FOR_CATEGORY_NAME, max = NumberConstants.MAX_VALUE_FOR_CATEGORY_NAME,
             message = StringConstants.CATEGORY_NO_LONGER_THAN_THIRTY_SYMBOLS) String parentCategoryName) {
         Category parent = categoryService.getParentByName(parentCategoryName);
         List<Category> subcategories = categoryService.getSubcategories(parent);
         return subcategories.stream()
-                .map(category -> modelMapper.map(category, ShowCategoryDto.class))
+                .map(category -> modelMapper.map(category, CategoryDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -83,16 +106,19 @@ public class CategoryController {
 
     @DeleteMapping(value = "/categories/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("isAuthenticated()")
     public void deleteCategoryById(@PathVariable @NotNull @Positive(message = StringConstants.CATEGORY_ID_MUST_BE_POSITIVE) Long id) {
         categoryService.delete(id);
     }
 
     @PutMapping(value = "/categories/{id}")
-    public CategoryDto update(@PathVariable @NotNull @Positive(message = StringConstants.CATEGORY_ID_MUST_BE_POSITIVE) Long id,
-                              @RequestBody @Validated CreateCategoryDto createCategoryDto) {
+    @PreAuthorize("isAuthenticated()")
+    public CreateCategoryDto update(@PathVariable @NotNull @Positive(message = StringConstants.CATEGORY_ID_MUST_BE_POSITIVE) Long id,
+                                    @RequestBody @Validated CreateCategoryDto createCategoryDto) {
         Category parent = categoryService.getParent(createCategoryDto.getParentId());
         Category newCategory = new Category(createCategoryDto.getName(), parent);
         categoryService.update(newCategory, id);
-        return modelMapper.map(createCategoryDto, CategoryDto.class);
+        return modelMapper.map(createCategoryDto, CreateCategoryDto.class);
     }
 }
+

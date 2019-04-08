@@ -1,16 +1,10 @@
 package com.softserve.actent.service.impl;
 
-import com.softserve.actent.exceptions.DuplicateValueException;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.security.AccessDeniedException;
-import com.softserve.actent.model.entity.City;
-import com.softserve.actent.model.entity.Image;
-import com.softserve.actent.model.entity.Location;
-import com.softserve.actent.model.entity.Role;
-import com.softserve.actent.model.entity.Sex;
-import com.softserve.actent.model.entity.User;
+import com.softserve.actent.model.entity.*;
+import com.softserve.actent.repository.CityRepository;
 import com.softserve.actent.repository.ImageRepository;
-import com.softserve.actent.repository.LocationRepository;
 import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.UserService;
 import org.junit.After;
@@ -48,10 +42,9 @@ public class UserServiceImplTest {
     private final Image firstUserAvatar = new Image();
     private final String firstUserBio = "About first user";
     private final Sex firstUserSex = Sex.MALE;
-    private final Location firstUserLocation = new Location();
+    private final City firstUserLocation = new City();
     private final Role firstUserRole = Role.ROLE_USER;
     private final String firstUserImagePath = "D:IMG-7033";
-    private final String firstUserImageHash = "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b";
     private final Long firstUserImageId = 1L;
     private final Long firstUserLocationId = 1L;
     private final String firstUserLocationAddress = "Fedkovycha str, 5";
@@ -66,10 +59,9 @@ public class UserServiceImplTest {
     private final Image secondUserAvatar = new Image();
     private final String secondUserBio = "About kozak Mamay";
     private final Sex secondUserSex = Sex.MALE;
-    private final Location secondUserLocation = new Location();
+    private final City secondUserLocation = new City();
     private final Role secondUserRole = Role.ROLE_USER;
     private final String secondUserImagePath = "D:IMG-7035";
-    private final String secondUserImageHash = "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4a";
     private final Long secondUserImageId = 2L;
     private final Long secondUserLocationId = 2L;
     private final String secondUserLocationAddress = "Pasternaka str, 77";
@@ -78,7 +70,7 @@ public class UserServiceImplTest {
     private final Long nonExistUserId = 999L;
     private final Integer usersCount = 2;
 
-    private City city = new City();
+    private Region region = new Region();
     private User firstUser = new User();
     private User secondUser = new User();
     private List<User> users = new ArrayList<>();
@@ -91,7 +83,7 @@ public class UserServiceImplTest {
     UserRepository userRepository;
 
     @MockBean
-    LocationRepository locationRepository;
+    CityRepository cityRepository;
 
     @MockBean
     ImageRepository imageRepository;
@@ -99,24 +91,23 @@ public class UserServiceImplTest {
     @Before
     public void setUp() {
 
-        city.setId(cityId);
-        city.setName(cityName);
+        region.setId(cityId);
+
+        region.setName(cityName);
 
         firstUserAvatar.setFilePath(firstUserImagePath);
-        firstUserAvatar.setHash(firstUserImageHash);
         firstUserAvatar.setId(firstUserImageId);
 
         secondUserAvatar.setFilePath(secondUserImagePath);
-        secondUserAvatar.setHash(secondUserImageHash);
         secondUserAvatar.setId(secondUserImageId);
 
         firstUserLocation.setId(firstUserLocationId);
-        firstUserLocation.setAddress(firstUserLocationAddress);
-        firstUserLocation.setCity(city);
+        firstUserLocation.setName(firstUserLocationAddress);
+        firstUserLocation.setRegion(region);
 
         secondUserLocation.setId(secondUserLocationId);
-        secondUserLocation.setAddress(secondUserLocationAddress);
-        secondUserLocation.setCity(city);
+        secondUserLocation.setName(secondUserLocationAddress);
+        secondUserLocation.setRegion(region);
 
         firstUser.setId(firstUserId);
         firstUser.setEmail(firstUserEmail);
@@ -170,8 +161,8 @@ public class UserServiceImplTest {
         Mockito.doNothing().when(userRepository).deleteById(firstUserId);
         Mockito.doNothing().when(userRepository).deleteById(secondUserId);
 
-        Mockito.when(locationRepository.findById(secondUserLocationId)).thenReturn(Optional.of(secondUserLocation));
-        Mockito.when(locationRepository.findById(firstUserLocationId)).thenReturn(Optional.of(firstUserLocation));
+        Mockito.when(cityRepository.findById(secondUserLocationId)).thenReturn(Optional.of(secondUserLocation));
+        Mockito.when(cityRepository.findById(firstUserLocationId)).thenReturn(Optional.of(firstUserLocation));
 
         Mockito.when(imageRepository.findById(firstUserImageId)).thenReturn(Optional.of(firstUserAvatar));
         Mockito.when(imageRepository.findById(secondUserImageId)).thenReturn(Optional.of(secondUserAvatar));
@@ -205,7 +196,7 @@ public class UserServiceImplTest {
         assertThat(user.getBio()).isEqualTo(firstUserBio);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenUserByIdNotExist_thenExceptionShouldBeThrown() {
 
         userService.get(nonExistUserId);
@@ -226,7 +217,7 @@ public class UserServiceImplTest {
 
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenUserByEmailNotExist_thenExceptionShouldBeThrown() {
 
         userService.getUserByEmail(nonExistUserEmail);
@@ -254,7 +245,7 @@ public class UserServiceImplTest {
 
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenDeleteUserWithNonExistingId_thenExceptionShouldBeThrown() {
 
         userService.delete(nonExistUserId);

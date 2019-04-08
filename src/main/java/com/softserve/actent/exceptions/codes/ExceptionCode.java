@@ -28,7 +28,9 @@ public enum ExceptionCode {
 
     MESSAGE_NOT_FOUND(2060),
 
-    USER_NOT_FOUND(2090);
+    USER_NOT_FOUND(2090),
+
+    THE_FIELD_IS_NULL(2100);
 
     public final int exceptionCode;
 

@@ -2,20 +2,17 @@ package com.softserve.actent.model.entity;
 
 import com.softserve.actent.constant.NumberConstants;
 import com.softserve.actent.constant.StringConstants;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +22,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -55,6 +53,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Pattern(regexp="(^$|[0-9]{10})", message = StringConstants.USER_PHONE_IS_NOT_VALID)
+    private String phone;
+
     @Column
     private LocalDate birthDate;
 
@@ -64,7 +65,7 @@ public class User {
 
     @NonNull
     @ManyToOne
-    private Location location;
+    private City location;
 
     @NonNull
     @Length(max = NumberConstants.USER_BIO_MAX_LENGTH)

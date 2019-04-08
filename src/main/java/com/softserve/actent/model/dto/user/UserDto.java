@@ -11,14 +11,27 @@ import java.util.Set;
 @Data
 public class UserDto {
     private Long id;
+
     private String login;
+
     private String email;
+
+    private String phone;
+
     private String firstName;
+
     private String lastName;
+
     private LocalDate birthDate;
+
     private Image avatar;
+
     private UserLocationDto location;
+
     private String bio;
+
     private String sex;
+
     private Set<Role> roleset;
+
 }

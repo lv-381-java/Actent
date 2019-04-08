@@ -2,7 +2,7 @@ package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
 import com.softserve.actent.constant.StringConstants;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.exceptions.validation.IncorrectChatTypeException;
 import com.softserve.actent.model.entity.Chat;
@@ -50,7 +50,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat getChatById(Long chatId) {
         return chatRepository.findById(chatId).
-                orElseThrow(() -> new ResourceNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND,
+                orElseThrow(() -> new DataNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND,
                         ExceptionCode.CHAT_NOT_FOUND));
     }
 
@@ -61,7 +61,7 @@ public class ChatServiceImpl implements ChatService {
         if (chatRepository.existsById(chatId)) {
             chatRepository.deleteById(chatId);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND,
+            throw new DataNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND,
                     ExceptionCode.CHAT_NOT_FOUND);
         }
     }
@@ -73,7 +73,7 @@ public class ChatServiceImpl implements ChatService {
             chat.setId(chatId);
             return chatRepository.save(chat);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND,
+            throw new DataNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND,
                     ExceptionCode.CHAT_NOT_FOUND);
         }
     }
@@ -84,7 +84,7 @@ public class ChatServiceImpl implements ChatService {
         Chat chat = getChatById(chatId);
 
         if(chat.getBannedUsers().contains(user)){
-            throw new ResourceNotFoundException(StringConstants.USER_BY_SUCH_ID_IS_ALREADY_EXISTS_IN_LIST_OF_BANNED_USERS_IN_THIS_CHAT,
+            throw new DataNotFoundException(StringConstants.USER_BY_SUCH_ID_IS_ALREADY_EXISTS_IN_LIST_OF_BANNED_USERS_IN_THIS_CHAT,
                     ExceptionCode.DUPLICATE_VALUE);
         }else{
             chat.getBannedUsers().add(user);
@@ -107,7 +107,7 @@ public class ChatServiceImpl implements ChatService {
 
             return chat;
         }else{
-            throw new ResourceNotFoundException(StringConstants.USER_BY_SUCH_ID_IS_NOT_BE_BANNED_IN_THIS_CHAT,
+            throw new DataNotFoundException(StringConstants.USER_BY_SUCH_ID_IS_NOT_BE_BANNED_IN_THIS_CHAT,
                     ExceptionCode.NOT_FOUND);
         }
     }

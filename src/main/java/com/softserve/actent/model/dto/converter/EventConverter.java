@@ -1,13 +1,7 @@
 package com.softserve.actent.model.dto.converter;
 
 import com.softserve.actent.model.dto.equipment.EquipmentDto;
-import com.softserve.actent.model.dto.event.ChatForEventDto;
-import com.softserve.actent.model.dto.event.CityForEventDto;
-import com.softserve.actent.model.dto.event.CountryForEventDto;
-import com.softserve.actent.model.dto.event.EventDto;
-import com.softserve.actent.model.dto.event.LocationForEventDto;
-import com.softserve.actent.model.dto.event.RegionForEventDto;
-import com.softserve.actent.model.dto.event.UserForEventDto;
+import com.softserve.actent.model.dto.event.*;
 import com.softserve.actent.model.dto.eventUser.EventUserForEventDto;
 import com.softserve.actent.model.entity.Event;
 import com.softserve.actent.model.entity.EventUser;
@@ -46,6 +40,7 @@ public class EventConverter implements IModelMapperConverter<Event, EventDto> {
         eventDto.setChatForEventDto(getChat(entity));
         eventDto.setEquipments(getEquipmentsIfTheyAre(entity));
         eventDto.setEventForEventUserDtos(getEventsUsers(entity));
+        eventDto.setCategoryForEventDto(getCategoryForEventDto(entity));
 
         return eventDto;
     }
@@ -110,5 +105,10 @@ public class EventConverter implements IModelMapperConverter<Event, EventDto> {
         eventUserForEvenDto.setEventUserType(eventUser.getType());
 
         return eventUserForEvenDto;
+    }
+
+    private CategoryForEventDto getCategoryForEventDto(Event event) {
+
+        return modelMapper.map(event.getCategory(), CategoryForEventDto.class);
     }
 }

@@ -30,10 +30,10 @@ public class Image {
     @Column(name = "file_path", nullable = false)
     private String filePath;
 
-    @NonNull
-    @NotBlank(message = ExceptionMessages.IMAGE_NO_HASH)
-    @Column(nullable = false, unique = true, length = NumberConstants.HASH_LENGTH)
-    @Size(min = NumberConstants.HASH_LENGTH, max = NumberConstants.HASH_LENGTH,
-            message = ExceptionMessages.IMAGE_INAPPROPRIATE_HASH_LENGTH)
-    private String hash;
+//    @NonNull
+//    @NotBlank(message = ExceptionMessages.IMAGE_NO_HASH)
+//    @Column(nullable = false, unique = true, length = NumberConstants.HASH_LENGTH)
+//    @Size(min = NumberConstants.HASH_LENGTH, max = NumberConstants.HASH_LENGTH,
+//            message = ExceptionMessages.IMAGE_INAPPROPRIATE_HASH_LENGTH)
+//    private String hash;
 }

@@ -8,6 +8,8 @@ import com.softserve.actent.model.entity.Review;
 import com.softserve.actent.model.entity.Tag;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,7 +21,7 @@ public class EventDto {
     private String title;
     private String description;
     private String creationDate;
-    private Long startDate;
+    private LocalDateTime startDate;
     private Long duration;
     private Integer capacity;
 

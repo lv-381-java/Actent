@@ -1,0 +1,135 @@
+.styleMain {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
+    align-items: center;
+    box-shadow: 0 0 31px 2px rgba(0, 0, 0, 0.53);
+    margin: 20px auto;
+}
+
+.styleLowerMain1 {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 10px 10px;
+}
+
+.styleLowerMain2 {
+    display: flex;
+    justify-content: flex-end;
+    width: 85%;
+    margin: 10px 10px;
+    padding: 5px 5px;
+}
+
+.styleContainer {
+    width: 250px;
+    height: 250px;
+    font-size: 10px;
+    margin: 3% 5% 5% 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.styleInput {
+    font-size: 22px;
+    font-family: Roboto sans-serif;
+}
+
+.styleSpan {
+    display: inline-block;
+    font-family: sans-serif;
+    font-size: 15px;
+    width: 100px;
+}
+
+/* .imageStyle {
+    max-width: 100%;
+    max-height: 100%;
+
+} */
+
+/*Edit profile styles*/
+
+.styleMainDiv {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 10px 10px;
+    overflow: auto;
+}
+
+.styleCard {
+    display: flexbox;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
+    align-items: center;
+    box-shadow: 0 0 31px 2px rgba(0, 0, 0, 0.53);
+    margin: 20px 20px 20px 20px;
+}
+
+.styleName {
+    margin: 10px 100px 0 100px;
+    height: 400px;
+    width: 400px;
+    min-width: 200px;
+}
+.styleTitle {
+    font-size: 35px;
+}
+
+.styleHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+}
+
+.styleButtons {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    margin: 20px 20px 40px 350px;
+    width: 40%;
+}
+
+.styleContainerEdit {
+    width: 150px;
+    height: 150px;
+    min-width: 100px;
+    min-height: 100px;
+    margin: 0% 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imageStyle {
+    max-width: 100%;
+    max-height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* FileUpload styles */
+
+.dialogStyle {
+    opacity: 0.98;
+}
+
+.dropzoneStyle {
+    height: 100%;
+    border: 1px dotted lightgrey;
+    border-radius: 5px;
+    background-color: #fafdff;
+    padding: 20px 20px;
+    text-align: center;
+}
+
+.buttonStyle {
+    margin: 1% 15% 3%;
+}

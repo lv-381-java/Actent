@@ -34,6 +34,6 @@ public class EventUser {
     @Fetch(FetchMode.JOIN)
     private User user;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private EventUserType type;
 }

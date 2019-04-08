@@ -38,7 +38,6 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
     @NotBlank(message = StringConstants.TITLE_SHOULD_NOT_BE_BLANK)
     @Length(max = NumberConstants.TITLE_MAX_LENGTH, message = StringConstants.TITLE_LENGTH_IS_TO_LONG)
     @Column(nullable = false, length = NumberConstants.TITLE_MAX_LENGTH)
@@ -54,7 +53,7 @@ public class Event {
 
     @NonNull
     @Column(name = "start_date", nullable = false)
-    private Long startDate;
+    private LocalDateTime startDate;
 
     @NonNull
     @Column(nullable = false)
@@ -66,8 +65,7 @@ public class Event {
     @Fetch(FetchMode.JOIN)
     private User creator;
 
-    @NonNull
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
     @Fetch(FetchMode.JOIN)
     private Location address;
@@ -90,7 +88,7 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<EventUser> eventUserList;
 
-    @NonNull
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     @Fetch(FetchMode.JOIN)
@@ -103,7 +101,7 @@ public class Event {
     @Fetch(FetchMode.SUBSELECT)
     private List<Tag> tags;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_id")
     @Fetch(FetchMode.JOIN)
     private Chat chat;

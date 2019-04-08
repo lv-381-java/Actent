@@ -14,6 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequestMapping(UrlConstants.API_V1)
+@PreAuthorize("permitAll()")
 public class ImageController {
 
     private final ImageService imageService;
@@ -40,6 +42,7 @@ public class ImageController {
     }
 
     @PostMapping(value = "/images")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addImage(@Validated @RequestBody AddImageDto addImageDto) {
 
@@ -81,6 +84,7 @@ public class ImageController {
     }
 
     @PutMapping(value = "/images/{id}")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public ImageDto updateImage(@Validated @RequestBody AddImageDto addImageDto,
                                 @PathVariable @NotNull(message = ExceptionMessages.IMAGE_NO_ID)
@@ -91,6 +95,7 @@ public class ImageController {
     }
 
     @DeleteMapping(value = "/images/{id}")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteImage(@PathVariable @NotNull(message = ExceptionMessages.IMAGE_NO_ID)
                                 @Positive(message = ExceptionMessages.IMAGE_INNAPPROPRIATE_ID) Long id) {

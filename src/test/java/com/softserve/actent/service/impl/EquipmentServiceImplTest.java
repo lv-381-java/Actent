@@ -1,6 +1,6 @@
 package com.softserve.actent.service.impl;
 
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.model.entity.Equipment;
 import com.softserve.actent.model.entity.Event;
 import com.softserve.actent.model.entity.User;
@@ -110,7 +110,7 @@ public class EquipmentServiceImplTest {
         assertThat(found.getTitle()).isEqualTo(title);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenInValidId_thenExceptionShouldBeThrown() {
 
         equipmentService.get(nonExistingId);
@@ -133,13 +133,13 @@ public class EquipmentServiceImplTest {
         assertThat(equipmentService.add(equipment)).isEqualTo(equipment);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenAddEquipmentWithNonExistingUserId_thenExceptionShouldBeThrown(){
 
         equipmentService.add(equipmentWithNonExistUser);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenAddEquipmentWithNonExistingEventId_thenExceptionShouldBeThrown(){
 
         equipmentService.add(equipmentWithNonExistEvent);
@@ -157,7 +157,7 @@ public class EquipmentServiceImplTest {
         assertThat(equipmentService.update(equipmentWithoutUser, existingId).getTitle()).isEqualTo(secondTitle);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenUpdateEquipmentWithNonExistingId_thenExceptionShouldBeThrown(){
 
         equipmentService.update(equipmentWithoutUser, nonExistingId);
@@ -169,7 +169,7 @@ public class EquipmentServiceImplTest {
         equipmentService.delete(existingId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenDeleteTagWithNonExistingId_thenExceptionShouldBeThrown() {
 
         equipmentService.delete(nonExistingId);

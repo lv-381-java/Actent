@@ -1,7 +1,7 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Review;
 import com.softserve.actent.repository.ReviewRepository;
@@ -39,7 +39,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         return optionalReview.orElseThrow(() -> {
             log.error(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID + " Id: " + reviewId);
-            return new ResourceNotFoundException(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
+            return new DataNotFoundException(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
         });
     }
 
@@ -60,7 +60,7 @@ public class ReviewServiceImpl implements ReviewService {
             return reviewRepository.save(review);
         } else {
             log.error(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID + " Id: " + reviewId);
-            throw new ResourceNotFoundException(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
         }
     }
 
@@ -74,7 +74,7 @@ public class ReviewServiceImpl implements ReviewService {
             reviewRepository.deleteById(reviewId);
         } else {
             log.error(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID + " Id: " + reviewId);
-            throw new ResourceNotFoundException(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Region;
 import com.softserve.actent.repository.CountryRepository;
@@ -36,7 +36,7 @@ public class RegionServiceImpl implements RegionService {
             newRegion.setCountry(region.getCountry());
             return regionRepository.save(newRegion);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.COUNTRY_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }
@@ -51,7 +51,7 @@ public class RegionServiceImpl implements RegionService {
             dbRegion.setName(region.getName());
             return regionRepository.save(dbRegion);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.REGION_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }
@@ -60,7 +60,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Region get(Long regionId) {
         return regionRepository.findById(regionId)
-                .orElseThrow(() -> new ResourceNotFoundException(
+                .orElseThrow(() -> new DataNotFoundException(
                         ExceptionMessages.REGION_NOT_FOUND,
                         ExceptionCode.NOT_FOUND));
     }
@@ -77,7 +77,7 @@ public class RegionServiceImpl implements RegionService {
         if (region.isPresent()) {
             regionRepository.deleteById(regionId);
         } else {
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.REGION_NOT_FOUND,
                     ExceptionCode.NOT_FOUND);
         }

@@ -1,7 +1,7 @@
 package com.softserve.actent.model.dto.converter;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.dto.message.ViewImageMessageDto;
 import com.softserve.actent.model.dto.message.ViewMessageDto;
@@ -42,7 +42,7 @@ public class ViewMessageConverter implements IModelMapperConverter<Message, View
         } else if (entity.getMessageType().equals(MessageType.IMAGE)) {
             return modelMapper.map(entity, ViewImageMessageDto.class);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, ExceptionCode.MESSAGE_NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, ExceptionCode.MESSAGE_NOT_FOUND);
         }
     }
 }

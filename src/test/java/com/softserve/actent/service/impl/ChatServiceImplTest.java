@@ -1,6 +1,6 @@
 package com.softserve.actent.service.impl;
 
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.validation.IncorrectChatTypeException;
 import com.softserve.actent.model.entity.Chat;
 import com.softserve.actent.model.entity.ChatType;
@@ -138,7 +138,7 @@ public class ChatServiceImplTest {
         assertThat(found.getType()).isEqualTo(chatType);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenNonValidId_thenEmployeeShouldNotBeFound(){
         Chat found = chatService.getChatById(nonExistingId);
         verifyFindByIdIsCalledOnce();
@@ -162,7 +162,7 @@ public class ChatServiceImplTest {
         chatService.deleteChatById(existingId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenDeleteChatWithNonExistingId_thenExceptionShouldBeThrown(){
         chatService.deleteChatById(nonExistingId);
     }
@@ -172,7 +172,7 @@ public class ChatServiceImplTest {
         assertThat(chatService.updateChat(chat, existingId).getType()).isEqualTo(chatType);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenUpdateChatWithNonExistingId_thenExceptionShouldBeThrown(){
         assertThat(chatService.updateChat(chat, nonExistingId).getType()).isEqualTo(chatType);
     }
@@ -184,7 +184,7 @@ public class ChatServiceImplTest {
                 .isEqualTo(bannedUserExists.size());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void whenDeleteBannedNonExistsUserFromChat_thenExceptionShouldBeThrown(){
         Chat chat = chatService.unBanUserFromChat(existingId, existingUserId);
         assertThat(chat.getBannedUsers().size())

@@ -1,7 +1,7 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Tag;
 import com.softserve.actent.repository.TagRepository;
@@ -43,14 +43,14 @@ public class TagServiceImpl implements TagService {
             tag.setId(id);
             return tagRepository.save(tag);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
         }
     }
 
     @Override
     public Tag get(Long id) {
 
-        return tagRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND));
+        return tagRepository.findById(id).orElseThrow(() -> new DataNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class TagServiceImpl implements TagService {
         if (optionalReview.isPresent()) {
             tagRepository.deleteById(id);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
         }
     }
 
@@ -76,6 +76,6 @@ public class TagServiceImpl implements TagService {
     public Tag getByText(String name) {
 
         return tagRepository.findByText(name).orElseThrow(() ->
-                new ResourceNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_TEXT, ExceptionCode.NOT_FOUND));
+                new DataNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_TEXT, ExceptionCode.NOT_FOUND));
     }
 }

@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequestMapping(UrlConstants.API_V1)
+@PreAuthorize("permitAll()")
 public class TagController {
 
     private final TagService tagService;
@@ -42,7 +43,7 @@ public class TagController {
     }
 
     @PostMapping(value = "/tags")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addTag(@Validated @RequestBody CreateTagDto createTagDto) {
 
@@ -73,7 +74,7 @@ public class TagController {
     }
 
     @PutMapping(value = "/tags/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public TagDto updateTagById(@Validated @RequestBody CreateTagDto tagDto,
                                 @PathVariable @NotNull(message = ExceptionMessages.TAG_NO_ID)
@@ -84,7 +85,7 @@ public class TagController {
     }
 
     @DeleteMapping(value = "/tags/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTagById(@PathVariable @NotNull(message = ExceptionMessages.TAG_NO_ID)
                                   @Positive(message = ExceptionMessages.TAG_INNAPPROPRIATE_ID) Long id) {

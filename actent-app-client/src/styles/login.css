@@ -1,0 +1,27 @@
+.container{
+    width: 80vw;
+    margin: 0 auto;
+}
+.loginForm{
+    width: 40vw;
+    margin: 0 auto;
+}
+.textField{
+    width: 15vw;
+    display: block;
+    margin: 0 auto;
+}
+.fields{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+.loginButton{
+    display: block;
+    width: 10vw;
+    margin: 0 auto;
+}
+.signIn{
+    font-size: 20px;
+    font-weight: bold;
+}

@@ -11,5 +11,4 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
     Optional<Image> findByFilePath(String filePath);
 
-    Optional<Image> findByHash(String hash);
 }

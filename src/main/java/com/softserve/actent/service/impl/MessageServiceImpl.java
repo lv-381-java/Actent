@@ -1,7 +1,7 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.exceptions.validation.MessageValidationException;
 import com.softserve.actent.model.entity.Image;
@@ -50,7 +50,6 @@ public class MessageServiceImpl implements MessageService {
     public Message addImageMessage(Message message) {
         Image image = new Image();
         Message newMessage = new Message();
-        image.setHash(message.getImage().getHash());
         image.setFilePath(message.getImage().getFilePath());
         newMessage.setMessageType(MessageType.IMAGE);
         newMessage.setImage(imageService.add(image));
@@ -65,7 +64,7 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messages = messageRepository.findAll();
         if (messages.isEmpty()) {
 
-            throw new ResourceNotFoundException(
+            throw new DataNotFoundException(
                     ExceptionMessages.MESSAGE_NOT_FOUND,
                     MESSAGE_NOT_FOUND
             );
@@ -82,14 +81,14 @@ public class MessageServiceImpl implements MessageService {
         if (optionalMessage.isPresent()) {
             messageRepository.deleteById(id);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, MESSAGE_NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, MESSAGE_NOT_FOUND);
         }
     }
 
     @Override
     public Message get(Long id) {
         return messageRepository.findById(id).
-                orElseThrow(() -> new ResourceNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, MESSAGE_NOT_FOUND));
+                orElseThrow(() -> new DataNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, MESSAGE_NOT_FOUND));
     }
 
     @Override
@@ -108,7 +107,7 @@ public class MessageServiceImpl implements MessageService {
             newMessage.setMessageType(MessageType.TEXT);
             return messageRepository.save(newMessage);
         } else {
-            throw new ResourceNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, MESSAGE_NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, MESSAGE_NOT_FOUND);
         }
     }
 

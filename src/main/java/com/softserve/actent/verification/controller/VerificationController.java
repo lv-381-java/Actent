@@ -1,34 +1,37 @@
 package com.softserve.actent.verification.controller;
 
+import com.softserve.actent.constant.UrlConstants;
+import com.softserve.actent.verification.dto.ConfirmDto;
+import com.softserve.actent.verification.dto.UserConfirmDto;
 import com.softserve.actent.verification.service.Verification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Validated
-@Controller
+@RestController
+@RequestMapping(UrlConstants.API_V1)
 public class VerificationController {
 
     @Autowired
     private Verification verification;
 
-    @RequestMapping(value = "/confirm", method = RequestMethod.GET)
+    @PostMapping(value = "/confirm")
     @ResponseStatus(HttpStatus.OK)
-    public String confirmEmail(@RequestParam(value = "login")
-                                         String login,
-                               @RequestParam(value = "uuid")
-                                       String uuid){
+    public ConfirmDto confirmEmail(@RequestBody UserConfirmDto dto){
 
-        if(verification.confirmUser(login, uuid)){
-            return "forward:" + "/";
+        System.out.println(dto.getLogin());
+        System.out.println(dto.getUuid());
+
+        ConfirmDto confirmDto = new ConfirmDto();
+
+        if(verification.confirmUser(dto.getLogin().trim(), dto.getUuid().trim())){
+            confirmDto.setVerification("VERIFIED");
         }else {
-            return "forward:" + "/404.html";
+            confirmDto.setVerification("NON_VERIFIED");
         }
+        return confirmDto;
     }
 
 }

@@ -8,5 +8,4 @@ public interface ImageService extends BaseCrudService<Image> {
 
     Image getImageByFilePath(String filePath);
 
-    Image getImageByHash(String hash);
 }

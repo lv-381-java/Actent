@@ -11,8 +11,11 @@ import javax.validation.constraints.Size;
 public class UserLocationDto {
 
     @Size(max = NumberConstants.USER_ADDRESS_MAX_LENGTH, message = StringConstants.USER_LOCATION_LENGHT_RANGE)
-    private String address;
+    private String name;
 
-    @Positive(message = StringConstants.USER_CITY_ID_NEGATIVE_NUMBER)
-    private Long cityId;
+    private Long id;
+
+    private String regionName;
+
+    private String regionCountryName;
 }

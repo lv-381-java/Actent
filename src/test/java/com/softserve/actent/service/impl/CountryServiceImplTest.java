@@ -1,6 +1,6 @@
 package com.softserve.actent.service.impl;
 
-import com.softserve.actent.exceptions.ResourceNotFoundException;
+import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.repository.CountryRepository;
 import com.softserve.actent.service.CountryService;
 import com.softserve.actent.model.entity.Country;
@@ -71,12 +71,12 @@ public class CountryServiceImplTest {
         assertThat(countryService.get(firstId).getName()).isEqualTo(firstCountryName);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testGetNullId() {
         countryService.get(null);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testGetByNotExistedId_orThrowException() {
         countryService.get(notExistedId);
     }
@@ -94,17 +94,17 @@ public class CountryServiceImplTest {
     }
 
     @Test
-    public void testUpdat() {
+    public void testUpdate() {
         when(countryRepository.existsById(secondId)).thenReturn(true);
         assertThat(countryService.update(secondCountry, secondId).getName()).isEqualTo(secondCountryName);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testUpdateByNotExistedId_thenThrowException() {
         countryService.update(firstCountry, notExistedId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testUpdateWhereCountryNull_thenThrowException() {
         countryService.update(null, firstId);
     }
@@ -114,12 +114,12 @@ public class CountryServiceImplTest {
         countryService.delete(firstId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testDeleteByNotExistedId_thenThrowException() {
         countryService.delete(notExistedId);
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = DataNotFoundException.class)
     public void testDeleteByNullId() {
         countryService.delete(null);
     }

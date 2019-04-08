@@ -5,10 +5,14 @@ import com.softserve.actent.constant.StringConstants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -24,10 +28,12 @@ public class EventCreationDto {
             message = StringConstants.DESCRIPTION_SHOULD_BE_BETWEEN_MIN_AND_MAX_VALUE)
     private String description;
 
-    @Min(value = NumberConstants.MIN_VALUE_FOR_START_DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Future(message = StringConstants.START_DATE_CAN_NOT_BE_PAST)
     @NotNull(message = StringConstants.START_DATE_CAN_NOT_BE_NULL)
-    private Long startDate;
+    private LocalDateTime startDate;
 
+    @Min(value = NumberConstants.DURATION_MIN_VALUE, message = StringConstants.DURATION_CAN_NOT_BE_LESS_THAN_TEN_MINUTES)
     @NotNull(message = StringConstants.DURATION_CAN_NOT_BE_NULL)
     @Positive(message = StringConstants.DURATION_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
     private Long duration;

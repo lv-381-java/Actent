@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequestMapping(UrlConstants.API_V1)
+@PreAuthorize("permitAll()")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -42,7 +43,7 @@ public class ReviewController {
     }
 
     @PostMapping(value = "/reviews")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addReview(@ApiIgnore @CurrentUser UserPrincipal currentUser,
                            @Validated @RequestBody CreateReviewDto addReviewDto) {
@@ -74,7 +75,7 @@ public class ReviewController {
     }
 
     @PutMapping(value = "/reviews/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public ReviewDto updateReview(@ApiIgnore @CurrentUser UserPrincipal currentUser,
                                   @Validated @RequestBody CreateReviewDto updateReviewDto,
@@ -91,7 +92,7 @@ public class ReviewController {
     }
 
     @DeleteMapping(value = "/reviews/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserById(@ApiIgnore @CurrentUser UserPrincipal currentUser,
                                @PathVariable

@@ -1,0 +1,19 @@
+.event-container {
+    display: flex;
+    align-self: stretch;
+    flex-direction: column;
+    height: 980px;
+}
+
+.box {
+    box-shadow: 0 2px 5px;
+    border-radius: 1pc;
+}
+
+.box-1 {
+    height: 50%;
+}
+
+.box-2 {
+    height: 50%;
+}
