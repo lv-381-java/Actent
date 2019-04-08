@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import { Grid, Typography, Divider, Button } from '@material-ui/core';
 import Ratings from 'react-ratings-declarative';
 import { addReviewToUser, getUserById } from '../../util/apiUtils';
+import { Redirect } from 'react-router-dom';
 
 export default class ReviewForm extends Component {
     state = {
@@ -60,13 +61,15 @@ export default class ReviewForm extends Component {
             return Promise.reject('Bad text length.');
         }
 
-        return addReviewToUser(
+        let redirect;
+
+        addReviewToUser(
             {
                 score: review.score,
                 text: review.text,
             },
             this.state.target.id,
-        );
+        ).then(alert(`Review successfully added.`));
     };
 
     render() {
@@ -122,7 +125,7 @@ export default class ReviewForm extends Component {
                             <Button
                                 variant='outlined'
                                 style={{ marginTop: 5 }}
-                                onClick={async _ => console.log((await this.submitUserReview(targetId)).data)}
+                                onClick={_ => this.submitUserReview(targetId)}
                             >
                                 Submit review
                             </Button>

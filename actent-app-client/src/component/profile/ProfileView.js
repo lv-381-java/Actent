@@ -76,6 +76,14 @@ export default class ProfileView extends React.Component {
                             {this.props.profileData.login}
                         </p>
                         <p className='styleInput'>
+                            <span className='styleSpan'>Email:</span>
+                            {this.props.profileData.email}
+                        </p>
+                        <p className='styleInput'>
+                            <span className='styleSpan'>Phone:</span>
+                            {this.props.profileData.phone}
+                        </p>
+                        <p className='styleInput'>
                             <span className='styleSpan'>Address:</span>
                             {this.props.address !== null && this.props.address !== undefined
                                 ? `${this.props.profileData.address.name} , ${
@@ -90,10 +98,6 @@ export default class ProfileView extends React.Component {
                         <p className='styleInput'>
                             <span className='styleSpan'>Bio:</span>
                             {this.props.profileData.bio}
-                        </p>
-                        <p className='styleInput'>
-                            <span className='styleSpan'>Interests:</span>
-                            {this.props.profileData.interests}
                         </p>
                     </div>
                 </div>
