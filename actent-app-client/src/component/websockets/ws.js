@@ -1,13 +1,41 @@
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 
-var stompClient = null;
-var count = 0;
+let stompClient = null;
+let count = 0;
+
+function checkTime(time) {
+    if(time < 10){
+        return `0${time}`;
+    }else{
+        return time;
+    }
+}
+
+function getMessageSendDate(time) {
+
+    if(time !== null){
+
+        let date = new Date(time);
+
+        const dateTime = {
+            hours: checkTime(date.getHours()),
+            minutes: checkTime(date.getMinutes()),
+            seconds: checkTime(date.getSeconds())
+        };
+
+        return dateTime;
+
+    }else {
+        return null;
+    }
+
+}
 
 export function showMessageOutput(messageOutput) {
 
-    var messageArea = document.getElementById('messageArea');
-    var messageElement = document.createElement('li');
+    let messageArea = document.getElementById('messageArea');
+    let messageElement = document.createElement('li');
 
     if (count !== null) {
         messageElement.classList.add('chat-message-first');
@@ -16,20 +44,21 @@ export function showMessageOutput(messageOutput) {
         messageElement.classList.add('chat-message');
     }
 
-    var avatarElement = document.createElement('i');
+    let avatarElement = document.createElement('i');
     messageElement.appendChild(avatarElement);
 
-    var usernameElement = document.createElement('span');
-    var usernameText = document.createTextNode(messageOutput.senderFirstName);
+    let usernameElement = document.createElement('span');
+    let usernameText = document.createTextNode(messageOutput.senderFirstName);
     usernameElement.appendChild(usernameText);
     messageElement.appendChild(usernameElement);
 
-    var textElement = document.createElement('p');
-    var messageText = document.createTextNode(messageOutput.messageContent);
+    let textElement = document.createElement('p');
+    let messageText = document.createTextNode(messageOutput.messageContent);
     textElement.appendChild(messageText);
 
-    var timeElement = document.createElement('p');
-    var time = document.createTextNode(messageOutput.sendTime);
+    let timeElement = document.createElement('p');
+    let dateTime = getMessageSendDate(messageOutput.sendTime);
+    let time = document.createTextNode(dateTime.hours + ":" + dateTime.minutes + ":" + dateTime.seconds);
     timeElement.appendChild(time);
 
     messageElement.appendChild(textElement);
