@@ -4,19 +4,30 @@ import Button from '@material-ui/core/Button';
 import {connect, sendMessage, showMessageOutput} from '../websockets/ws';
 import '../../styles/chat.css';
 import axios from 'axios';
+import { getCurrentUser } from '../../util/apiUtils';
 import {API_BASE_URL, API_MESSAGES_URL} from "../../constants/apiConstants";
 
 export default class Chat extends React.Component {
 
     state = {
         chatId: undefined,
-        messages: []
+        messages: [],
+        currentUserId: undefined
     };
 
     constructor(props) {
         super(props);
         this.state.chatId = props.chatId;
+        this.setCurrentUserId();
     }
+
+    setCurrentUserId = () => {
+        getCurrentUser().then(
+            res => {
+                this.setState({currentUserId: res.data.id})
+            }
+        ).catch(error => console.log(error(error)));
+    };
 
     getListMessages = () => {
              axios.get(API_BASE_URL + API_MESSAGES_URL + `/${this.state.chatId}`).then(res => {
@@ -35,12 +46,12 @@ export default class Chat extends React.Component {
     };
 
     handleSendMessage = () => {
-        sendMessage(this.state.chatId);
-    }
+        sendMessage(this.state.chatId, this.state.currentUserId);
+    };
 
     handleConnect = () => {
         connect(this.state.chatId);
-    }
+    };
 
     render() {
 

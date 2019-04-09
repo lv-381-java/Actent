@@ -53,11 +53,12 @@ export function disconnect() {
     console.log('Disconnected')
 }
 
-export function sendMessage(chatId) {
+export function sendMessage(chatId, userId) {
 
     const messageSend = {
-        chatId: chatId,
-        messageContent: document.getElementById('outlined-email-input').value.trim()
+        senderId: userId,
+        messageContent: document.getElementById('outlined-email-input').value.trim(),
+        chatId: chatId
     };
     console.log(messageSend);
     stompClient.send("/chat/message", {},

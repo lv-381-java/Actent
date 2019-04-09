@@ -1,5 +1,6 @@
 package com.softserve.actent.controller.messanger;
 
+import com.softserve.actent.model.dto.chat.ChatTextMessageDto;
 import com.softserve.actent.model.dto.converter.ViewMessageConverter;
 import com.softserve.actent.model.dto.message.CreateTextMessageDto;
 import com.softserve.actent.model.entity.Message;
@@ -28,8 +29,6 @@ public class ChatWebSocketController {
 
     private final MessageService messageService;
 
-    private final ModelMapper modelMapper;
-
     private final ChatService chatService;
 
     private final UserService userService;
@@ -41,20 +40,20 @@ public class ChatWebSocketController {
                                    ModelMapper modelMapper, ChatService chatService, UserService userService, ViewMessageConverter viewMessageConverter) {
         this.sendingOperations = sendingOperations;
         this.messageService = messageService;
-        this.modelMapper = modelMapper;
         this.chatService = chatService;
         this.userService = userService;
         this.viewMessageConverter = viewMessageConverter;
     }
 
     @MessageMapping("/message")
-    public void sendMessage(@Payload CreateTextMessageDto createMessageDto){
+    public void sendMessage(@Payload ChatTextMessageDto chatTextMessageDto){
 
-        Message message = modelMapper.map(createMessageDto, Message.class);
-        message.setSender(userService.get(1L));
-        message.setChat(chatService.getChatById(createMessageDto.getChatId()));
+        Message message = new Message();
+        message.setMessageContent(chatTextMessageDto.getMessageContent());
+        message.setSender(userService.get(chatTextMessageDto.getSenderId()));
+        message.setChat(chatService.getChatById(chatTextMessageDto.getChatId()));
 
-        sendingOperations.convertAndSend(format("/topic/messages/%s", createMessageDto.getChatId()),
+        sendingOperations.convertAndSend(format("/topic/messages/%s", chatTextMessageDto.getChatId()),
                 viewMessageConverter.convertToDto(messageService.add(message)));
     }
 
