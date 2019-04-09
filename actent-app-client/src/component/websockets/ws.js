@@ -1,5 +1,5 @@
 import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
+import {Stomp} from "@stomp/stompjs";
 
 var stompClient = null;
 var count = 0;
@@ -9,10 +9,10 @@ export function showMessageOutput(messageOutput) {
     var messageArea = document.getElementById('messageArea');
     var messageElement = document.createElement('li');
 
-    if(count !== null) {
+    if (count !== null) {
         messageElement.classList.add('chat-message-first');
         count = null;
-    }else{
+    } else {
         messageElement.classList.add('chat-message');
     }
 
@@ -53,11 +53,11 @@ export function disconnect() {
     console.log('Disconnected')
 }
 
-export function sendMessage(chatId, userId) {
+export function sendMessage(chatId, userId, message) {
 
     const messageSend = {
         senderId: userId,
-        messageContent: document.getElementById('outlined-email-input').value.trim(),
+        messageContent: message,
         chatId: chatId
     };
     console.log(messageSend);

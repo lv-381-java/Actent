@@ -12,7 +12,8 @@ export default class Chat extends React.Component {
     state = {
         chatId: undefined,
         messages: [],
-        currentUserId: undefined
+        currentUserId: undefined,
+        message: ''
     };
 
     constructor(props) {
@@ -46,14 +47,30 @@ export default class Chat extends React.Component {
     };
 
     handleSendMessage = () => {
-        sendMessage(this.state.chatId, this.state.currentUserId);
+        sendMessage(this.state.chatId, this.state.currentUserId, this.state.message);
+        this.setState({message: ''});
     };
 
     handleConnect = () => {
         connect(this.state.chatId);
     };
 
+    handleSendImage = () => {
+        console.log('Hello');
+    };
+
+    handleInputValue = event => {
+        this.setState({ message: event.target.value.trim() });
+    };
+
     render() {
+
+        const sendButton =
+            this.state.message.length !== 0 ? (
+                <Button className="FormField__Button" variant="contained" color="primary" onClick={this.handleSendMessage}>
+                    Send message
+                </Button>
+            ) : null;
 
         return (
 
@@ -74,12 +91,14 @@ export default class Chat extends React.Component {
                                 autoComplete=""
                                 margin="normal"
                                 variant="outlined"
+                                onChange={this.handleInputValue}
                             />
                         </div>
 
-                        <Button className="FormField__Button" variant="contained" color="primary" onClick={this.handleSendMessage}>
-                            Send message
+                        <Button className="FormField__Button" variant="contained" color="primary" onClick={this.handleSendImage}>
+                            Image
                         </Button>
+                        { sendButton }
                     </div>
                 </div>
 
