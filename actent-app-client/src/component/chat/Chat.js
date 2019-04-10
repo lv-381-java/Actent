@@ -1,11 +1,13 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {connect, sendMessage, showMessageOutput} from '../websockets/ws';
+import {connect, sendMessage, showMessageOutput, sendImage} from '../websockets/ws';
 import '../../styles/chat.css';
 import axios from 'axios';
 import { getCurrentUser } from '../../util/apiUtils';
 import {API_BASE_URL, API_MESSAGES_URL} from "../../constants/apiConstants";
+import DownloadImage from './DownloadImage';
+import {apiUrl} from "../profile/Profile";
 
 export default class Chat extends React.Component {
 
@@ -13,7 +15,10 @@ export default class Chat extends React.Component {
         chatId: undefined,
         messages: [],
         currentUserId: undefined,
-        message: ''
+        message: '',
+        imageName: '',
+        imageData: {},
+        imageId: undefined,
     };
 
     constructor(props) {
@@ -26,8 +31,9 @@ export default class Chat extends React.Component {
         getCurrentUser().then(
             res => {
                 this.setState({currentUserId: res.data.id})
-            }
-        ).catch(error => console.log(error(error)));
+            }).catch(e => {
+                console.log(e)
+            });
     };
 
     getListMessages = () => {
@@ -46,6 +52,15 @@ export default class Chat extends React.Component {
         this.handleConnect();
     };
 
+    handleSendImage = () => {
+        sendImage(this.state.chatId, this.state.currentUserId, this.state.imageData.filePath);
+        this.setState({
+            imageName: '',
+            imageData: {},
+            imageId: undefined
+        })
+    };
+
     handleSendMessage = () => {
         sendMessage(this.state.chatId, this.state.currentUserId, this.state.message);
         this.setState({message: ''});
@@ -55,19 +70,49 @@ export default class Chat extends React.Component {
         connect(this.state.chatId);
     };
 
-    handleSendImage = () => {
-        console.log('Hello');
-    };
-
     handleInputValue = event => {
         this.setState({ message: event.target.value.trim() });
+    };
+
+    saveImage = () => {
+        const uploadUrl = apiUrl + '/storage/uploadFile/';
+        const requestTimeout = 30000;
+
+        axios
+            .post(uploadUrl, this.state.imageData, {
+                timeout: requestTimeout,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then(response => {
+                this.setState({
+                    imageName: response.data,
+                    imageData: {
+                        filePath: response.data,
+                    },
+                });
+                this.handleSendImage();
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+
+    fetchData = (imageData, imageName) => {
+        this.setState({
+            imageData: imageData,
+            imageName: imageName
+        }, () => {
+            this.saveImage()
+        })
     };
 
     render() {
 
         const sendButton =
             this.state.message.length !== 0 ? (
-                <Button className="FormField__Button" variant="contained" color="primary" onClick={this.handleSendMessage}>
+                <Button className="FormField__Button send" variant="contained" color="primary" onClick={this.handleSendMessage}>
                     Send message
                 </Button>
             ) : null;
@@ -94,11 +139,8 @@ export default class Chat extends React.Component {
                                 onChange={this.handleInputValue}
                             />
                         </div>
-
-                        <Button className="FormField__Button" variant="contained" color="primary" onClick={this.handleSendImage}>
-                            Image
-                        </Button>
                         { sendButton }
+                        <DownloadImage fetchData={this.fetchData}/>
                     </div>
                 </div>
 

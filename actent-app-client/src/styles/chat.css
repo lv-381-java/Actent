@@ -25,6 +25,17 @@
     width: 50vw;
 }
 
+.send {
+    float: right;
+}
+
+.chat-image {
+    display: flex;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 10%;
+}
+
 #chat-page ul {
     list-style-type: none;
     background-color: #FFF;

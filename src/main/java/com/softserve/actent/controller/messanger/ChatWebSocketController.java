@@ -1,12 +1,16 @@
 package com.softserve.actent.controller.messanger;
 
+import com.softserve.actent.model.dto.chat.ChatImageMessageDto;
 import com.softserve.actent.model.dto.chat.ChatTextMessageDto;
 import com.softserve.actent.model.dto.converter.ViewMessageConverter;
+import com.softserve.actent.model.dto.message.CreateImageMessageDto;
 import com.softserve.actent.model.dto.message.CreateTextMessageDto;
+import com.softserve.actent.model.entity.Image;
 import com.softserve.actent.model.entity.Message;
 import com.softserve.actent.security.annotation.CurrentUser;
 import com.softserve.actent.security.model.UserPrincipal;
 import com.softserve.actent.service.ChatService;
+import com.softserve.actent.service.ImageService;
 import com.softserve.actent.service.MessageService;
 import com.softserve.actent.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,14 +39,32 @@ public class ChatWebSocketController {
 
     private final ViewMessageConverter viewMessageConverter;
 
+    private final ImageService imageService;
+
     @Autowired
     public ChatWebSocketController(SimpMessageSendingOperations sendingOperations, MessageService messageService,
-                                   ModelMapper modelMapper, ChatService chatService, UserService userService, ViewMessageConverter viewMessageConverter) {
+                                   ChatService chatService, UserService userService, ViewMessageConverter viewMessageConverter, ImageService imageService) {
         this.sendingOperations = sendingOperations;
         this.messageService = messageService;
         this.chatService = chatService;
         this.userService = userService;
         this.viewMessageConverter = viewMessageConverter;
+        this.imageService = imageService;
+    }
+
+    @MessageMapping("/image")
+    public void sendImage(@Payload ChatImageMessageDto chatImageMessageDto){
+        Image image = new Image();
+        image.setFilePath(chatImageMessageDto.getFilePath());
+        image = imageService.add(image);
+
+        Message message = new Message();
+        message.setImage(image);
+        message.setSender(userService.get(chatImageMessageDto.getSenderId()));
+        message.setChat(chatService.getChatById(chatImageMessageDto.getChatId()));
+
+        sendingOperations.convertAndSend(format("/topic/messages/%s", chatImageMessageDto.getChatId()),
+                viewMessageConverter.convertToDto(messageService.addImageMessage(message)));
     }
 
     @MessageMapping("/message")
