@@ -34,6 +34,45 @@ function getMessageSendDate(time) {
 
 }
 
+export function showMessageOutputPrepend(messageOutput) {
+
+    let messageArea = document.getElementById('messageArea');
+    let messageElement = document.createElement('li');
+
+    messageElement.classList.add('chat-message');
+
+    let avatarElement = document.createElement('i');
+    messageElement.appendChild(avatarElement);
+
+    let usernameElement = document.createElement('span');
+    let usernameText = document.createTextNode(messageOutput.senderFirstName);
+    usernameElement.appendChild(usernameText);
+    messageElement.appendChild(usernameElement);
+
+    if(messageOutput.messageType === 'TEXT'){
+        let textElement = document.createElement('p');
+        let messageText = document.createTextNode(messageOutput.messageContent);
+        textElement.appendChild(messageText);
+        messageElement.appendChild(textElement);
+    }
+
+    if(messageOutput.messageType === 'IMAGE'){
+        let imageElement = document.createElement('img');
+        imageElement.classList.add('chat-image');
+        imageElement.setAttribute("src", `${getImageUrl(messageOutput.imageFilePath)}`);
+        messageElement.appendChild(imageElement);
+    }
+
+    let timeElement = document.createElement('p');
+    let dateTime = getMessageSendDate(messageOutput.sendTime);
+    let time = document.createTextNode(dateTime.hours + ":" + dateTime.minutes + ":" + dateTime.seconds);
+    timeElement.appendChild(time);
+
+    messageElement.appendChild(timeElement);
+    // messageElement.insertAfter(".show-button-first");
+    messageArea.prepend(messageElement);
+}
+
 export function showMessageOutput(messageOutput) {
 
     let messageArea = document.getElementById('messageArea');

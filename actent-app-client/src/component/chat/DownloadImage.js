@@ -6,7 +6,7 @@ import {s3Root} from "../profile/ProfileView";
 import DialogContent from '@material-ui/core/DialogContent';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
-const maxSize = 5242880;
+const maxSize = 1048576;
 
 export default class DownloadImage extends React.Component{
 

@@ -9,6 +9,7 @@ import com.softserve.actent.model.entity.Chat;
 import com.softserve.actent.model.entity.ChatType;
 import com.softserve.actent.model.entity.User;
 import com.softserve.actent.repository.ChatRepository;
+import com.softserve.actent.repository.MessageRepository;
 import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.ChatService;
 import com.softserve.actent.service.UserService;
@@ -22,11 +23,13 @@ public class ChatServiceImpl implements ChatService {
 
     private final ChatRepository chatRepository;
     private final UserService userService;
+    private final MessageRepository messageRepository;
 
     @Autowired
-    public ChatServiceImpl(ChatRepository chatRepository, UserRepository userRepository, UserService userService) {
+    public ChatServiceImpl(ChatRepository chatRepository, UserRepository userRepository, UserService userService, MessageRepository messageRepository) {
         this.chatRepository = chatRepository;
         this.userService = userService;
+        this.messageRepository = messageRepository;
     }
 
     @Transactional
@@ -110,5 +113,16 @@ public class ChatServiceImpl implements ChatService {
             throw new DataNotFoundException(StringConstants.USER_BY_SUCH_ID_IS_NOT_BE_BANNED_IN_THIS_CHAT,
                     ExceptionCode.NOT_FOUND);
         }
+    }
+
+    @Override
+    public Long getCountOfMessages(Long chatId) {
+        if(chatRepository.existsById(chatId)){
+            return messageRepository.countByChatId(chatId);
+        }else{
+            throw new DataNotFoundException(StringConstants.CHAT_ID_SHOULD_BE_POSITIVE,
+                    ExceptionCode.NOT_FOUND);
+        }
+
     }
 }

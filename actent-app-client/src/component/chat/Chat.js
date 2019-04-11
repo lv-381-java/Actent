@@ -1,13 +1,21 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {connect, sendMessage, showMessageOutput, sendImage} from '../websockets/ws';
+import {connect, sendMessage, showMessageOutput, sendImage, showMessageOutputPrepend} from '../websockets/ws';
 import '../../styles/chat.css';
 import axios from 'axios';
-import { getCurrentUser } from '../../util/apiUtils';
-import {API_BASE_URL, API_MESSAGES_URL} from "../../constants/apiConstants";
+import {getCurrentUser} from '../../util/apiUtils';
+import {
+    API_BASE_URL, API_CHAT_COUNT_URL, API_CHAT_URL,
+    API_CURRENT_MESSAGES,
+    API_MESSAGES_URL,
+    API_PAGE_SIZE_20
+} from "../../constants/apiConstants";
 import DownloadImage from './DownloadImage';
 import {apiUrl} from "../profile/Profile";
+import {NotificationContainer, NotificationManager} from "react-notifications";
+
+let bool = true;
 
 export default class Chat extends React.Component {
 
@@ -19,6 +27,8 @@ export default class Chat extends React.Component {
         imageName: '',
         imageData: {},
         imageId: undefined,
+        counterPages: undefined,
+        countMessages: undefined
     };
 
     constructor(props) {
@@ -32,20 +42,39 @@ export default class Chat extends React.Component {
             res => {
                 this.setState({currentUserId: res.data.id})
             }).catch(e => {
-                console.log(e)
-            });
+            console.log(e)
+        });
     };
 
-    getListMessages = () => {
-             axios.get(API_BASE_URL + API_MESSAGES_URL + `/${this.state.chatId}`).then(res => {
-                this.setState({messages: res.data}, () => {
-                    this.state.messages.forEach(msg => showMessageOutput(msg))
+    getPageableMessages = () => {
+
+        axios.get(API_BASE_URL + API_CURRENT_MESSAGES + `/${this.state.chatId}/${this.state.counterPages}/${API_PAGE_SIZE_20}`)
+            .then(res => {
+                this.setState({messages: res.data.concat(this.state.messages)}, () => {
+                    if (bool) {
+                        res.data.forEach(msg => showMessageOutput(msg));
+                        bool = false;
+                    } else {
+                        res.data.reverse().forEach(msg => showMessageOutputPrepend(msg));
+                    }
                 })
+            });
+        this.setState({counterPages: this.state.counterPages - 1});
+    };
+
+    getCountOfMessages = () => {
+        axios.get(API_BASE_URL + API_CHAT_URL + `/${this.state.chatId}` + API_CHAT_COUNT_URL).then(res => {
+            this.setState({countMessages: res.data.countOfMessages}, () => {
+                let pages = Math.ceil(this.state.countMessages / 20) - 1;
+                this.setState({counterPages: pages}, () => {
+                    this.getPageableMessages();
+                });
             })
+        })
     };
 
     componentWillMount() {
-        this.getListMessages();
+        this.getCountOfMessages();
     }
 
     componentDidMount() {
@@ -71,7 +100,7 @@ export default class Chat extends React.Component {
     };
 
     handleInputValue = event => {
-        this.setState({ message: event.target.value.trim() });
+        this.setState({message: event.target.value.trim()});
     };
 
     saveImage = () => {
@@ -108,22 +137,48 @@ export default class Chat extends React.Component {
         })
     };
 
+    delete = (event) => {
+        event.preventDefault();
+        axios.delete(API_BASE_URL + `/textMessages/40`);
+        this.state.messages.forEach(msg => {
+            if(msg.id === 40){
+                let messagesArray = this.state.messages;
+                messagesArray = messagesArray.splice(messagesArray.indexOf(msg), 1);
+                this.setState({messages: messagesArray });
+                return;
+            }
+        })
+    };
+
     render() {
 
         const sendButton =
             this.state.message.length !== 0 ? (
-                <Button className="FormField__Button send" variant="contained" color="primary" onClick={this.handleSendMessage}>
+                <Button className="FormField__Button send" variant="contained" color="primary"
+                        onClick={this.handleSendMessage}>
                     Send message
+                </Button>
+            ) : null;
+
+        const nextButton =
+            this.state.counterPages >= 0 ? (
+                <Button color="primary" className='show-button-first' onClick={this.getPageableMessages}>
+                    Next messages
                 </Button>
             ) : null;
 
         return (
 
             <div id="chat-page">
-
                 <div className="chat-container">
 
-                    <ul id="messageArea" />
+                    {nextButton}
+                    <Button color="primary" className='show-button-first' onClick={this.delete}>
+                        Delete Message
+                    </Button>
+                    <ul id="messageArea">
+
+                    </ul>
 
                     <div className='input'>
                         <div className="FormField">
@@ -139,10 +194,12 @@ export default class Chat extends React.Component {
                                 onChange={this.handleInputValue}
                             />
                         </div>
-                        { sendButton }
+                        {sendButton}
                         <DownloadImage fetchData={this.fetchData}/>
                     </div>
                 </div>
+
+                <NotificationContainer/>
 
             </div>
 

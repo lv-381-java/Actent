@@ -45,6 +45,11 @@
     bottom: 14vh;
 }
 
+.show-button-first {
+    z-index: 100;
+    float: right;
+}
+
 #chat-page ul li {
     line-height: 1.5rem;
     padding: 10px 20px;
