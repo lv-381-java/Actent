@@ -86,6 +86,7 @@ class ShowEvent extends React.Component {
                     spectators={this.state.spectators}
                     eventId={this.state.eventId}
                     eventUserList={this.state.eventUserList}
+                    currentUserId={this.props.currentUserId}
                 />
             </div>
         );

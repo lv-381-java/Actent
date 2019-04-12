@@ -62,11 +62,13 @@ class Spectator extends React.Component {
     }
 
     handleUnAssignedUser = () => {
+        this.props.setUnassigne();
         this.unassigneUser();
         this.handleClose();
     }
 
     handleAssignedUserId = () => {
+        this.props.setIsSpectator();
         this.assigneAsParticipant();
         this.handleClose();
     };

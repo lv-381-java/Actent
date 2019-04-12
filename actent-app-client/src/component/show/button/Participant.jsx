@@ -8,8 +8,9 @@ import Axios from 'axios';
 class Participant extends React.Component {
 
     state = {
+        id: undefined,
         open: false,
-        assigne: false,
+        assigne: false
     };
 
     componentDidMount() {
@@ -24,13 +25,13 @@ class Participant extends React.Component {
         
         Axios.post(`http://localhost:8080/api/v1/eventsUsers`, eventUser).then(eve => {
             this.setState({
-                ...this.state,
+
                 id: eve.data.id,
                 assigne: true,
             });
         }).catch(error => {
             this.setState({
-                ...this.state,
+
                 assigne: true,
             });
             console.log(error);
@@ -40,13 +41,12 @@ class Participant extends React.Component {
     unassigneUser = () => {
         Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${this.state.id}`).then(eve => {
             this.setState({
-                ...this.state,
+
                 assigne: false,
             })
         }
         ).catch(error => {
             this.setState({
-                ...this.state,
                 assigne: false,
             });
             console.log(error);
@@ -68,7 +68,6 @@ class Participant extends React.Component {
                 assigne: true,
             })
         } else {
-            console.log(this.props.assigne)
             this.setState({
                 assigne: false,
             })
@@ -76,11 +75,13 @@ class Participant extends React.Component {
     }
 
     handleUnAssignedUser = () => {
+        this.props.setUnassigne();
         this.unassigneUser();
         this.handleClose();
     }
 
     handleAssignedUserId = () => {
+        this.props.setIsParticipant();
         this.assigneAsParticipant();
         this.handleClose();
     };
