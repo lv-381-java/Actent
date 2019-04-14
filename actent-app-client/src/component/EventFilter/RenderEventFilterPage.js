@@ -87,7 +87,6 @@ export default class RenderEventFilterPage extends React.Component {
                 this.setState({
                     filteredEvents: events,
                     events: [],
-                    events: events,
                     id: res.data['id'],
                     title: res.data['title'],
                     category: res.data['Category.name'],
@@ -148,7 +147,7 @@ export default class RenderEventFilterPage extends React.Component {
                                         title={event.title}
                                         eventId={event.id}
                                         description={event.description}
-                                        city={event.Location.Country.Region.City.name}
+                                        city={event.Location.address}
                                         category={event.Category.name}
                                     />
                                 </div>
