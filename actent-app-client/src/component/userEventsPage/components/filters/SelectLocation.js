@@ -1,9 +1,9 @@
 import React from 'react';
 import { MDBCol } from 'mdbreact';
 
-export default class SelectCity extends React.Component {
+export default class SelectLocation extends React.Component {
   setValue = event => {
-        this.props.setCity(event.target.value);
+        this.props.setLocation(event.target.value);
   };
   render() {
     return (
