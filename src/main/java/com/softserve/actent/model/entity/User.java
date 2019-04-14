@@ -65,7 +65,7 @@ public class User {
 
     @NonNull
     @ManyToOne
-    private City location;
+    private Location location;
 
     @NonNull
     @Length(max = NumberConstants.USER_BIO_MAX_LENGTH)

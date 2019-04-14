@@ -9,6 +9,7 @@ import com.softserve.actent.utils.modelmapper.IModelMapperConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,16 +47,7 @@ public class EventConverter implements IModelMapperConverter<Event, EventDto> {
     }
 
     private LocationForEventDto extractLocation(Event event) {
-
-        CountryForEventDto countryForEventDto = modelMapper.map(event.getAddress().getCity().getRegion().getCountry(), CountryForEventDto.class);
-        RegionForEventDto regionForEventDto = modelMapper.map(event.getAddress().getCity().getRegion(), RegionForEventDto.class);
-        CityForEventDto cityForEventDto = modelMapper.map(event.getAddress().getCity(), CityForEventDto.class);
         LocationForEventDto locationForEventDto = modelMapper.map(event.getAddress(), LocationForEventDto.class);
-
-        regionForEventDto.setCityForEventDto(cityForEventDto);
-        countryForEventDto.setRegionForEventDto(regionForEventDto);
-        locationForEventDto.setCountryForEventDto(countryForEventDto);
-
         return locationForEventDto;
     }
 
