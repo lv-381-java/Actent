@@ -1,90 +1,108 @@
 package com.softserve.actent.service.impl;
 
 import com.softserve.actent.constant.ExceptionMessages;
+import com.softserve.actent.constant.UrlConstants;
 import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Location;
-import com.softserve.actent.repository.CityRepository;
 import com.softserve.actent.repository.LocationRepository;
 import com.softserve.actent.service.LocationService;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LocationServiceImpl implements LocationService {
+    private static final String INPUT = "?input=";
+    private static final String KEY = "&key=";
+    private static final String API_KEY = "AIzaSyCKjqC6ENzXDMbAOIkpbU24N1ULYFEhA9o";
 
     private final LocationRepository locationRepository;
-    private final CityRepository cityRepository;
 
     @Autowired
-    public LocationServiceImpl(LocationRepository locationRepository, CityRepository cityRepository) {
+    public LocationServiceImpl(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
-        this.cityRepository = cityRepository;
     }
 
     @Transactional
     @Override
     public Location add(Location location) {
-        Location newLocation = new Location();
-        newLocation.setAddress(location.getAddress());
-
-        if (cityRepository.existsById(location.getCity().getId())) {
-            newLocation.setCity(location.getCity());
-            return locationRepository.save(newLocation);
-        } else {
-            throw new DataNotFoundException(
-                    ExceptionMessages.CITY_NOT_FOUND,
-                    ExceptionCode.NOT_FOUND);
-        }
-    }
-
-    @Transactional
-    @Override
-    public Location update(Location location, Long id) {
-
-        if (locationRepository.existsById(id)) {
-            Location dbLocation = locationRepository.getOne(id);
-            dbLocation.setAddress(location.getAddress());
-            return locationRepository.save(dbLocation);
-        } else {
-            throw new DataNotFoundException(
-                    ExceptionMessages.LOCATION_NOT_FOUND,
-                    ExceptionCode.NOT_FOUND);
-        }
+        return locationRepository.save(location);
     }
 
     @Override
-    public Location get(Long locationId) {
-        return locationRepository.findById(locationId)
+    public Location get(Long id) {
+        return locationRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException(
                         ExceptionMessages.LOCATION_NOT_FOUND,
                         ExceptionCode.NOT_FOUND));
     }
 
     @Override
-    public List<Location> getAll() {
-        return locationRepository.findAll();
+    public List<Location> getAllAutocomplete(String address) {
+        ArrayList<Location> locations = null;
+        StringBuilder jsonResults = new StringBuilder();
+        getUrl(address, jsonResults);
+        try {
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
+            locations = new ArrayList(predsJsonArray.length());
+            for (int i = 0; i < predsJsonArray.length(); i++) {
+                Location location = new Location();
+                location.setAddress(predsJsonArray.getJSONObject(i).getString("description"));
+                locations.add(location);
+            }
+        } catch (JSONException e) {
+            System.out.println("Error processing JSON results");
+        }
+
+        return locations;
     }
 
-    @Transactional
-    @Override
-    public void delete(Long locationId) {
-        Optional<Location> location = locationRepository.findById(locationId);
-        if ((location.isPresent())) {
-            locationRepository.deleteById(locationId);
-        } else {
-            throw new DataNotFoundException(
-                    ExceptionMessages.LOCATION_NOT_FOUND,
-                    ExceptionCode.NOT_FOUND);
+    private String createPlaceApiUrl(String address) throws UnsupportedEncodingException {
+        StringBuilder placeUrl = new StringBuilder(UrlConstants.PLACES_API);
+        placeUrl.append(UrlConstants.TYPE_AUTOCOMPLETE);
+        placeUrl.append(UrlConstants.OUT_JSON);
+        placeUrl.append(INPUT + URLEncoder.encode(address, "utf8"));
+        placeUrl.append(KEY + API_KEY);
+        return placeUrl.toString();
+    }
+
+    private void getUrl(String address, StringBuilder jsonResults) {
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL(createPlaceApiUrl(address));
+            System.out.println(url);
+            conn = (HttpURLConnection) url.openConnection();
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+            int read;
+            char[] buff = new char[1024];
+            while ((read = in.read(buff)) != -1) {
+                jsonResults.append(buff, 0, read);
+            }
+        } catch (MalformedURLException e) {
+            System.out.println("Error processing API URL");
+        } catch (IOException e) {
+            System.out.println("Error connecting to API");
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
         }
     }
 
-    @Override
-    public List<Location> getAllByCityId(Long cityId) {
-        return locationRepository.findAllByCity_Id(cityId);
-    }
 }
