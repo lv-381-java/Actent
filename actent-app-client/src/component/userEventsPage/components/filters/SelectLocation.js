@@ -11,7 +11,7 @@ export default class SelectLocation extends React.Component {
         <input
           className='form-control form-control-lg'
           type='text'
-          placeholder='name'
+          placeholder='location'
           aria-label='Search'
           onChange={this.setValue}
         />

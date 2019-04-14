@@ -10,7 +10,7 @@ const style = {
 
 export default class UserEventsPage extends React.Component {
     state = {
-        filterCityName: undefined,
+        filterAddress: undefined,
         filterUserType: undefined,
         filterCategory: undefined,
         events: [],
@@ -21,8 +21,8 @@ export default class UserEventsPage extends React.Component {
         this.setState({selectTab: tabId}, () => this.getEvents());
     };
 
-    setCity = cityName => {
-        this.setState({filterCityName: cityName}, () => this.getEvents());
+    setLocation = address => {
+        this.setState({filterAddress: address}, () => this.getEvents());
     };
 
     setUserType = userType => {
@@ -37,16 +37,16 @@ export default class UserEventsPage extends React.Component {
     getEvents() {
         let url = '/eventsUsers/';
         if (this.state.selectTab === 0) {
-            url += `allEvents/${this.props.userId}`;
+            url += `allEvents/1`;
         } else if (this.state.selectTab === 1) {
-            url += `futureEvents/${this.props.userId}`;
+            url += `futureEvents/1`;
         } else if (this.state.selectTab === 2) {
-            url += `pastEvents/${this.props.userId}`;
+            url += `pastEvents/1`;
         }
-        if (this.state.filterCategory || this.state.filterCityName || this.state.filterUserType) {
+        if (this.state.filterCategory || this.state.filterAddress || this.state.filterUserType) {
             url += '?';
-            if (this.state.filterCityName) {
-                url += 'city=' + this.state.filterCityName + '&';
+            if (this.state.filterAddress) {
+                url += 'address=' + this.state.filterAddress + '&';
             }
             if (this.state.filterCategory) {
                 url += 'category=' + this.state.filterCategory + '&';
@@ -77,7 +77,7 @@ export default class UserEventsPage extends React.Component {
             <div style={style}>
                 <div>
                     <PageTitle/>
-                    <MainFilter setCity={this.setCity} setUserType={this.setUserType} setCategory={this.setCategory}/>
+                    <MainFilter setLocation={this.setLocation} setUserType={this.setUserType} setCategory={this.setCategory}/>
                     <TabContainer setSelectTab={this.setSelectTab} selectTab={this.state.selectTab}
                                   events={this.state.events}/>
                 </div>
