@@ -65,6 +65,18 @@ public class LocationServiceImpl implements LocationService {
                         ExceptionCode.NOT_FOUND));
     }
 
+    @Override
+    public Location getByAddress(String address) {
+        if (locationRepository.existsByAddress(address)) {
+            return locationRepository.findByAddress(address);
+        } else {
+            throw new DataNotFoundException(
+                    ExceptionMessages.LOCATION_ADDRESS_NOT_FOUND,
+                    ExceptionCode.NOT_FOUND);
+        }
+
+    }
+
 
     @Override
     public List<Location> getAllAutocomplete(String address) {

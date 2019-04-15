@@ -9,6 +9,8 @@ public interface LocationService {
 
     Location get(Long id);
 
+    Location getByAddress(String address);
+
     List<Location> getAllAutocomplete(String address);
 }
 
