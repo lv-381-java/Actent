@@ -4,6 +4,7 @@ import com.softserve.actent.constant.ExceptionMessages;
 import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Equipment;
+import com.softserve.actent.notification.EmailNotification;
 import com.softserve.actent.repository.EquipmentRepository;
 import com.softserve.actent.repository.EventRepository;
 import com.softserve.actent.repository.UserRepository;
@@ -21,12 +22,14 @@ public class EquipmentServiceImpl implements EquipmentService {
     private final EquipmentRepository equipmentRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final EmailNotification emailNotification;
 
     @Autowired
-    public EquipmentServiceImpl(EquipmentRepository equipmentRepository, EventRepository eventRepository, UserRepository userRepository) {
+    public EquipmentServiceImpl(EquipmentRepository equipmentRepository, EventRepository eventRepository, UserRepository userRepository, EmailNotification emailNotification) {
         this.equipmentRepository = equipmentRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.emailNotification = emailNotification;
     }
 
     @Transactional
@@ -124,6 +127,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         if (optionalEquipment.isPresent()) {
 
             equipmentRepository.deleteById(id);
+            sendNotificationAfterDeleting(optionalEquipment.get());
         } else {
 
             throw new DataNotFoundException(
@@ -146,6 +150,18 @@ public class EquipmentServiceImpl implements EquipmentService {
         } else {
 
             return equipments;
+        }
+    }
+
+    private void sendNotificationAfterDeleting(Equipment equipment){
+
+        if (equipment.getAssignedUser() != null
+                && !equipment.getAssignedUser().getId().equals(equipment.getAssignedEvent().getCreator().getId())){
+
+            String subject = "Actent event: " + equipment.getAssignedEvent().getTitle();
+            String content = "Your equipment: " + equipment.getTitle() + " was deleted";
+            String email = equipment.getAssignedUser().getEmail();
+            emailNotification.sendEmail(email, subject, content);
         }
     }
 }

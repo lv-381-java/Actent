@@ -10,6 +10,7 @@ public class ExceptionMessages {
     public static final String USER_CAN_NOT_ASSIGNED_TWICE = "User can not assigned twice";
     public static final String USER_CAN_NOT_BE_NULL = "User can not be null";
     public static final String EVENT_USER_BY_THIS_ID_IS_NOT_FOUND = "Event user by this id is not found";
+    public static final String ID_CAN_NOT_BE_NULL = "Id can not be null";
 
     public static final String EVENT_BY_THIS_ID_IS_NOT_FOUND = "Event by this id is not found";
     public static final String EVENT_BY_THIS_TITLE_IS_NOT_FOUND = "Event by this title is not found";
