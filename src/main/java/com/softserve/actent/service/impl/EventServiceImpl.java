@@ -18,6 +18,8 @@ import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.ChatService;
 import com.softserve.actent.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -73,8 +75,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findActiveEvents() {
-        return eventRepository.findByStartDateIsGreaterThanEqual(LocalDateTime.now());
+    public Page<Event> findActiveEvents(Pageable pageable) {
+        return eventRepository.findByStartDateIsGreaterThanEqual(LocalDateTime.now(), pageable);
     }
 
     @Override

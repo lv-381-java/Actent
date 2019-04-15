@@ -106,4 +106,8 @@ public class User {
     private Status status;
 
     private String uuid;
+
+    @NonNull
+    @ManyToOne
+    private Subscribe subscribers;
 }

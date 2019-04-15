@@ -14,6 +14,7 @@ import com.softserve.actent.service.MessageService;
 import com.softserve.actent.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -86,8 +87,8 @@ public class MessageController {
     public List<ViewMessageDto> getCurrentMessagesByChatId(@PathVariable @NotNull(message = StringConstants.CHAT_ID_SHOULD_NOT_BE_NULL)
                                                            @Positive(message = StringConstants.CHAT_ID_SHOULD_BE_POSITIVE) Long id,
                                                            Pageable pageable) {
-
-        return viewMessageConverter.convertToDto(messageService.getCurrentMessagesByChatId(id, pageable));
+        System.out.println(pageable);
+        return viewMessageConverter.convertToDto(messageService.getCurrentMessagesByChatId(id, new PageRequest(1,10)));
     }
 
     @GetMapping(value = "/messages/{id}")
@@ -109,7 +110,6 @@ public class MessageController {
         Message message = modelMapper.map(createMessageDto, Message.class);
         message.setSender(userService.get(currentUser.getId()));
         Message message1 = messageService.update(message, id);
-
         message.setChat(chatService.getChatById(createMessageDto.getChatId()));
         return viewMessageConverter.convertToDto(message1);
     }

@@ -4,6 +4,8 @@ import FilterBody from './FilterBody';
 import CardExample from './Cart';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
+import Pagination from 'react-js-pagination';
+import './pagination.css';
 
 const cartStyle = {
     paddingTop: '2rem',
@@ -11,111 +13,177 @@ const cartStyle = {
 
 export default class RenderEventFilterPage extends React.Component {
     state = {
+        filterTitle: '',
+
         categories: [],
+        filterCategories: [],
+
+        filterDateFrom: undefined,
+        filterDateTo: undefined,
+
+        filterCityName: '',
+        showCityName: '',
+
         events: [],
-        id: 0,
-        title: '',
-        description: '',
-        category: '',
-        city: '',
-        filteredEvents: [],
-        categoriesId: [],
-        cityName: '',
-        dateFrom: undefined,
-        dateTo: undefined,
+
+        activePage: 1,
+        totalItems: 0,
+
+        dateButtonColor: 'info',
+        cityButtonColor: 'info',
+        categoryButtonColor: 'info',
     };
 
     componentDidMount() {
         this.getEvents();
+        this.getTottalItems();
         this.getCategories();
     }
 
-    setTitle = title => {
-        console.log(title);
-        this.setState({ title: title }, () => this.eventsFilter());
-        console.log('in title');
-        console.log(this.state.title);
+    isEmptyFilters = () => {
+        return (
+            this.state.filterTitle.length === 0 &&
+            this.state.filterCategories.length === 0 &&
+            this.state.filterDateFrom === undefined &&
+            this.state.filterDateTo === undefined &&
+            this.state.filterCityName.length === 0
+        );
     };
 
     cleanFilter = () => {
-        this.setState({ filteredEvents: [], categoriesId: [] }, () => this.getEvents());
-        console.log('in clean');
+        this.setState(
+            {
+                filterTitle: '',
+                filterCategories: [],
+                filterDateFrom: undefined,
+                filterDateTo: undefined,
+                filterCityName: '',
+                showCityName: '',
+            },
+            () => this.getEvents(),
+        );
+        this.setCityButtonColor('info');
+        this.setDateButtonColor('info');
+        this.setCategoryButtonColor();
     };
 
-    setDateRange = (dateFrom, dateTo) => {
-        this.setState({ dateFrom: dateFrom, dateTo: dateTo }, () => this.eventsFilter());
+    setFilterTitle = title => {
+        this.setState({ filterTitle: title }, () => this.eventsFilter());
     };
 
-    setCity = cityName => {
-        this.setState({ cityName: cityName }, () => this.eventsFilter());
+    addFilterCategorieId = categoriesId => {
+        let filterCategories = this.state.filterCategories;
+        filterCategories.push(categoriesId);
+        this.setState({ filterCategories: filterCategories }, () => this.eventsFilter());
     };
 
-    setCategoriesId = categoriesId => {
-        this.setState({ categoriesId: categoriesId }, () => this.eventsFilter());
+    deleteFilterCategorieId = categoriesId => {
+        let filterCategories = this.state.filterCategories.filter(id => id !== categoriesId);
+        this.setState({ filterCategories: filterCategories }, () => this.eventsFilter());
+    };
+
+    setFilterDateFrom = dateFrom => {
+        this.setState({ filterDateFrom: dateFrom }, () => this.eventsFilter());
+    };
+
+    setFilterDateTo = dateTo => {
+        this.setState({ filterDateTo: dateTo }, () => this.eventsFilter());
+    };
+
+    setFilterCityName = (cityName, keyCode) => {
+        console.log(keyCode);
+        if (keyCode === 13) {
+            this.setState({ filterCityName: cityName, showCityName: cityName, categoryButtonColor: 'success' }, () =>
+                this.eventsFilter(),
+            );
+            this.setCategoryButtonColor();
+        } else {
+            this.setState({ showCityName: cityName });
+        }
+        console.log(this.state.showCityName);
+    };
+
+    setCategoryButtonColor = () => {
+        let filterCategories = this.state.filterCategories;
+        console.log(filterCategories.length);
+        filterCategories.length === 0
+            ? this.setState({ categoryButtonColor: 'info' })
+            : this.setState({ categoryButtonColor: 'success' });
+    };
+
+    setCityButtonColor = () => {
+        this.state.filterCityName === ''
+            ? this.setState({ cityButtonColor: 'info' })
+            : this.setState({ cityButtonColor: 'success' });
+    };
+
+    setDateButtonColor = color => {
+        this.setState({ dateButtonColor: color });
     };
 
     getCategories = () => {
         axios
             .get(`/categories`)
             .then(res => {
-                console.log(res.data);
-                const categories = res.data;
+                let categories = res.data;
                 this.setState({ categories });
             })
             .catch(function(error) {
-                console.log(error);
+                console.error(error);
             });
+    };
+
+    getTottalItems = () => {
+        axios
+            .get(`/events/totalElements`)
+            .then(res => {
+                let totalItems = res.data;
+                this.setState({ totalItems }, () => console.log(this.state.totalItems));
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+    };
+
+    handlePageChange = pageNumber => {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({ activePage: pageNumber }, () => this.getEvents());
     };
 
     eventsFilter = () => {
         const data = {
-            categoriesId: this.state.categoriesId,
-            cityName: this.state.cityName,
-            dateFrom: this.state.dateFrom,
-            dateTo: this.state.dateTo,
-            title: this.state.title,
+            categoriesId: this.state.filterCategories,
+            cityName: this.state.filterCityName,
+            dateFrom: this.state.filterDateFrom,
+            dateTo: this.state.filterDateTo,
+            title: this.state.filterTitle,
         };
-        console.log('filter');
-        console.log(data);
+
         axios
             .post(`/events/filter`, data)
             .then(res => {
-                const events = res.data;
-                console.log(res.data);
-                console.log(this.state.title);
-                console.log('aaaaaaaaaaaaaaaa');
+                let events = res.data;
                 this.setState({
-                    filteredEvents: events,
-                    events: [],
                     events: events,
-                    id: res.data['id'],
-                    title: res.data['title'],
-                    category: res.data['Category.name'],
-                    description: res.data['description'],
                 });
             })
             .catch(function(error) {
-                console.log(error);
+                console.error(error);
             });
-        console.log(data);
     };
 
     getEvents = () => {
+        let page = this.state.activePage - 1;
+        console.log('age');
+        console.log(page);
         axios
-            .get(`/events/all`)
+            .get(`/events/all/${page}/9`)
             .then(res => {
-                const events = res.data;
-                console.log(res.data);
-                this.setState({
-                    events: events,
-                    id: res.data['id'],
-                    title: res.data['title'],
-                    category: res.data['Category.name'],
-                    description: res.data['description'],
-                });
+                let events = res.data;
+                this.setState({ events: events });
             })
             .catch(function(error) {
-                console.log(error);
+                console.error(error);
             });
     };
 
@@ -124,18 +192,29 @@ export default class RenderEventFilterPage extends React.Component {
         return (
             <div>
                 <BrowserRouter>
-                    <Header setTitle={this.setTitle} />
+                    <Header setTitle={this.setFilterTitle} />
                 </BrowserRouter>
                 <div className='container'>
                     <FilterBody
-                        cityName={this.state.cityName}
-                        filteredEvents={this.state.filteredEvents}
+                        isEmptyFilters={this.isEmptyFilters}
                         cleanFilter={this.cleanFilter}
-                        setDateRange={this.setDateRange}
                         categories={this.state.categories}
-                        setCity={this.setCity}
-                        setCategoriesId={this.setCategoriesId}
-                        categoriesId={this.state.categoriesId}
+                        filterCategories={this.state.filterCategories}
+                        addFilterCategorieId={this.addFilterCategorieId}
+                        deleteFilterCategorieId={this.deleteFilterCategorieId}
+                        setFilterDateFrom={this.setFilterDateFrom}
+                        setFilterDateTo={this.setFilterDateTo}
+                        filterCityName={this.state.filterCityName}
+                        showCityName={this.state.showCityName}
+                        setFilterCityName={this.setFilterCityName}
+                        dateFrom={this.state.filterDateFrom}
+                        dateTo={this.state.filterDateTo}
+                        dateButtonColor={this.state.dateButtonColor}
+                        cityButtonColor={this.state.cityButtonColor}
+                        categoryButtonColor={this.state.categoryButtonColor}
+                        setCategoryButtonColor={this.setCategoryButtonColor}
+                        setCityButtonColor={this.setCityButtonColor}
+                        setDateButtonColor={this.setDateButtonColor}
                     />
                     <div className='row'>
                         {events.map(event => {
@@ -154,6 +233,20 @@ export default class RenderEventFilterPage extends React.Component {
                                 </div>
                             );
                         })}
+                    </div>
+                    <div className='row' style={{ margin: 'auto', marginTop: '50px' }}>
+                        <nav aria-label='Page navigation example'>
+                            <Pagination
+                                activePage={this.state.activePage}
+                                itemsCountPerPage={9}
+                                totalItemsCount={this.state.totalItems}
+                                pageRangeDisplayed={5}
+                                onChange={this.handlePageChange}
+                                innerClass={'pagination'}
+                                itemClass={'page-item'}
+                                linkClass={'page-link pagination-border'}
+                            />
+                        </nav>
                     </div>
                 </div>
             </div>

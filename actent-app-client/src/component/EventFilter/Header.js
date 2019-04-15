@@ -1,16 +1,7 @@
 import React from 'react';
-import {
-    MDBNavbar,
-    MDBNavbarBrand,
-    MDBNavbarNav,
-    MDBNavbarToggler,
-    MDBCollapse,
-    MDBNavItem,
-    MDBNavLink,
-    MDBView,
-    MDBMask,
-} from 'mdbreact';
+import { MDBView, MDBMask } from 'mdbreact';
 import HeaderInput from './HeaderInput';
+import './pagination.css';
 
 export default class Header extends React.Component {
     constructor(props) {
@@ -32,7 +23,7 @@ export default class Header extends React.Component {
         return (
             <div>
                 <header>
-                    <MDBView src='https://mdbootstrap.com/img/Photos/Others/img%20(40).jpg'>
+                    <MDBView className='header-height' src='https://mdbootstrap.com/img/Photos/Others/img%20(40).jpg'>
                         <MDBMask overlay='black-strong' className='flex-center flex-column text-white text-center'>
                             <HeaderInput setTitle={this.props.setTitle} />
                         </MDBMask>
