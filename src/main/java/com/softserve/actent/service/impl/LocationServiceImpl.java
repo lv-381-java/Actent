@@ -27,6 +27,7 @@ import java.util.List;
 @Service
 public class LocationServiceImpl implements LocationService {
     private static final String INPUT = "?input=";
+    private static final String ADDRESS = "?address=";
     private static final String KEY = "&key=";
     private static final String API_KEY = "AIzaSyCKjqC6ENzXDMbAOIkpbU24N1ULYFEhA9o";
 
@@ -39,7 +40,20 @@ public class LocationServiceImpl implements LocationService {
 
     @Transactional
     @Override
-    public Location add(Location location) {
+    public Location add(String address) {
+        Location location = new Location();
+        location.setAddress(address);
+        StringBuilder jsonResults = new StringBuilder();
+        getUrl(createGeocodeApiUrl(address), jsonResults);
+        try {
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONArray predsJsonArray = jsonObj.getJSONArray("results");
+            location.setLatitude(predsJsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
+            location.setLongtitude(predsJsonArray.getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
+
+        } catch (JSONException e) {
+            System.out.println("Error processing JSON results");
+        }
         return locationRepository.save(location);
     }
 
@@ -51,11 +65,13 @@ public class LocationServiceImpl implements LocationService {
                         ExceptionCode.NOT_FOUND));
     }
 
+
     @Override
     public List<Location> getAllAutocomplete(String address) {
         ArrayList<Location> locations = null;
         StringBuilder jsonResults = new StringBuilder();
-        getUrl(address, jsonResults);
+        getUrl(createPlaceApiUrl(address), jsonResults);
+
         try {
             JSONObject jsonObj = new JSONObject(jsonResults.toString());
             JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
@@ -72,19 +88,35 @@ public class LocationServiceImpl implements LocationService {
         return locations;
     }
 
-    private String createPlaceApiUrl(String address) throws UnsupportedEncodingException {
+    private String createPlaceApiUrl(String address) {
         StringBuilder placeUrl = new StringBuilder(UrlConstants.PLACES_API);
         placeUrl.append(UrlConstants.TYPE_AUTOCOMPLETE);
         placeUrl.append(UrlConstants.OUT_JSON);
-        placeUrl.append(INPUT + URLEncoder.encode(address, "utf8"));
+        try {
+            placeUrl.append(INPUT + URLEncoder.encode(address, "utf8"));
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("UnsupportedEncodingException");
+        }
         placeUrl.append(KEY + API_KEY);
         return placeUrl.toString();
+    }
+
+    private String createGeocodeApiUrl(String address) {
+        StringBuilder geocodeUrl = new StringBuilder(UrlConstants.GEOCODE_API);
+        geocodeUrl.append(UrlConstants.OUT_JSON);
+        try {
+            geocodeUrl.append(ADDRESS + URLEncoder.encode(address, "utf8"));
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("UnsupportedEncodingException");
+        }
+        geocodeUrl.append(KEY + API_KEY);
+        return geocodeUrl.toString();
     }
 
     private void getUrl(String address, StringBuilder jsonResults) {
         HttpURLConnection conn = null;
         try {
-            URL url = new URL(createPlaceApiUrl(address));
+            URL url = new URL(address);
             System.out.println(url);
             conn = (HttpURLConnection) url.openConnection();
             InputStreamReader in = new InputStreamReader(conn.getInputStream());

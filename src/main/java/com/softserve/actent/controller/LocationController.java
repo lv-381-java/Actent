@@ -5,7 +5,6 @@ import com.softserve.actent.constant.StringConstants;
 import com.softserve.actent.constant.UrlConstants;
 import com.softserve.actent.model.dto.IdDto;
 import com.softserve.actent.model.dto.location.LocationAddressDto;
-import com.softserve.actent.model.dto.location.LocationCreateDto;
 import com.softserve.actent.model.dto.location.LocationDto;
 import com.softserve.actent.model.entity.Location;
 import com.softserve.actent.service.LocationService;
@@ -13,7 +12,6 @@ import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
@@ -48,7 +46,7 @@ public class LocationController {
                                                              @NotBlank(message = StringConstants.EMPTY_LOCATION)
                                                              @Length(min = NumberConstants.LOCATION_MIN_LENGTH,
                                                                      max = NumberConstants.LOCATION_MAX_LENGTH,
-                                                                     message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_3_AND_100_SYMBOLS)
+                                                                     message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS)
                                                                      String address) {
         List<Location> locations = locationService.getAllAutocomplete(address);
         return locations.stream()
@@ -56,12 +54,24 @@ public class LocationController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping
+    @PostMapping(value = "/{address}")
     @ResponseStatus(HttpStatus.CREATED)
-    public IdDto add(@Validated @RequestBody LocationCreateDto locationCreateDto) {
+    public IdDto add(@PathVariable
+                     @NotBlank(message = StringConstants.EMPTY_LOCATION)
+                     @Length(max = NumberConstants.LOCATION_MAX_LENGTH,
+                             message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS)
+                             String address) {
 
-        Location location = locationService.add(modelMapper.map(locationCreateDto, Location.class));
+        Location location = locationService.add(address);
         return new IdDto(location.getId());
     }
 
+    @GetMapping(value = "existed/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public IdDto get(@PathVariable @NotNull(message = StringConstants.LOCATION_MUST_BE_NOT_NULL)
+                     @Positive(message = StringConstants.LOCATION_ID_POSITIVE_AND_GREATER_THAN_ZERO) Long id) {
+
+        IdDto idDto = new IdDto(locationService.get(id).getId().longValue());
+        return idDto;
+    }
 }
