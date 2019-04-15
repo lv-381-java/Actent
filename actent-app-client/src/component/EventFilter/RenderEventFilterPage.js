@@ -14,6 +14,7 @@ const cartStyle = {
 export default class RenderEventFilterPage extends React.Component {
     state = {
         filterTitle: '',
+        showTitleName: '',
 
         categories: [],
         filterCategories: [],
@@ -59,16 +60,25 @@ export default class RenderEventFilterPage extends React.Component {
                 filterDateTo: undefined,
                 filterCityName: '',
                 showCityName: '',
+                showTitleName: '',
+                dateButtonColor: 'info',
+                cityButtonColor: 'info',
+                categoryButtonColor: 'info',
             },
+
             () => this.getEvents(),
         );
-        this.setCityButtonColor('info');
-        this.setDateButtonColor('info');
+        this.setCityButtonColor();
         this.setCategoryButtonColor();
+        this.setDateButtonColor('info');
     };
 
-    setFilterTitle = title => {
-        this.setState({ filterTitle: title }, () => this.eventsFilter());
+    setFilterTitle = (title, keyCode) => {
+        if (keyCode === 13) {
+            this.setState({ filterTitle: title, showTitleName: title }, () => this.eventsFilter());
+        } else {
+            this.setState({ showTitleName: title });
+        }
     };
 
     addFilterCategorieId = categoriesId => {
@@ -93,12 +103,11 @@ export default class RenderEventFilterPage extends React.Component {
     setFilterCityName = (cityName, keyCode) => {
         console.log(keyCode);
         if (keyCode === 13) {
-            this.setState({ filterCityName: cityName, showCityName: cityName, categoryButtonColor: 'success' }, () =>
+            this.setState({ filterCityName: cityName, showCityName: cityName, cityButtonColor: 'success' }, () =>
                 this.eventsFilter(),
             );
-            this.setCategoryButtonColor();
         } else {
-            this.setState({ showCityName: cityName });
+            this.setState({ showCityName: cityName }, () => this.setCityButtonColor());
         }
         console.log(this.state.showCityName);
     };
@@ -106,12 +115,13 @@ export default class RenderEventFilterPage extends React.Component {
     setCategoryButtonColor = () => {
         let filterCategories = this.state.filterCategories;
         console.log(filterCategories.length);
-        filterCategories.length === 0
+        filterCategories.length == 0
             ? this.setState({ categoryButtonColor: 'info' })
             : this.setState({ categoryButtonColor: 'success' });
     };
 
     setCityButtonColor = () => {
+        console.log(this.state.filterCityName);
         this.state.filterCityName === ''
             ? this.setState({ cityButtonColor: 'info' })
             : this.setState({ cityButtonColor: 'success' });
@@ -174,8 +184,6 @@ export default class RenderEventFilterPage extends React.Component {
 
     getEvents = () => {
         let page = this.state.activePage - 1;
-        console.log('age');
-        console.log(page);
         axios
             .get(`/events/all/${page}/9`)
             .then(res => {
@@ -192,7 +200,7 @@ export default class RenderEventFilterPage extends React.Component {
         return (
             <div>
                 <BrowserRouter>
-                    <Header setTitle={this.setFilterTitle} />
+                    <Header setTitle={this.setFilterTitle} showTitleName={this.state.showTitleName} />
                 </BrowserRouter>
                 <div className='container'>
                     <FilterBody

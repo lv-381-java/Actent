@@ -25,7 +25,7 @@ export default class Header extends React.Component {
                 <header>
                     <MDBView className='header-height' src='https://mdbootstrap.com/img/Photos/Others/img%20(40).jpg'>
                         <MDBMask overlay='black-strong' className='flex-center flex-column text-white text-center'>
-                            <HeaderInput setTitle={this.props.setTitle} />
+                            <HeaderInput setTitle={this.props.setTitle} showTitleName={this.props.showTitleName} />
                         </MDBMask>
                     </MDBView>
                 </header>

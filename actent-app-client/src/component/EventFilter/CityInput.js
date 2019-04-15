@@ -15,20 +15,10 @@ export default class CityInput extends React.Component {
         let code = event.keyCode || event.which;
         console.log(code);
         this.props.setCity(event.target.value, code);
-        this.setCollorButton();
     };
 
     setCollorButton = () => {
         this.state.findCity === '' ? this.props.setButtonColor('info') : this.props.setButtonColor('success');
-    };
-
-    enterPressed = event => {
-        let code = event.keyCode || event.which;
-        if (code === 13) {
-            this.props.setCity(this.state.findCity, event.keyCode);
-
-            console.log(this.state.findCity);
-        }
     };
 
     render() {
@@ -40,7 +30,6 @@ export default class CityInput extends React.Component {
             );
         return (
             <MDBCol md='6' style={style}>
-                {console.log(this.state.keyCode)}
                 <input
                     className='form-control form-control-lg'
                     type='text'
