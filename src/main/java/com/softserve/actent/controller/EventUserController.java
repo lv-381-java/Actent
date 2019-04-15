@@ -37,7 +37,10 @@ public class EventUserController {
     private final EventUserFilterConverter filterConverter;
 
     @Autowired
-    public EventUserController(EventUserService eventUserService, EventUserConverter eventUserConverter, UserEventsFilterRepository filterRepository, EventUserFilterConverter filterConverter) {
+    public EventUserController(EventUserService eventUserService,
+                               EventUserConverter eventUserConverter,
+                               UserEventsFilterRepository filterRepository,
+                               EventUserFilterConverter filterConverter) {
         this.eventUserService = eventUserService;
         this.eventsUsersConverter = eventUserConverter;
         this.filterRepository = filterRepository;
