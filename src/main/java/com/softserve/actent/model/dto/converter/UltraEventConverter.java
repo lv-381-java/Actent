@@ -33,27 +33,7 @@ public class UltraEventConverter {
 
     public UltraEventDto convertToDto(Event event, String type) {
 
-        if (type != null && !type.isEmpty()) {
-
-            if (type.equals("minimal")) {
-
-                return getMinimalEventDto(event);
-
-            } else if (type.equals("ostap")) {
-
-                return getOstapDto(event);
-
-            } else if (type.equals("show")) {
-
-                return getShowEventDto(event);
-
-            } else if (type.equals("full")) {
-
-                return getFullEventDto(event);
-            }
-        }
-
-        return getMinimalEventDto(event);
+        return getMethod(type).apply(event);
     }
     public Event convertToEntity(EventCreationDto eventCreationDto) {
 
@@ -62,22 +42,7 @@ public class UltraEventConverter {
 
     public List<UltraEventDto> convertToDtoList(List<Event> events, String type) {
 
-        List<UltraEventDto> ultraEventDtoList = new ArrayList<>();
-
-        if (type != null && !type.isEmpty()) {
-
-            if (type.equals("minimal")) {
-                return getList(events, this::getMinimalEventDto);
-            } else if (type.equals("ostap")) {
-                return getList(events, this::getOstapDto);
-            } else if (type.equals("show")) {
-                return getList(events, this::getShowEventDto);
-            } else if (type.equals("full")) {
-                return getList(events, this::getFullEventDto);
-            }
-        }
-
-        return null;
+        return getList(events, getMethod(type));
     }
 
     private MinimalEventDto getMinimalEventDto(Event event) {
@@ -197,5 +162,23 @@ public class UltraEventConverter {
         }
 
         return ultraEventDtoList;
+    }
+
+    private Function<Event, UltraEventDto> getMethod(String type) {
+
+        if (type != null && !type.isEmpty()) {
+
+            switch (type) {
+                case "minimal":
+                    return this::getMinimalEventDto;
+                case "ostap":
+                    return this::getOstapDto;
+                case "show":
+                    return this::getShowEventDto;
+                case "full":
+                    return this::getFullEventDto;
+            }
+        }
+        return this::getMinimalEventDto;
     }
 }
