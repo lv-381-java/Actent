@@ -8,12 +8,11 @@ import {getCurrentUser} from '../../util/apiUtils';
 import {
     API_BASE_URL, API_CHAT_COUNT_URL, API_CHAT_URL,
     API_CURRENT_MESSAGES,
-    API_MESSAGES_URL,
     API_PAGE_SIZE_20
 } from "../../constants/apiConstants";
 import DownloadImage from './DownloadImage';
-import {apiUrl} from "../profile/Profile";
-import {NotificationContainer, NotificationManager} from "react-notifications";
+import { apiUrl } from "../profile/Profile";
+import { NotificationContainer } from "react-notifications";
 
 let bool = true;
 
@@ -137,15 +136,14 @@ export default class Chat extends React.Component {
         })
     };
 
-    delete = (event) => {
-        event.preventDefault();
-        axios.delete(API_BASE_URL + `/textMessages/40`);
+    //TODO: add this function with its logic into main class (Chat.js) and find the way when delete method has done -> message array - 1 and re-render <li>!!!!!!!!!!!!
+    //remove message from state
+    delete = (messageId) => {
         this.state.messages.forEach(msg => {
-            if(msg.id === 40){
+            if(msg.id === messageId){
                 let messagesArray = this.state.messages;
                 messagesArray = messagesArray.splice(messagesArray.indexOf(msg), 1);
                 this.setState({messages: messagesArray });
-                return;
             }
         })
     };
@@ -170,15 +168,12 @@ export default class Chat extends React.Component {
         return (
 
             <div id="chat-page">
+
                 <div className="chat-container">
 
                     {nextButton}
-                    <Button color="primary" className='show-button-first' onClick={this.delete}>
-                        Delete Message
-                    </Button>
-                    <ul id="messageArea">
-
-                    </ul>
+                    <div id="bool" />
+                    <ul id="messageArea" />
 
                     <div className='input'>
                         <div className="FormField">
@@ -202,7 +197,6 @@ export default class Chat extends React.Component {
                 <NotificationContainer/>
 
             </div>
-
         );
     }
 

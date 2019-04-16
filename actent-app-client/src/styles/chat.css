@@ -50,6 +50,14 @@
     float: right;
 }
 
+#chat-page ul li:hover {
+    background-color: #66707D;
+}
+
+.buttonsActions {
+    display: flex;
+}
+
 #chat-page ul li {
     line-height: 1.5rem;
     padding: 10px 20px;

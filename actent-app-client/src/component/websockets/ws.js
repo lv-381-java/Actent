@@ -2,6 +2,8 @@ import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import React from "react";
 import {getImageUrl} from "../profile/ProfileView";
+import Confirm from '../chat/Confirm';
+import * as ReactDOM from "react-dom";
 
 let stompClient = null;
 let count = 0;
@@ -14,7 +16,7 @@ function checkTime(time) {
     }
 }
 
-function getMessageSendDate(time) {
+export function getMessageSendDate(time) {
 
     if(time !== null){
 
@@ -36,44 +38,16 @@ function getMessageSendDate(time) {
 
 export function showMessageOutputPrepend(messageOutput) {
 
-    let messageArea = document.getElementById('messageArea');
-    let messageElement = document.createElement('li');
-
-    messageElement.classList.add('chat-message');
-
-    let avatarElement = document.createElement('i');
-    messageElement.appendChild(avatarElement);
-
-    let usernameElement = document.createElement('span');
-    let usernameText = document.createTextNode(messageOutput.senderFirstName);
-    usernameElement.appendChild(usernameText);
-    messageElement.appendChild(usernameElement);
-
-    if(messageOutput.messageType === 'TEXT'){
-        let textElement = document.createElement('p');
-        let messageText = document.createTextNode(messageOutput.messageContent);
-        textElement.appendChild(messageText);
-        messageElement.appendChild(textElement);
+    if(messageOutput.delete){
+        deleteMessage(messageOutput.id, messageOutput.senderId);
+        return;
     }
 
-    if(messageOutput.messageType === 'IMAGE'){
-        let imageElement = document.createElement('img');
-        imageElement.classList.add('chat-image');
-        imageElement.setAttribute("src", `${getImageUrl(messageOutput.imageFilePath)}`);
-        messageElement.appendChild(imageElement);
+    if(messageOutput.update){
+        let date = new Date();
+        updateMessage(messageOutput.messageId, date, messageOutput.messageContent);
+        return;
     }
-
-    let timeElement = document.createElement('p');
-    let dateTime = getMessageSendDate(messageOutput.sendTime);
-    let time = document.createTextNode(dateTime.hours + ":" + dateTime.minutes + ":" + dateTime.seconds);
-    timeElement.appendChild(time);
-
-    messageElement.appendChild(timeElement);
-    // messageElement.insertAfter(".show-button-first");
-    messageArea.prepend(messageElement);
-}
-
-export function showMessageOutput(messageOutput) {
 
     let messageArea = document.getElementById('messageArea');
     let messageElement = document.createElement('li');
@@ -84,6 +58,7 @@ export function showMessageOutput(messageOutput) {
     } else {
         messageElement.classList.add('chat-message');
     }
+    messageElement.setAttribute("id","msg_" + messageOutput.id + "sender_" + messageOutput.senderId);
 
     let avatarElement = document.createElement('i');
     messageElement.appendChild(avatarElement);
@@ -95,6 +70,8 @@ export function showMessageOutput(messageOutput) {
 
     if(messageOutput.messageType === 'TEXT'){
         let textElement = document.createElement('p');
+        textElement.classList.add('textField');
+        textElement.setAttribute("id", `textField_${messageOutput.id}`);
         let messageText = document.createTextNode(messageOutput.messageContent);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
@@ -111,8 +88,119 @@ export function showMessageOutput(messageOutput) {
     let dateTime = getMessageSendDate(messageOutput.sendTime);
     let time = document.createTextNode(dateTime.hours + ":" + dateTime.minutes + ":" + dateTime.seconds);
     timeElement.appendChild(time);
-
     messageElement.appendChild(timeElement);
+
+    let editTimeElement = document.createElement('p');
+    editTimeElement.classList.add('editTime');
+    editTimeElement.setAttribute("id", `editTime_${messageOutput.id}`);
+
+    if(messageOutput.lastEditTime != null){
+        if(messageOutput.messageType === 'TEXT'){
+            let editTime = getMessageSendDate(messageOutput.lastEditTime);
+            let editTimeP = document.createTextNode("Edited at: " + editTime.hours + ":" + editTime.minutes + ":" + editTime.seconds);
+            editTimeElement.appendChild(editTimeP);
+        }
+    }
+
+    messageElement.appendChild(editTimeElement);
+
+    messageElement.onclick = function(){
+        let t = new Date().getTime();
+
+        ReactDOM.render(<Confirm
+                key={t} messageId={this.id.slice(4,6)}
+                senderId={this.id.slice(13, 15)}
+                open={true}
+                chatId={messageOutput.chatId}
+            />,
+            document.getElementById("bool"));
+
+    };
+
+    messageArea.prepend(messageElement);
+}
+
+export function showMessageOutput(messageOutput) {
+
+    if(messageOutput.delete){
+        deleteMessage(messageOutput.id, messageOutput.senderId);
+        return;
+    }
+
+    if(messageOutput.update){
+        let date = new Date();
+        updateMessage(messageOutput.messageId, date, messageOutput.messageContent);
+        return;
+    }
+
+    let messageArea = document.getElementById('messageArea');
+    let messageElement = document.createElement('li');
+
+    if (count !== null) {
+        messageElement.classList.add('chat-message-first');
+        count = null;
+    } else {
+        messageElement.classList.add('chat-message');
+    }
+    messageElement.setAttribute("id","msg_" + messageOutput.id + "sender_" + messageOutput.senderId);
+
+    let avatarElement = document.createElement('i');
+    messageElement.appendChild(avatarElement);
+
+    let usernameElement = document.createElement('span');
+    let usernameText = document.createTextNode(messageOutput.senderFirstName);
+    usernameElement.appendChild(usernameText);
+    messageElement.appendChild(usernameElement);
+
+    if(messageOutput.messageType === 'TEXT'){
+        let textElement = document.createElement('p');
+        textElement.classList.add('textField');
+        textElement.setAttribute("id", `textField_${messageOutput.id}`);
+        let messageText = document.createTextNode(messageOutput.messageContent);
+        textElement.appendChild(messageText);
+        messageElement.appendChild(textElement);
+    }
+
+    if(messageOutput.messageType === 'IMAGE'){
+        let imageElement = document.createElement('img');
+        imageElement.classList.add('chat-image');
+        imageElement.setAttribute("src", `${getImageUrl(messageOutput.imageFilePath)}`);
+        messageElement.appendChild(imageElement);
+    }
+
+    let timeElement = document.createElement('p');
+    let dateTime = getMessageSendDate(messageOutput.sendTime);
+    let time = document.createTextNode(dateTime.hours + ":" + dateTime.minutes + ":" + dateTime.seconds);
+    timeElement.appendChild(time);
+    messageElement.appendChild(timeElement);
+
+    let editTimeElement = document.createElement('p');
+    editTimeElement.classList.add('editTime');
+    editTimeElement.setAttribute("id", `editTime_${messageOutput.id}`);
+
+    if(messageOutput.lastEditTime != null){
+        if(messageOutput.messageType === 'TEXT'){
+            let editTime = getMessageSendDate(messageOutput.lastEditTime);
+            let editTimeP = document.createTextNode("Edited at: " + editTime.hours + ":" + editTime.minutes + ":" + editTime.seconds);
+            editTimeElement.appendChild(editTimeP);
+        }
+    }
+
+    messageElement.appendChild(editTimeElement);
+
+    messageElement.onclick = function(){
+        let t = new Date().getTime();
+
+        ReactDOM.render(<Confirm
+                key={t} messageId={this.id.slice(4,6)}
+                senderId={this.id.slice(13, 15)}
+                open={true}
+                chatId={messageOutput.chatId}
+            />,
+            document.getElementById("bool"));
+
+    };
+
     messageArea.appendChild(messageElement);
 }
 
@@ -122,7 +210,6 @@ export function connect(chatId) {
     stompClient.connect({}, frame => {
         console.log('Connected ' + frame);
         stompClient.subscribe(`/topic/messages/${chatId}`, messageOutput => {
-            console.log(messageOutput.body);
             showMessageOutput(JSON.parse(messageOutput.body));
         });
     });
@@ -155,4 +242,34 @@ export function sendImage(chatId, senderId, filePath){
     console.log(image);
     stompClient.send("/chat/image", {},
         JSON.stringify(image));
+}
+
+export function deleteURL(messageId, senderId){
+    const deleteMes = {
+        messageId: messageId,
+        senderId: senderId,
+    };
+    stompClient.send(`/chat/message/delete`, {}, JSON.stringify(deleteMes));
+}
+
+function deleteMessage(messageId, senderId){
+    let messageArea = document.getElementById('messageArea');
+    let message = document.getElementById(`msg_${messageId}sender_${senderId}`);
+    messageArea.removeChild(message);
+}
+
+export function updateURL(chatId, messageContent, senderId, messageId){
+    const updateMes = {
+        chatId: chatId,
+        messageContent: messageContent,
+        senderId: senderId,
+        messageId: messageId,
+    };
+    stompClient.send("/chat/message/update", {}, JSON.stringify(updateMes));
+}
+
+function updateMessage(messageId, date, editMessage){
+    document.getElementById(`textField_${messageId}`).textContent = editMessage;
+    let time = getMessageSendDate(date);
+    document.getElementById(`editTime_${messageId}`).textContent = "Edited at: " + time.hours + ":" + time.minutes + ":" + time.seconds;
 }

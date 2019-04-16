@@ -1,7 +1,7 @@
 package com.softserve.actent.controller.messanger;
 
-import com.softserve.actent.model.dto.chat.ChatImageMessageDto;
-import com.softserve.actent.model.dto.chat.ChatTextMessageDto;
+import com.softserve.actent.constant.StringConstants;
+import com.softserve.actent.model.dto.chat.*;
 import com.softserve.actent.model.dto.converter.ViewMessageConverter;
 import com.softserve.actent.model.dto.message.CreateImageMessageDto;
 import com.softserve.actent.model.dto.message.CreateTextMessageDto;
@@ -16,12 +16,19 @@ import com.softserve.actent.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 import static java.lang.String.format;
 
@@ -41,15 +48,18 @@ public class ChatWebSocketController {
 
     private final ImageService imageService;
 
+    private final ModelMapper modelMapper;
+
     @Autowired
     public ChatWebSocketController(SimpMessageSendingOperations sendingOperations, MessageService messageService,
-                                   ChatService chatService, UserService userService, ViewMessageConverter viewMessageConverter, ImageService imageService) {
+                                   ChatService chatService, UserService userService, ViewMessageConverter viewMessageConverter, ImageService imageService, ModelMapper modelMapper) {
         this.sendingOperations = sendingOperations;
         this.messageService = messageService;
         this.chatService = chatService;
         this.userService = userService;
         this.viewMessageConverter = viewMessageConverter;
         this.imageService = imageService;
+        this.modelMapper = modelMapper;
     }
 
     @MessageMapping("/image")
@@ -77,6 +87,42 @@ public class ChatWebSocketController {
 
         sendingOperations.convertAndSend(format("/topic/messages/%s", chatTextMessageDto.getChatId()),
                 viewMessageConverter.convertToDto(messageService.add(message)));
+    }
+
+    @MessageMapping(value = "/message/delete")
+    public void deleteMessageById(@Payload DeleteFromDto deleteFromDto) {
+
+        Message message = messageService.get(deleteFromDto.getMessageId());
+
+        DeleteMessageDto deleteMessageDto = new DeleteMessageDto();
+        deleteMessageDto.setId(message.getId());
+        deleteMessageDto.setSenderId(message.getSender().getId());
+        deleteMessageDto.setDelete("TRUE");
+
+        messageService.delete(deleteFromDto.getMessageId());
+
+        sendingOperations.convertAndSend(format("/topic/messages/%s", message.getChat().getId()),
+                deleteMessageDto);
+    }
+
+    @MessageMapping(value = "/message/update")
+    public void updateMessage(@Payload EditFromDto editFromDto){
+
+        Message message = new Message();
+        message.setChat(chatService.getChatById(editFromDto.getChatId()));
+        message.setMessageContent(editFromDto.getMessageContent());
+        message.setSender(userService.get(editFromDto.getSenderId()));
+
+        Message editMessage = messageService.update(message, editFromDto.getMessageId());
+
+        EditMessageDto editMessageDto = new EditMessageDto();
+        editMessageDto.setChatId(editMessage.getChat().getId());
+        editMessageDto.setMessageContent(editMessage.getMessageContent());
+        editMessageDto.setMessageId(editMessage.getId());
+        editMessageDto.setSenderId(editMessage.getSender().getId());
+        editMessageDto.setUpdate("UPDATE");
+
+        sendingOperations.convertAndSend(format("/topic/messages/%s", editMessage.getChat().getId()), editMessageDto);
     }
 
 }
