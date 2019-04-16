@@ -38,13 +38,15 @@ export default class App extends React.Component {
     };
 
     render() {
+        console.log(this.state.currentUserId)
         return (
             <div>
                 <Menu />
                 <Switch>
                     <Route path='/auth' component={SignInUp} />
-                    <Route path='/show/:id' component={ShowEvent} />
-                    <Route path='/show' render={() => <ShowEvent />} />
+                    <Route path='/show/:id'  render={props => <ShowEvent {...props} currentUserId={this.state.currentUserId} />} />
+                    {/* <Route path='/show/:id' component={ShowEvent } /> */}
+                    <Route path='/show' render={() => <ShowEvent currentUserId={this.state.currentUserId}/>} />
                     <Route
                         path='/profile'
                         render={
