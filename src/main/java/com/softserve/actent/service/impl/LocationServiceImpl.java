@@ -29,7 +29,7 @@ public class LocationServiceImpl implements LocationService {
     private static final String INPUT = "?input=";
     private static final String ADDRESS = "?address=";
     private static final String KEY = "&key=";
-    private static final String API_KEY = "AIzaSyCKjqC6ENzXDMbAOIkpbU24N1ULYFEhA9o";
+    private static final String API_KEY = "";
 
     private final LocationRepository locationRepository;
 
