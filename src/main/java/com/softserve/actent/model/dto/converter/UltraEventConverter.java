@@ -142,7 +142,7 @@ public class UltraEventConverter {
 
     private LocationForEventDto getLocation(Location location) {
 
-        return null;
+        return modelMapper.map(location, LocationForEventDto.class);
     }
     private CategoryForEventDto getCategory(Category category) {
 
