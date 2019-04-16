@@ -66,15 +66,13 @@ public class LocationController {
         return new IdDto(location.getId());
     }
 
-    @GetMapping(value = "address/{address}")
+    @GetMapping(value = "byAddress/{address}")
     @ResponseStatus(HttpStatus.OK)
     public IdDto getByAddress(@PathVariable
                               @NotBlank(message = StringConstants.EMPTY_LOCATION)
                               @Length(max = NumberConstants.LOCATION_MAX_LENGTH,
                                       message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS)
                                       String address) {
-
-        IdDto idDto = new IdDto(locationService.getByAddress(address).getId().longValue());
-        return idDto;
+        return  new IdDto(locationService.getByAddress(address).getId());
     }
 }
