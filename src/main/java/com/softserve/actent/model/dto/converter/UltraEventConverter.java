@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +33,7 @@ public class UltraEventConverter {
 
     public UltraEventDto convertToDto(Event event, String type) {
 
-        if (type != null && !type.isBlank()) {
+        if (type != null && !type.isEmpty()) {
 
             if (type.equals("minimal")) {
 
@@ -63,43 +64,21 @@ public class UltraEventConverter {
 
         List<UltraEventDto> ultraEventDtoList = new ArrayList<>();
 
-        if (type != null && !type.isBlank()) {
+        if (type != null && !type.isEmpty()) {
 
             if (type.equals("minimal")) {
-
-                for (int i = 0; i < events.size(); i++) {
-                    ultraEventDtoList.add(getMinimalEventDto(events.get(i)));
-                }
-                return ultraEventDtoList;
-
+                return getList(events, this::getMinimalEventDto);
             } else if (type.equals("ostap")) {
-
-                for (int i = 0; i < events.size(); i++) {
-                    ultraEventDtoList.add(getOstapDto(events.get(i)));
-                }
-                return ultraEventDtoList;
-
+                return getList(events, this::getOstapDto);
             } else if (type.equals("show")) {
-
-                for (int i = 0; i < events.size(); i++) {
-                    ultraEventDtoList.add(getShowEventDto(events.get(i)));
-                }
-                return ultraEventDtoList;
-
+                return getList(events, this::getShowEventDto);
             } else if (type.equals("full")) {
-
-                for (int i = 0; i < events.size(); i++) {
-                    ultraEventDtoList.add(getFullEventDto(events.get(i)));
-                }
-                return ultraEventDtoList;
-
+                return getList(events, this::getFullEventDto);
             }
         }
 
         return null;
     }
-
-
 
     private MinimalEventDto getMinimalEventDto(Event event) {
 
@@ -137,7 +116,6 @@ public class UltraEventConverter {
 
         return eventFullDto;
     }
-
 
 
     private LocationForEventDto getLocation(Location location) {
@@ -210,4 +188,14 @@ public class UltraEventConverter {
         }
     }
 
+    private List<UltraEventDto> getList(List<Event> events, Function<Event, UltraEventDto> function) {
+
+        List<UltraEventDto> ultraEventDtoList = new ArrayList<>();
+
+        for (Event event : events) {
+            ultraEventDtoList.add(function.apply(event));
+        }
+
+        return ultraEventDtoList;
+    }
 }
