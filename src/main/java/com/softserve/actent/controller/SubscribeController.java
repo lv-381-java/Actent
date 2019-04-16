@@ -3,16 +3,9 @@ package com.softserve.actent.controller;
 import com.softserve.actent.constant.UrlConstants;
 import com.softserve.actent.model.dto.IdDto;
 import com.softserve.actent.model.dto.SubscribeDto;
-import com.softserve.actent.model.dto.message.CreateImageMessageDto;
-import com.softserve.actent.model.dto.message.ViewMessageDto;
-import com.softserve.actent.model.entity.City;
-import com.softserve.actent.model.entity.Message;
 import com.softserve.actent.model.entity.Subscribe;
-import com.softserve.actent.repository.CityRepository;
-import com.softserve.actent.repository.SubscribeRepository;
 import com.softserve.actent.security.annotation.CurrentUser;
 import com.softserve.actent.security.model.UserPrincipal;
-import com.softserve.actent.service.CityService;
 import com.softserve.actent.service.SubscribeService;
 import com.softserve.actent.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -29,15 +22,13 @@ public class SubscribeController {
 
     private final ModelMapper modelMapper;
     private final UserService userService;
-    private final CityRepository cityRepository;
     private final SubscribeService subscribeService;
 
 
     @Autowired
-    public SubscribeController(ModelMapper modelMapper, SubscribeService subscribeService, UserService userService, CityRepository cityRepository) {
+    public SubscribeController(ModelMapper modelMapper, SubscribeService subscribeService, UserService userService) {
         this.modelMapper = modelMapper;
         this.userService = userService;
-        this.cityRepository = cityRepository;
         this.subscribeService = subscribeService;
     }
 

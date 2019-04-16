@@ -54,7 +54,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     public void checkSubscribers(Event event) {
 
         String category = event.getCategory().getName();
-        String city = event.getAddress().getCity().getName();
+        String city = event.getAddress().getAddress();
         System.out.println(category + city);
         List<Subscribe> subscribes = subscribeRepository.findAllByCategoryAndCity(category, city);
 

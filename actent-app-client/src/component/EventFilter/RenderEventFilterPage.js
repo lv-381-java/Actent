@@ -115,7 +115,7 @@ export default class RenderEventFilterPage extends React.Component {
     setCategoryButtonColor = () => {
         let filterCategories = this.state.filterCategories;
         console.log(filterCategories.length);
-        filterCategories.length == 0
+        filterCategories.length === 0
             ? this.setState({ categoryButtonColor: 'info' })
             : this.setState({ categoryButtonColor: 'success' });
     };
@@ -163,7 +163,7 @@ export default class RenderEventFilterPage extends React.Component {
     eventsFilter = () => {
         const data = {
             categoriesId: this.state.filterCategories,
-            cityName: this.state.filterCityName,
+            locationAddress: this.state.filterCityName,
             dateFrom: this.state.filterDateFrom,
             dateTo: this.state.filterDateTo,
             title: this.state.filterTitle,
@@ -187,6 +187,7 @@ export default class RenderEventFilterPage extends React.Component {
         axios
             .get(`/events/all/${page}/9`)
             .then(res => {
+                console.log(res.data);
                 let events = res.data;
                 this.setState({ events: events });
             })
@@ -235,7 +236,7 @@ export default class RenderEventFilterPage extends React.Component {
                                         title={event.title}
                                         eventId={event.id}
                                         description={event.description}
-                                        city={event.Location.Country.Region.City.name}
+                                        city={event.Location.address}
                                         category={event.Category.name}
                                     />
                                 </div>
