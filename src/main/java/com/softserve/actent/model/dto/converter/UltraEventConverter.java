@@ -27,48 +27,38 @@ public class UltraEventConverter {
 
     @Autowired
     public UltraEventConverter(ModelMapper modelMapper) {
-
         this.modelMapper = modelMapper;
     }
 
     public UltraEventDto convertToDto(Event event, String type) {
-
         return getMethod(type).apply(event);
     }
     public Event convertToEntity(EventCreationDto eventCreationDto) {
-
         return extractEvent(eventCreationDto);
     }
 
     public List<UltraEventDto> convertToDtoList(List<Event> events, String type) {
-
         return getList(events, getMethod(type));
     }
 
     private MinimalEventDto getMinimalEventDto(Event event) {
-
         return modelMapper.map(event, MinimalEventDto.class);
     }
     private EventOstapDto getOstapDto(Event event) {
-
         EventOstapDto eventOstapDto = modelMapper.map(event, EventOstapDto.class);
         eventOstapDto.setLocationForEventDto(getLocation(event.getAddress()));
         eventOstapDto.setCategoryForEventDto(getCategory(event.getCategory()));
-
         return eventOstapDto;
     }
     private ShowEventDto getShowEventDto(Event event) {
-
         ShowEventDto showEventDto = modelMapper.map(event, ShowEventDto.class);
         showEventDto.setLocationForEventDto(getLocation(event.getAddress()));
         showEventDto.setCategoryForEventDto(getCategory(event.getCategory()));
         showEventDto.setChatForEventDto(getChat(event.getChat()));
         showEventDto.setUserForEventDto(getCreator(event.getCreator()));
-
         return showEventDto;
     }
     private EventFullDto getFullEventDto(Event event) {
-
         EventFullDto eventFullDto = modelMapper.map(event, EventFullDto.class);
         eventFullDto.setLocationForEventDto(getLocation(event.getAddress()));
         eventFullDto.setCategoryForEventDto(getCategory(event.getCategory()));
@@ -78,33 +68,26 @@ public class UltraEventConverter {
         eventFullDto.setEventForEventUserDtoList(getEventsUsers(event));
         // todo: add tags
         // todo: add reviews
-
         return eventFullDto;
     }
 
 
     private LocationForEventDto getLocation(Location location) {
-
         return modelMapper.map(location, LocationForEventDto.class);
     }
     private CategoryForEventDto getCategory(Category category) {
-
         return modelMapper.map(category, CategoryForEventDto.class);
     }
     private ChatForEventDto getChat(Chat chat) {
-
         return modelMapper.map(chat, ChatForEventDto.class);
     }
     private UserForEventDto getCreator(User user) {
-
         return modelMapper.map(user, UserForEventDto.class);
     }
     private List<EquipmentDto> getEquipmentsIfTheyAre(Event event) {
-
         if (event.getEquipments() == null) {
             return null;
         }
-
         return event.getEquipments().stream()
                 .map(equipment -> modelMapper.map(equipment, EquipmentDto.class))
                 .collect(Collectors.toList());
@@ -112,38 +95,32 @@ public class UltraEventConverter {
     private List<EventUserForEventDto> getEventsUsers(Event event) {
 
         List<EventUser> eventUserList = event.getEventUserList();
-
         if (eventUserList == null) {
             return null;
         }
 
-        List<EventUserForEventDto> eventUserForEvenDtos = new ArrayList<>(eventUserList.size());
-
+        List<EventUserForEventDto> eventUserForEvenDtoList = new ArrayList<>(eventUserList.size());
         for (EventUser eventUser : eventUserList) {
-            eventUserForEvenDtos.add(getEventUserForEventDto(eventUser));
+            eventUserForEvenDtoList.add(getEventUserForEventDto(eventUser));
         }
 
-        return eventUserForEvenDtos;
+        return eventUserForEvenDtoList;
     }
     private EventUserForEventDto getEventUserForEventDto(EventUser eventUser) {
-
         EventUserForEventDto eventUserForEvenDto = new EventUserForEventDto();
         eventUserForEvenDto.setId(eventUser.getId());
         eventUserForEvenDto.setUserForEventDto(modelMapper.map(eventUser.getUser(), UserForEventDto.class));
         eventUserForEvenDto.setEventUserType(eventUser.getType());
-
         return eventUserForEvenDto;
     }
 
 
     private Event extractEvent(EventCreationDto eventCreationDto) {
-
         Event event = modelMapper.map(eventCreationDto, Event.class);
         event.setAccessType(AccessType.valueOf(eventCreationDto.getAccessType().toUpperCase()));
         Location location = new Location();
         location.setId(eventCreationDto.getLocationId());
         event.setAddress(location);
-
         return event;
     }
 
@@ -154,20 +131,16 @@ public class UltraEventConverter {
     }
 
     private List<UltraEventDto> getList(List<Event> events, Function<Event, UltraEventDto> function) {
-
         List<UltraEventDto> ultraEventDtoList = new ArrayList<>();
-
         for (Event event : events) {
             ultraEventDtoList.add(function.apply(event));
         }
-
         return ultraEventDtoList;
     }
 
     private Function<Event, UltraEventDto> getMethod(String type) {
 
         if (type != null && !type.isEmpty()) {
-
             switch (type) {
                 case "minimal":
                     return this::getMinimalEventDto;
