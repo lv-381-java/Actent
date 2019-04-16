@@ -11,6 +11,8 @@ public class ExceptionMessages {
     public static final String USER_CAN_NOT_BE_NULL = "User can not be null";
     public static final String EVENT_USER_BY_THIS_ID_IS_NOT_FOUND = "Event user by this id is not found";
     public static final String ID_CAN_NOT_BE_NULL = "Id can not be null";
+    public static final String EVENT_LIST_IS_NULL = "Event list is null.";
+    public static final String LOCATION_CAN_NO_BE_NULL = "Location can not be null.";
 
     public static final String EVENT_BY_THIS_ID_IS_NOT_FOUND = "Event by this id is not found";
     public static final String EVENT_BY_THIS_TITLE_IS_NOT_FOUND = "Event by this title is not found";
@@ -52,7 +54,7 @@ public class ExceptionMessages {
 
     public static final String CHAT_BY_THIS_ID_IS_NOT_FOUND = "Chat by this id is not found";
     public static final String ACTIVE_BY_THIS_TYPE_IS_NOT_FOUND = "While adding chat to active. Active by this type is not found";
-  
+
     public static final String YOU_CAN_NOT_CHANGE_THIS_MESSAGE = "You can't change this message";
     public static final String MESSAGE_NOT_FOUND = "Message not found";
 
@@ -65,7 +67,7 @@ public class ExceptionMessages {
     public static final String REGION_NOT_FOUND = "Region with this id not found";
     public static final String CITY_NOT_FOUND = "City with this id not found";
     public static final String LOCATION_NOT_FOUND = "Location with this id not found";
-  
+
     public static final String COUNTRY_ALREADY_EXIST = "Country with this name already exist in base";
     public static final String REGION_ALREADY_EXIST = "Region with this name in this country already exist in base";
     public static final String CITY_ALREADY_EXIST = "City with this name in this region already exist in base";

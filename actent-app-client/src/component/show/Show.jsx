@@ -68,6 +68,9 @@ class Show extends React.Component {
     render() {
         console.log('render ', this.state.userId)
         console.log('render ', this.state.assID)
+        console.log('assige method', this.isAssigne())
+        console.log('isPart', this.state.isParticipant)
+        console.log('isSpec', this.state.isSpectator)
         return(
             <div className='container-fluid'>
                 <div className='row'>
