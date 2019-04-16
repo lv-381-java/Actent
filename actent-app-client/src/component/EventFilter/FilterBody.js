@@ -7,16 +7,11 @@ import CategoryList from './CategoryList';
 export default class FilterBody extends Component {
     state = {
         collapseID: '',
-        filteredEvents: [],
-        dateButtonColor: 'info',
-        cityButtonColor: 'info',
-        categoryButtonColor: 'info',
     };
 
     toggleCollapse = collapseID => () => {
-        this.setState(prevState => ({
-            collapseID: prevState.collapseID !== collapseID ? collapseID : '',
-        }));
+        console.log(collapseID);
+        this.props.collapseID === collapseID ? this.props.setCollapseID('') : this.props.setCollapseID(collapseID);
     };
 
     render() {
@@ -51,7 +46,7 @@ export default class FilterBody extends Component {
                                 </MDBBtn>
 
                                 {button}
-                                <MDBCollapse id='category' isOpen={this.state.collapseID}>
+                                <MDBCollapse id='category' isOpen={this.props.collapseID}>
                                     <div className='container'>
                                         <CategoryList
                                             categories={this.props.categories}
@@ -62,7 +57,7 @@ export default class FilterBody extends Component {
                                         />
                                     </div>
                                 </MDBCollapse>
-                                <MDBCollapse id='date' isOpen={this.state.collapseID}>
+                                <MDBCollapse id='date' isOpen={this.props.collapseID}>
                                     <div className='container'>
                                         <DatePicker
                                             setButtonColor={this.props.setDateButtonColor}
@@ -73,7 +68,7 @@ export default class FilterBody extends Component {
                                         />
                                     </div>
                                 </MDBCollapse>
-                                <MDBCollapse id='city' isOpen={this.state.collapseID}>
+                                <MDBCollapse id='city' isOpen={this.props.collapseID}>
                                     <div className='container'>
                                         <CityInput
                                             setButtonColor={this.props.setCityButtonColor}

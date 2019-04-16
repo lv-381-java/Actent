@@ -33,6 +33,8 @@ export default class RenderEventFilterPage extends React.Component {
         dateButtonColor: 'info',
         cityButtonColor: 'info',
         categoryButtonColor: 'info',
+
+        collapseID: '',
     };
 
     componentDidMount() {
@@ -64,12 +66,13 @@ export default class RenderEventFilterPage extends React.Component {
                 dateButtonColor: 'info',
                 cityButtonColor: 'info',
                 categoryButtonColor: 'info',
+                collapseID: '',
             },
 
             () => this.getEvents(),
         );
-        this.setCityButtonColor();
-        this.setCategoryButtonColor();
+        this.setCityButtonColor('info');
+        this.setCategoryButtonColor('info');
         this.setDateButtonColor('info');
     };
 
@@ -85,11 +88,18 @@ export default class RenderEventFilterPage extends React.Component {
         let filterCategories = this.state.filterCategories;
         filterCategories.push(categoriesId);
         this.setState({ filterCategories: filterCategories }, () => this.eventsFilter());
+        this.setCategoryButtonColor('success');
     };
 
     deleteFilterCategorieId = categoriesId => {
         let filterCategories = this.state.filterCategories.filter(id => id !== categoriesId);
         this.setState({ filterCategories: filterCategories }, () => this.eventsFilter());
+        console.log(this.state.filterCategories.length);
+        if (filterCategories.length === 0) {
+            this.setState({ categoryButtonColor: 'info' });
+        } else {
+            this.setState({ categoryButtonColor: 'success' });
+        }
     };
 
     setFilterDateFrom = dateFrom => {
@@ -107,28 +117,24 @@ export default class RenderEventFilterPage extends React.Component {
                 this.eventsFilter(),
             );
         } else {
-            this.setState({ showCityName: cityName }, () => this.setCityButtonColor());
+            this.setState({ showCityName: cityName }, () => this.setCityButtonColor('info'));
         }
         console.log(this.state.showCityName);
     };
 
-    setCategoryButtonColor = () => {
-        let filterCategories = this.state.filterCategories;
-        console.log(filterCategories.length);
-        filterCategories.length === 0
-            ? this.setState({ categoryButtonColor: 'info' })
-            : this.setState({ categoryButtonColor: 'success' });
+    setCategoryButtonColor = color => {
+        this.setState({ categoryButtonColor: color });
     };
 
-    setCityButtonColor = () => {
-        console.log(this.state.filterCityName);
-        this.state.filterCityName === ''
-            ? this.setState({ cityButtonColor: 'info' })
-            : this.setState({ cityButtonColor: 'success' });
+    setCityButtonColor = color => {
+        this.setState({ cityButtonColor: color });
     };
 
     setDateButtonColor = color => {
         this.setState({ dateButtonColor: color });
+    };
+    setCollapseID = name => {
+        this.setState({ collapseID: name });
     };
 
     getCategories = () => {
@@ -156,7 +162,6 @@ export default class RenderEventFilterPage extends React.Component {
     };
 
     handlePageChange = pageNumber => {
-        console.log(`active page is ${pageNumber}`);
         this.setState({ activePage: pageNumber }, () => this.getEvents());
     };
 
@@ -168,18 +173,21 @@ export default class RenderEventFilterPage extends React.Component {
             dateTo: this.state.filterDateTo,
             title: this.state.filterTitle,
         };
-
-        axios
-            .post(`/events/filter`, data)
-            .then(res => {
-                let events = res.data;
-                this.setState({
-                    events: events,
+        if (data.title.length === 0 && data.locationAddress.length === 0 && data.categoriesId.length === 0) {
+            this.getEvents();
+        } else {
+            axios
+                .post(`/events/filter`, data)
+                .then(res => {
+                    let events = res.data;
+                    this.setState({
+                        events: events,
+                    });
+                })
+                .catch(function(error) {
+                    console.error(error);
                 });
-            })
-            .catch(function(error) {
-                console.error(error);
-            });
+        }
     };
 
     getEvents = () => {
@@ -187,7 +195,6 @@ export default class RenderEventFilterPage extends React.Component {
         axios
             .get(`/events/all/${page}/9`)
             .then(res => {
-                console.log(res.data);
                 let events = res.data;
                 this.setState({ events: events });
             })
@@ -224,6 +231,8 @@ export default class RenderEventFilterPage extends React.Component {
                         setCategoryButtonColor={this.setCategoryButtonColor}
                         setCityButtonColor={this.setCityButtonColor}
                         setDateButtonColor={this.setDateButtonColor}
+                        collapseID={this.state.collapseID}
+                        setCollapseID={this.setCollapseID}
                     />
                     <div className='row'>
                         {events.map(event => {
