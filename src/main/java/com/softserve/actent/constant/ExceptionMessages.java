@@ -11,6 +11,8 @@ public class ExceptionMessages {
     public static final String USER_CAN_NOT_BE_NULL = "User can not be null";
     public static final String EVENT_USER_BY_THIS_ID_IS_NOT_FOUND = "Event user by this id is not found";
     public static final String ID_CAN_NOT_BE_NULL = "Id can not be null";
+    public static final String EVENT_LIST_IS_NULL = "Event list is null.";
+    public static final String LOCATION_CAN_NO_BE_NULL = "Location can not be null.";
 
     public static final String EVENT_BY_THIS_ID_IS_NOT_FOUND = "Event by this id is not found";
     public static final String EVENT_BY_THIS_TITLE_IS_NOT_FOUND = "Event by this title is not found";
@@ -26,19 +28,15 @@ public class ExceptionMessages {
     public static final String CATEGORY_IS_NOT_FOUND = "Category with this id isn't exist";
 
     public static final String REVIEW_NO_ID = "You need to provide review id.";
-    public static final String REVIEW_NO_AUTHOR_ID = "ou need to provide review author id.";
     public static final String REVIEW_NO_TEXT = "You need to provide review text.";
     public static final String REVIEW_NO_SCORE = "You need to provide review score.";
     public static final String REVIEW_BAD_SCORE = "Review score must be in range from 1 to 5.";
     public static final String REVIEW_NOT_FOUND_WITH_ID = "Review with requested id was not found.";
     public static final String REVIEW_INAPPROPRIATE_ID = "Review id should be number greater than zero.";
-    public static final String REVIEW_INAPPROPRIATE_AUTHOR_ID = "Author id should be number greater than zero.";
 
     public static final String IMAGE_NO_ID = "You need to provide image id.";
     public static final String IMAGE_NO_FILEPATH = "You need to provide image url.";
-    public static final String IMAGE_INAPPROPRIATE_HASH_LENGTH = "SHA256 hash must be exactly 64 symbols in length.";
     public static final String IMAGE_NOT_FOUND_WITH_ID = "Image with requested id was not found.";
-    public static final String IMAGE_NOT_FOUND_WITH_HASH = "Image with requested hash was not found.";
     public static final String IMAGE_NOT_FOUND_WITH_PATH = "Image with requested path was not found.";
     public static final String IMAGE_INNAPPROPRIATE_ID = "Image id should be number greater than zero.";
 
