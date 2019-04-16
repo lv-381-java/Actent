@@ -74,6 +74,7 @@ export default class App extends React.Component {
                         }
                     />
                     <Route path='/userEvents' render={() => <UserEventsPage />} />
+                    <Route path='/users/userEvents'component={UserEventsPage} />
                     <Route path='/createEvent' render={() => <FormContainer />} />
                     <Route path='/confirm' component={Confirm} />
                     <Route path='/chat' render={() => <Chat chatId={1} />} />

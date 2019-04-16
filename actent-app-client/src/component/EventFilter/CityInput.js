@@ -8,23 +8,17 @@ const style = {
 export default class CityInput extends React.Component {
     state = {
         findCity: '',
+        keyCode: 0,
     };
+
     handleChange = event => {
-        this.setState({ findCity: event.target.value });
+        let code = event.keyCode || event.which;
+        console.log(code);
+        this.props.setCity(event.target.value, code);
     };
 
     setCollorButton = () => {
         this.state.findCity === '' ? this.props.setButtonColor('info') : this.props.setButtonColor('success');
-    };
-
-    enterPressed = event => {
-        let code = event.keyCode || event.which;
-        if (code === 13) {
-            this.setState({ findCity: event.target.value }, () => this.setCollorButton());
-            this.props.setCity(this.state.findCity);
-
-            console.log(this.state.findCity);
-        }
     };
 
     render() {
@@ -36,15 +30,14 @@ export default class CityInput extends React.Component {
             );
         return (
             <MDBCol md='6' style={style}>
-                {console.log(this.props.cityName)}
                 <input
                     className='form-control form-control-lg'
                     type='text'
-                    name={this.state.findCity}
                     placeholder='Select city'
+                    value={this.props.showCityName}
                     aria-label='Search'
                     onChange={this.handleChange}
-                    onKeyPress={this.enterPressed}
+                    onKeyPress={this.handleChange}
                 />
                 {renderCity}
             </MDBCol>

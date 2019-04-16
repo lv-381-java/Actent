@@ -12,7 +12,7 @@ public class EventFilterDto {
 
     private String title;
 
-    private String cityName;
+    private String locationAddress;
 
     private List<Long> categoriesId;
 
