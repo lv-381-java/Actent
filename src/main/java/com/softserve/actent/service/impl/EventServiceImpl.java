@@ -16,7 +16,10 @@ import com.softserve.actent.repository.ImageRepository;
 import com.softserve.actent.repository.LocationRepository;
 import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.EventService;
+import com.softserve.actent.service.SubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -33,6 +36,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
     private final ChatRepository chatRepository;
+    private final SubscribeService subscribeService;
 
     @Autowired
     public EventServiceImpl(EventRepository eventRepository,
@@ -40,7 +44,8 @@ public class EventServiceImpl implements EventService {
                             LocationRepository locationRepository,
                             CategoryRepository categoryRepository,
                             ImageRepository imageRepository,
-                            ChatRepository chatRepository) {
+                            ChatRepository chatRepository,
+                            SubscribeService subscribeService) {
 
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
@@ -48,6 +53,7 @@ public class EventServiceImpl implements EventService {
         this.categoryRepository = categoryRepository;
         this.imageRepository = imageRepository;
         this.chatRepository = chatRepository;
+        this.subscribeService = subscribeService;
     }
 
     @Override
@@ -73,8 +79,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findActiveEvents() {
-        return eventRepository.findByStartDateIsGreaterThanEqual(LocalDateTime.now());
+    public Page<Event> findActiveEvents(Pageable pageable) {
+        return eventRepository.findByStartDateIsGreaterThanEqual(LocalDateTime.now(), pageable);
     }
 
     @Override
@@ -106,8 +112,12 @@ public class EventServiceImpl implements EventService {
     protected Event getSavedEvent(Event event) {
 
         event.setChat(createChat());
-        return eventRepository.save(event);
+        event=eventRepository.save(event);
+        subscribeService.checkSubscribers(event);
+        return event;
     }
+
+
 
     @Transactional
     protected Event getUpdatedEvent(Event event) {

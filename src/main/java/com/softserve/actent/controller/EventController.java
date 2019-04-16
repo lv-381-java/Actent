@@ -17,6 +17,8 @@ import com.softserve.actent.service.impl.EventSpecification;
 import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -58,12 +60,28 @@ public class EventController {
         this.eventFilterRepository = eventFilterRepository;
     }
 
-    @GetMapping(value = url + "/all")
+    @GetMapping(value = url + "/all/{page}/{size}")
     @ResponseStatus(HttpStatus.OK)
-    public List<UltraEventDto> getActiveEvents() {
 
-        List<Event> eventList = eventService.findActiveEvents();
-        return ultraEventConverter.convertToDtoList(eventList, "ostap");
+    public List<UltraEventDto> getActiveEvents(@PathVariable
+                                          @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
+                                                  int page,
+                                          @PathVariable
+                                          @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
+                                          @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
+                                                  int size) {
+
+        Page<Event> eventPage = eventService.findActiveEvents(PageRequest.of(page, size));
+        System.out.println(eventPage.getTotalElements());
+        return ultraEventConverter.convertToDtoList(eventPage.getContent(),"ostap");
+    }
+
+    @GetMapping(value = url + "/totalElements")
+    @ResponseStatus(HttpStatus.OK)
+    public Long getTotalElements() {
+
+        Page<Event> eventPage = eventService.findActiveEvents(PageRequest.of(0, 1));
+        return eventPage.getTotalElements();
     }
 
     @GetMapping(value = url + "/{id}")
