@@ -154,5 +154,5 @@ public class UltraEventConverter {
         }
         return this::getMinimalEventDto;
     }
-    
+
 }
