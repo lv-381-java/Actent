@@ -13,4 +13,5 @@ public class ShowEventDto extends EventOstapDto {
 
     @JsonProperty("Chat")
     private ChatForEventDto chatForEventDto;
+
 }

@@ -31,7 +31,6 @@ class Participant extends React.Component {
             });
         }).catch(error => {
             this.setState({
-
                 assigne: true,
             });
             console.log(error);
@@ -41,7 +40,6 @@ class Participant extends React.Component {
     unassigneUser = () => {
         Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${this.state.id}`).then(eve => {
             this.setState({
-
                 assigne: false,
             })
         }
@@ -99,7 +97,7 @@ class Participant extends React.Component {
 
                 assigneButton = (
                         <div>
-                            <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                            <Button className='btn btn-primary' variant="outlined" color="primary" onClick={this.handleClickOpen}>
                                 Unassigne as participiant
                             </Button>
 
@@ -125,7 +123,7 @@ class Participant extends React.Component {
 
                     assigneButton = (
                         <div>
-                            <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                            <Button className='btn btn-primary' variant="outlined" color="primary" onClick={this.handleClickOpen}>
                                 Assigne as participiant
                             </Button>
 
@@ -151,7 +149,7 @@ class Participant extends React.Component {
         } else {
             assigneButton = (
                     <div>
-                        <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                        <Button className='btn btn-primary' variant="outlined" color="primary" onClick={this.handleClickOpen}>
                             Discard assigne
                         </Button>
 

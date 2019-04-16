@@ -63,7 +63,7 @@ public class EventController {
     public List<UltraEventDto> getActiveEvents() {
 
         List<Event> eventList = eventService.findActiveEvents();
-        return ultraEventConverter.convertToDtoList(eventList, "minimal");
+        return ultraEventConverter.convertToDtoList(eventList, "ostap");
     }
 
     @GetMapping(value = url + "/{id}")
@@ -77,8 +77,7 @@ public class EventController {
     }
 
     @PostMapping(value = url + "/filter")
-    public List<UltraEventDto> getEventsWithFilter(
-            @RequestBody EventFilterDto eventFilterDto) {
+    public List<UltraEventDto> getEventsWithFilter(@RequestBody EventFilterDto eventFilterDto) {
         System.out.println(eventFilterDto);
         List<Event> result = eventFilterRepository.findAll(EventSpecification.getTitle(eventFilterDto.getTitle())
                 .and(EventSpecification.getCategory(eventFilterDto.getCategoriesId()))

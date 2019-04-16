@@ -3,7 +3,7 @@ import Title from './title/Title.jsx'
 import Window from './window/Window.jsx';
 import Info from './info/Info.jsx';
 import Chat from './chat/Chat.jsx';
-import './Show.css';
+//import './Show.css';
 import Participant from './button/Participant.jsx';
 import Spectator from './button/Spectator.jsx';
 
@@ -11,17 +11,18 @@ class Show extends React.Component {
 
     state = {
         userId: this.props.currentUserId,
-        assigne: undefined,
         isParticipant: false,
         isSpectator: false,
         assID: undefined,
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (state.userId !== props.currentUserId){
+
+        if (state.userId !== props.currentUserId) {
             state.userId = props.currentUserId
         }
-        if(state.userId !== undefined){
+
+        if (state.userId !== undefined) {
             props.eventUserList.forEach(e => {
                 if (e.userId == state.userId)
                 {
@@ -65,76 +66,80 @@ class Show extends React.Component {
 
 
     render() {
-        console.log(this.state.userId)
+        console.log('render ', this.state.userId)
+        console.log('render ', this.state.assID)
         return(
-            <div className='page'>
+            <div className='container-fluid'>
+                <div className='row'>
+                    <div className='col-md-9'>
 
-                <div className='container-1'>
-                    <div className='card-title'>
-                        <Title
-                            title={this.props.title}
-                        />
-                    </div>
-
-                    <div className='but'>
-                        {(!this.isAssigne() || this.state.isParticipant) && (<div className='b-1'>
-                            <Participant 
-                                setIsParticipant={this.setIsParticipant}
-                                setUnassigne={this.setUnassigne}
-                                currentUserId={this.state.userId}
-                                eventId={this.props.eventId}
-                                assigne={this.state.assigne}
+                        <div className='card-title'>
+                            <Title
+                                title={this.props.title}
                             />
-                        </div>)}
+                        </div>
 
-                        {(!this.isAssigne() || this.state.isSpectator) && (<div className='b-2'>
-                            <Spectator 
-                                setUnassigne={this.setUnassigne}
-                                setIsSpectator={this.setIsSpectator}
-                                currentUserId={this.state.userId}
+                        <div className='but'>
+                            {(!this.isAssigne() || this.state.isParticipant) && (<div className='b-1'>
+                                <Participant 
+                                    setIsParticipant={this.setIsParticipant}
+                                    setUnassigne={this.setUnassigne}
+                                    currentUserId={this.state.userId}
+                                    eventId={this.props.eventId}
+                                    assigne={this.state.assigne}
+                                    assID={this.state.assID}
+                                />
+                            </div>)}
+
+                            {(!this.isAssigne() || this.state.isSpectator) && (<div className='b-2'>
+                                <Spectator 
+                                    setUnassigne={this.setUnassigne}
+                                    setIsSpectator={this.setIsSpectator}
+                                    currentUserId={this.state.userId}
+                                    eventId={this.props.eventId}
+                                    assigne={this.state.isSpectator}
+                                    assID={this.state.assID}
+                            />
+                            </div>)}
+                        </div>
+
+                        <div className='card-window'>
+                            <Window
+                                description={this.props.description}
+                                image={this.props.image}
+                                equipments={this.props.equipments}
+                                reviews={this.props.reviews}
+                                creatorId={this.props.creatorId}
                                 eventId={this.props.eventId}
-                                assigne={this.state.assigne}
-                        />
-                        </div>)}
+                            /> 
+                        </div>
                     </div>
 
-                    <div className='card-window'>
-                        <Window
-                            description={this.props.description}
-                            image={this.props.image}
-                            equipments={this.props.equipments}
-                            reviews={this.props.reviews}
-                            creatorId={this.props.creatorId}
-                            eventId={this.props.eventId}
-                        /> 
+                    <div className='col-md-3'>
+                        <div className='card-info box'>
+                            <Info
+                                info={this.props.info}
+
+                                creationDate={this.props.creationDate}
+                                startDate={this.props.startDate}
+                                duration={this.props.duration}
+                                capacity={this.props.capacity}
+                                category={this.props.category}
+                                creatorFirstName={this.props.creatorFirstName}
+                                creatorLastName={this.props.creatorLastName}
+
+                                participants={this.props.participants}
+                                spectators={this.props.spectators}
+                            />
+                        </div>
+
+                        <div className='card-chat box'>
+                            <Chat
+                                chat={this.props.chat}
+                            />
+                        </div>
                     </div>
-                </div>
-
-                <div className='container-2'>
-                    <div className='card-info box'>
-                        <Info
-                            info={this.props.info}
-
-                            creationDate={this.props.creationDate}
-                            startDate={this.props.startDate}
-                            duration={this.props.duration}
-                            capacity={this.props.capacity}
-                            category={this.props.category}
-                            creatorFirstName={this.props.creatorFirstName}
-                            creatorLastName={this.props.creatorLastName}
-
-                            participants={this.props.participants}
-                            spectators={this.props.spectators}
-                        />
                     </div>
-
-                    <div className='card-chat box'>
-                        <Chat
-                            chat={this.props.chat}
-                        />
-                    </div>
-                </div>
-
             </div>
         );
     }

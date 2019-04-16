@@ -148,7 +148,7 @@ export default class RenderEventFilterPage extends React.Component {
                                         title={event.title}
                                         eventId={event.id}
                                         description={event.description}
-                                        city={event.Location.Country.Region.City.name}
+                                        //city={event.Location.Country.Region.City.name}
                                         category={event.Category.name}
                                     />
                                 </div>

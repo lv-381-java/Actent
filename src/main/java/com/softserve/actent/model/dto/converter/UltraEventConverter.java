@@ -1,5 +1,7 @@
 package com.softserve.actent.model.dto.converter;
 
+import com.softserve.actent.exceptions.DataNotFoundException;
+import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.dto.equipment.EquipmentDto;
 import com.softserve.actent.model.dto.event.*;
 import com.softserve.actent.model.dto.eventUser.EventUserForEventDto;
@@ -12,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -197,6 +202,12 @@ public class UltraEventConverter {
         event.setAddress(location);
 
         return event;
+    }
+
+    private void nullHunter(Object object, String message) {
+        if (Objects.isNull(object)) {
+            throw new DataNotFoundException(message, ExceptionCode.NOT_FOUND);
+        }
     }
 
 }
