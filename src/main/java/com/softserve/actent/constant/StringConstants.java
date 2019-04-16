@@ -26,7 +26,7 @@ public class StringConstants {
 
     public static final String EMPTY_LOCATION = "Location can't be empty";
     public static final String LOCATION_ID_POSITIVE_AND_GREATER_THAN_ZERO = "Location id must be positive and greater than zero";
-    public static final String LOCATION_SHOULD_BE_BETWEEN_3_AND_100_SYMBOLS = "Location should be between 3 and 100 symbols";
+    public static final String LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS = "Location should be between 2 and 100 symbols";
 
     public static final String CHAT_TYPE_NOT_BE_BLANK = "Chat type can`t be blank";
     public static final String TITLE_LENGTH_IS_TO_LONG = "Title length is to long";
