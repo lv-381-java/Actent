@@ -16,15 +16,12 @@ public class Subscribe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
-    private List<Category> categories;
+    private String category;
 
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private User subscriber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private City city;
+    private String city;
 }

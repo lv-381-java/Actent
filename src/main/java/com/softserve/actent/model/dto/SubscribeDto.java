@@ -12,6 +12,7 @@ public class SubscribeDto {
 
     String city;
 
-    List<Category> categories;
+    String category;
+
 
 }

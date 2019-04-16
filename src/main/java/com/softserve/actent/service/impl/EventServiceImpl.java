@@ -16,6 +16,7 @@ import com.softserve.actent.repository.ImageRepository;
 import com.softserve.actent.repository.LocationRepository;
 import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.EventService;
+import com.softserve.actent.service.SubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
     private final ChatRepository chatRepository;
+    private final SubscribeService subscribeService;
 
     @Autowired
     public EventServiceImpl(EventRepository eventRepository,
@@ -42,7 +44,8 @@ public class EventServiceImpl implements EventService {
                             LocationRepository locationRepository,
                             CategoryRepository categoryRepository,
                             ImageRepository imageRepository,
-                            ChatRepository chatRepository) {
+                            ChatRepository chatRepository,
+                            SubscribeService subscribeService) {
 
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
@@ -50,6 +53,7 @@ public class EventServiceImpl implements EventService {
         this.categoryRepository = categoryRepository;
         this.imageRepository = imageRepository;
         this.chatRepository = chatRepository;
+        this.subscribeService = subscribeService;
     }
 
     @Override
@@ -108,8 +112,12 @@ public class EventServiceImpl implements EventService {
     protected Event getSavedEvent(Event event) {
 
         event.setChat(createChat());
-        return eventRepository.save(event);
+        event=eventRepository.save(event);
+        subscribeService.checkSubscribers(event);
+        return event;
     }
+
+
 
     @Transactional
     protected Event getUpdatedEvent(Event event) {
