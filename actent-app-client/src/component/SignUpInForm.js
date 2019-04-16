@@ -13,16 +13,14 @@ export default class SignInUp extends React.Component {
                         <NavLink
                             to='/auth/signIn'
                             activeClassName='FormTitle__Link--Active'
-                            className='FormTitle__Link'
-                        >
+                            className='FormTitle__Link'>
                             Sign In
                         </NavLink>
                         or{' '}
                         <NavLink
                             to='/auth/signUp'
                             activeClassName='FormTitle__Link--Active'
-                            className='FormTitle__Link'
-                        >
+                            className='FormTitle__Link'>
                             Sign Up
                         </NavLink>
                     </div>

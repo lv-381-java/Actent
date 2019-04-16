@@ -8,38 +8,38 @@ export default class DatePicker extends React.Component {
     };
     constructor(props) {
         super(props);
-        this.handleDayClick = this.handleDayClick.bind(this);
-        this.handleResetClick = this.handleResetClick.bind(this);
-        this.state = this.getInitialState();
-    }
-    getInitialState() {
-        return {
-            from: undefined,
-            to: undefined,
+        this.state = {
+            from: this.props.dateFrom,
+            to: this.props.dateTo,
         };
     }
-    handleDayClick(day) {
+
+    handleDayClick = day => {
         const range = DateUtils.addDayToRange(day, this.state);
-        console.log(day);
         this.setState(range, () => this.convertToLong());
         this.props.setButtonColor('success');
-    }
-    handleResetClick() {
-        this.setState(this.getInitialState(), () => this.convertToLong());
-        this.props.setButtonColor('info');
-    }
+    };
+
+    handleResetClick = () => {
+        this.setState(
+            {
+                from: undefined,
+                to: undefined,
+            },
+            () => this.convertToLong(),
+        );
+    };
 
     convertToLong = () => {
-        if (this.state.from != undefined || this.state.from != null) {
-            console.log(this.state.from);
-            this.props.setDateRange(this.state.from, null);
-            if (this.state.to != undefined || this.state.to != null) {
-                this.props.setDateRange(this.state.from, this.state.to);
+        if (this.state.from) {
+            this.props.setFilterDateFrom(this.state.from);
+            if (this.state.to) {
+                this.props.setFilterDateTo(this.state.to);
             }
         } else {
-            console.log('null');
             this.props.setButtonColor('info');
-            this.props.setDateRange(null, null);
+            this.props.setFilterDateFrom(undefined);
+            this.props.setFilterDateTo(undefined);
         }
     };
 
