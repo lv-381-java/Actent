@@ -5,13 +5,14 @@ import RenderEventFilterPage from './component/EventFilter/RenderEventFilterPage
 import UserEventsPage from './component/userEventsPage/UserEventsPage';
 import ShowEvent from './container/ShowEvent';
 import SignInUp from './component/SignUpInForm';
-import { configureAxios, getCurrentUser } from './util/apiUtils';
+import {configureAxios, getCurrentUser} from './util/apiUtils';
 import Confirm from './component/confirm/Confirm';
 import Menu from './component/EventFilter/Menu';
 import Footer from './component/EventFilter/Footer';
 import Chat from './component/chat/Chat';
+import NewLocation from './component/createevent/NewLocation';
 
-import { Route, Switch, Redirect } from 'react-router-dom';
+import {Route, Switch, Redirect} from 'react-router-dom';
 import ReviewForm from './component/review/ReviewForm';
 import ReviewList from './component/review/ReviewList';
 
@@ -38,24 +39,22 @@ export default class App extends React.Component {
     };
 
     render() {
-        console.log(this.state.currentUserId)
         return (
             <div>
-                <Menu />
+                <Menu/>
                 <Switch>
-                    <Route path='/auth' component={SignInUp} />
-                    <Route path='/show/:id'  render={props => <ShowEvent {...props} currentUserId={this.state.currentUserId} />} />
-                    {/* <Route path='/show/:id' component={ShowEvent } /> */}
-                    <Route path='/show' render={() => <ShowEvent currentUserId={this.state.currentUserId}/>} />
+                    <Route path='/auth' component={SignInUp}/>
+                    <Route path='/show/:id' component={ShowEvent}/>
+                    <Route path='/show' render={() => <ShowEvent/>}/>
                     <Route
                         path='/profile'
                         render={
                             this.state.currentUserId
                                 ? props => {
-                                      console.log(this);
+                                    console.log(this);
 
-                                      return <Redirect to={`/users/${this.state.currentUserId}`} />;
-                                  }
+                                    return <Redirect to={`/users/${this.state.currentUserId}`}/>;
+                                }
                                 : console.log('Waiting for currentUserId...')
                         }
                     />
@@ -64,25 +63,26 @@ export default class App extends React.Component {
                         render={
                             this.state.currentUserId
                                 ? props => {
-                                      props =
-                                          Number(props.match.params.id) === Number(this.state.currentUserId)
-                                              ? { ...props, current: true }
-                                              : { ...props, current: false };
-                                      return <Profile {...props} />;
-                                  }
+                                    props =
+                                        Number(props.match.params.id) === Number(this.state.currentUserId)
+                                            ? {...props, current: true}
+                                            : {...props, current: false};
+                                    return <Profile {...props} />;
+                                }
                                 : console.log('Waiting for currentUserId...')
                         }
                     />
-                    <Route path='/userEvents' render={() => <UserEventsPage />} />
-                    <Route path='/users/userEvents'component={UserEventsPage} />
-                    <Route path='/createEvent' render={() => <FormContainer />} />
-                    <Route path='/confirm' component={Confirm} />
-                    <Route path='/chat' render={() => <Chat chatId={1} />} />
-                    <Route path='/addReview/:targetId' render={props => <ReviewForm {...props} />} />
-                    <Route path='/reviews/:userId' render={props => <ReviewList {...props} />} />
-                    <Route exact path='/' component={RenderEventFilterPage} />
+                    <Route path='/location' render={() => <NewLocation/>}/>
+                    <Route path='/userEvents' render={() => <UserEventsPage/>}/>
+                    <Route path='/users/userEvents' component={UserEventsPage}/>
+                    <Route path='/createEvent' render={() => <FormContainer/>}/>
+                    <Route path='/confirm' component={Confirm}/>
+                    <Route path='/chat' render={() => <Chat chatId={1}/>}/>
+                    <Route path='/addReview/:targetId' render={props => <ReviewForm {...props} />}/>
+                    <Route path='/reviews/:userId' render={props => <ReviewList {...props} />}/>
+                    <Route exact path='/' component={RenderEventFilterPage}/>
                 </Switch>
-                <Footer />
+                <Footer/>
             </div>
         );
     }
