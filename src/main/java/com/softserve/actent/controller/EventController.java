@@ -81,7 +81,7 @@ public class EventController {
         System.out.println(eventFilterDto);
         List<Event> result = eventFilterRepository.findAll(EventSpecification.getTitle(eventFilterDto.getTitle())
                 .and(EventSpecification.getCategory(eventFilterDto.getCategoriesId()))
-                .and(EventSpecification.getCity(eventFilterDto.getCityName()))
+                .and(EventSpecification.getLocation(eventFilterDto.getLocationAddress()))
                 .and(EventSpecification.getDate(eventFilterDto.getDateFrom(), eventFilterDto.getDateTo())));
         return ultraEventConverter.convertToDtoList(result, "ostap");
     }

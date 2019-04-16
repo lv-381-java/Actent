@@ -20,7 +20,7 @@ export default class RenderEventFilterPage extends React.Component {
         city: '',
         filteredEvents: [],
         categoriesId: [],
-        cityName: '',
+        locationAddress: '',
         dateFrom: undefined,
         dateTo: undefined,
     };
@@ -70,7 +70,7 @@ export default class RenderEventFilterPage extends React.Component {
     eventsFilter = () => {
         const data = {
             categoriesId: this.state.categoriesId,
-            cityName: this.state.cityName,
+            locationAddress: this.state.locationAddress,
             dateFrom: this.state.dateFrom,
             dateTo: this.state.dateTo,
             title: this.state.title,
@@ -127,7 +127,7 @@ export default class RenderEventFilterPage extends React.Component {
                 </BrowserRouter>
                 <div className='container'>
                     <FilterBody
-                        cityName={this.state.cityName}
+                        cityName={this.state.locationAddress}
                         filteredEvents={this.state.filteredEvents}
                         cleanFilter={this.cleanFilter}
                         setDateRange={this.setDateRange}

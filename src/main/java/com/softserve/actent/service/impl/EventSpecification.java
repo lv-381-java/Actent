@@ -30,15 +30,15 @@ public class EventSpecification {
                         : cb.isTrue(root.get(EVENT_CATEGORY).get(CATEGORY_ID).in(categoriesId));
     }
 
-    public static Specification<Event> getCity(String city) {
+    public static Specification<Event> getLocation(String address) {
         return (Specification<Event>) (root, query, cb) ->
-                (city == null || city.isEmpty()) ? null
-                        : cb.equal(root.get(EVENT_ADDRESS).get(EVENT_CITY).get(CITY_NAME), city);
+                (address == null || address.isEmpty()) ? null
+                        : cb.like(root.get(EVENT_ADDRESS).get("address"), "%" + address + "%");
     }
 
     public static Specification<Event> getDate(LocalDateTime dateFrom, LocalDateTime dateTo) {
         return (Specification<Event>) (root, query, cb) -> {
-            if (dateFrom == null && dateTo == null ) {
+            if (dateFrom == null && dateTo == null) {
                 return null;
             } else if (dateTo == null && dateFrom.isAfter(LocalDateTime.now())) {
                 return cb.greaterThanOrEqualTo(root.get(EVENT_START_DATE), dateFrom);
