@@ -23,6 +23,7 @@ public class ExceptionMessages {
     public static final String USER_BY_THIS_ID_IS_NOT_FOUND = "User by this id is not found";
     public static final String USER_BY_THIS_EMAIL_IS_NOT_FOUND = "User by this email is not found";
     public static final String USER_BY_THIS_LOGIN_ALREADY_EXIST = "User by this login already exist";
+    public static final String USER_BY_THIS_LOGIN_IS_NOT_FOUND = "User by this login is not found.";
 
     public static final String NO_SUBCATEGORIES_FOUND = "There is no subcategories in parent category you are looking for";
     public static final String CATEGORY_IS_NOT_FOUND = "Category with this id isn't exist";
@@ -59,7 +60,7 @@ public class ExceptionMessages {
     public static final String USER_NOT_REGISTRED = "User not registered!";
 
     public static final String LOCATION_NOT_FOUND = "Location with this id not found";
-    public static final String LOCATION_ADDRESS_NOT_FOUND = "Location with this address not found";
-
-    public static final String USER_BY_THIS_LOGIN_IS_NOT_FOUND = "User by this login is not found.";
+    public static final String JSON_ERROR = "Error processing JSON results";
+    public static final String API_URL_ERROR = "Error processing API URL";
+    public static final String CONNECTION_ERROR = "Error connecting to API";
 }
