@@ -4,6 +4,7 @@ import React from "react";
 import {getImageUrl} from "../profile/ProfileView";
 import Confirm from '../chat/Confirm';
 import * as ReactDOM from "react-dom";
+import {configureAxios, getCurrentUser} from "../../util/apiUtils";
 
 let stompClient = null;
 let count = 0;
@@ -40,12 +41,16 @@ export function showMessageOutputPrepend(messageOutput) {
 
     if(messageOutput.delete){
         deleteMessage(messageOutput.id, messageOutput.senderId);
+        let messageArea = document.getElementById("messageArea");
+        messageArea.scrollTop = messageArea.scrollHeight;
         return;
     }
 
     if(messageOutput.update){
         let date = new Date();
         updateMessage(messageOutput.messageId, date, messageOutput.messageContent);
+        let messageArea = document.getElementById("messageArea");
+        messageArea.scrollTop = messageArea.scrollHeight;
         return;
     }
 
@@ -106,30 +111,38 @@ export function showMessageOutputPrepend(messageOutput) {
 
     messageElement.onclick = function(){
         let t = new Date().getTime();
-
-        ReactDOM.render(<Confirm
-                key={t} messageId={this.id.slice(4,6)}
-                senderId={this.id.slice(13, 15)}
-                open={true}
-                chatId={messageOutput.chatId}
-            />,
-            document.getElementById("bool"));
-
+        configureAxios();
+        getCurrentUser().then(res => {
+            if(res.data.id == this.id.slice(13, 15)){
+                ReactDOM.render(<Confirm
+                        key={t} messageId={this.id.slice(4,6)}
+                        senderId={this.id.slice(13, 15)}
+                        open={true}
+                        chatId={messageOutput.chatId}
+                    />,
+                    document.getElementById("bool"));
+            }
+        });
     };
 
     messageArea.prepend(messageElement);
+    messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 export function showMessageOutput(messageOutput) {
 
     if(messageOutput.delete){
         deleteMessage(messageOutput.id, messageOutput.senderId);
+        let messageArea = document.getElementById("messageArea");
+        messageArea.scrollTop = messageArea.scrollHeight;
         return;
     }
 
     if(messageOutput.update){
         let date = new Date();
         updateMessage(messageOutput.messageId, date, messageOutput.messageContent);
+        let messageArea = document.getElementById("messageArea");
+        messageArea.scrollTop = messageArea.scrollHeight;
         return;
     }
 
@@ -190,18 +203,22 @@ export function showMessageOutput(messageOutput) {
 
     messageElement.onclick = function(){
         let t = new Date().getTime();
-
-        ReactDOM.render(<Confirm
-                key={t} messageId={this.id.slice(4,6)}
-                senderId={this.id.slice(13, 15)}
-                open={true}
-                chatId={messageOutput.chatId}
-            />,
-            document.getElementById("bool"));
-
+        configureAxios();
+        getCurrentUser().then(res => {
+            if(res.data.id == this.id.slice(13, 15)){
+                ReactDOM.render(<Confirm
+                        key={t} messageId={this.id.slice(4,6)}
+                        senderId={this.id.slice(13, 15)}
+                        open={true}
+                        chatId={messageOutput.chatId}
+                    />,
+                    document.getElementById("bool"));
+            }
+        });
     };
 
     messageArea.appendChild(messageElement);
+    messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 export function connect(chatId) {
