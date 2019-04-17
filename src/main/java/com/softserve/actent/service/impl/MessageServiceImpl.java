@@ -60,16 +60,13 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> getAll() {
-
         List<Message> messages = messageRepository.findAll();
         if (messages.isEmpty()) {
-
             throw new DataNotFoundException(
                     ExceptionMessages.MESSAGE_NOT_FOUND,
                     MESSAGE_NOT_FOUND
             );
         } else {
-
             return messages;
         }
     }
@@ -98,9 +95,7 @@ public class MessageServiceImpl implements MessageService {
         newMessage.setChat(message.getChat());
         newMessage.setSender(message.getSender());
         newMessage.setMessageContent(message.getMessageContent());
-
         Optional<Message> optionalMessage = messageRepository.findById(id);
-
         if (optionalMessage.isPresent() && checkCredential(optionalMessage, newMessage)) {
 
             newMessage.setId(id);
@@ -124,15 +119,15 @@ public class MessageServiceImpl implements MessageService {
     }
 
     private boolean checkCredential(Optional<Message> optionalMessage, Message message) {
-
-        if (optionalMessage.get().getChat().getId().equals(message.getChat().getId()) &&
-                optionalMessage.get().getSender().getId().equals(message.getSender().getId())) {
-            return true;
-        } else
-            throw new MessageValidationException(ExceptionMessages.YOU_CAN_NOT_CHANGE_THIS_MESSAGE,
-                    ExceptionCode.VALIDATION_FAILED);
-
-
+        if (optionalMessage.isPresent()) {
+            if (optionalMessage.get().getChat().getId().equals(message.getChat().getId()) &&
+                    optionalMessage.get().getSender().getId().equals(message.getSender().getId())) {
+                return true;
+            } else
+                throw new MessageValidationException(ExceptionMessages.YOU_CAN_NOT_CHANGE_THIS_MESSAGE,
+                        ExceptionCode.VALIDATION_FAILED);
+        }
+        return false;
     }
 
 }

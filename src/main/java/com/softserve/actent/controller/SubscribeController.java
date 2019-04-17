@@ -1,5 +1,6 @@
 package com.softserve.actent.controller;
 
+import com.softserve.actent.constant.StringConstants;
 import com.softserve.actent.constant.UrlConstants;
 import com.softserve.actent.model.dto.IdDto;
 import com.softserve.actent.model.dto.SubscribeDto;
@@ -15,6 +16,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(UrlConstants.API_V1)
@@ -37,6 +43,7 @@ public class SubscribeController {
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addSubscribe(@Validated @RequestBody SubscribeDto subscribeDto,
                               @ApiIgnore @CurrentUser UserPrincipal currentUser) {
+        System.out.println(subscribeDto);
         Subscribe subscribe = modelMapper.map(subscribeDto, Subscribe.class);
         subscribe.setSubscriber(userService.get(currentUser.getId()));
 
@@ -46,10 +53,27 @@ public class SubscribeController {
 
     @GetMapping(value = "/subscribers/check")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void check() {
-
+    public void checkSubscribers() {
         subscribeService.checkSubscribers();
 
+    }
+
+    @GetMapping(value = "/getSubscriptions")
+    @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SubscribeDto> getAll(@ApiIgnore @CurrentUser UserPrincipal currentUser) {
+        List<Subscribe> subscribeList = subscribeService.getAllByUserId(currentUser.getId());
+        return subscribeList.stream().map(subscribe ->
+                modelMapper.map(subscribe, SubscribeDto.class)).collect(Collectors.toList());
+    }
+
+
+    @DeleteMapping(value = "/subscribers/{id}")
+    @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMessageById(@PathVariable @NotNull
+                                  @Positive(message = StringConstants.MESSAGE_ID_SHOULD_BE_POSITIVE) Long id) {
+        subscribeService.delete(id);
     }
 
 }
