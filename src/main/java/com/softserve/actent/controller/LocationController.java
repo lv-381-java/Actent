@@ -32,18 +32,9 @@ public class LocationController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public LocationDto getById(@PathVariable @NotNull(message = StringConstants.LOCATION_MUST_BE_NOT_NULL)
-                               @Positive(message = StringConstants.LOCATION_ID_POSITIVE_AND_GREATER_THAN_ZERO) Long id) {
-        Location location = locationService.get(id);
-        return modelMapper.map(location, LocationDto.class);
-    }
-
     @GetMapping(value = "autocomplete/{address}")
     @ResponseStatus(HttpStatus.OK)
-    public List<LocationAddressDto> getAutocompleteLocations(@PathVariable
-                                                             @NotBlank(message = StringConstants.EMPTY_LOCATION)
+    public List<LocationAddressDto> getAutocompleteLocations(@PathVariable @NotBlank(message = StringConstants.EMPTY_LOCATION)
                                                              @Length(min = NumberConstants.LOCATION_MIN_LENGTH,
                                                                      max = NumberConstants.LOCATION_MAX_LENGTH,
                                                                      message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS)
@@ -54,25 +45,13 @@ public class LocationController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping(value = "/{address}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public IdDto add(@PathVariable
-                     @NotBlank(message = StringConstants.EMPTY_LOCATION)
-                     @Length(max = NumberConstants.LOCATION_MAX_LENGTH,
-                             message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS)
-                             String address) {
-
-        Location location = locationService.add(address);
-        return new IdDto(location.getId());
-    }
-
     @GetMapping(value = "byAddress/{address}")
     @ResponseStatus(HttpStatus.OK)
-    public IdDto getByAddress(@PathVariable
-                              @NotBlank(message = StringConstants.EMPTY_LOCATION)
-                              @Length(max = NumberConstants.LOCATION_MAX_LENGTH,
+    public IdDto getByAddress(@PathVariable @NotBlank(message = StringConstants.EMPTY_LOCATION)
+                              @Length(min = NumberConstants.LOCATION_MIN_LENGTH,
+                                      max = NumberConstants.LOCATION_MAX_LENGTH,
                                       message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS)
                                       String address) {
-        return  new IdDto(locationService.getByAddress(address).getId());
+        return new IdDto(locationService.getByAddress(address).getId());
     }
 }
