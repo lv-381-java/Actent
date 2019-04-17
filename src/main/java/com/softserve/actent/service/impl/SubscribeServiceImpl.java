@@ -8,6 +8,7 @@ import com.softserve.actent.model.entity.Subscribe;
 import com.softserve.actent.notification.EmailNotification;
 import com.softserve.actent.repository.SubscribeRepository;
 import com.softserve.actent.service.SubscribeService;
+import com.softserve.actent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,16 @@ import static com.softserve.actent.exceptions.codes.ExceptionCode.MESSAGE_NOT_FO
 public class SubscribeServiceImpl implements SubscribeService {
     private final SubscribeRepository subscribeRepository;
     private final EmailNotification emailNotification;
+    private final UserService userService;
+
 
     @Autowired
     public SubscribeServiceImpl(SubscribeRepository subscribeRepository,
-                                EmailNotification emailNotification) {
+                                EmailNotification emailNotification,
+                                UserService userService) {
         this.subscribeRepository = subscribeRepository;
         this.emailNotification = emailNotification;
+        this.userService = userService;
     }
 
     @Override
@@ -45,9 +50,9 @@ public class SubscribeServiceImpl implements SubscribeService {
     }
 
     @Override
-    public List<Subscribe> getAll() {
+    public List<Subscribe> getAllByUserId(Long userId) {
 
-        return subscribeRepository.findAll();
+        return subscribeRepository.findAllBySubscriber(userService.get(userId));
     }
 
     @Override

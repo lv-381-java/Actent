@@ -11,7 +11,7 @@ public interface SubscribeService {
 
     void delete(Long id);
 
-    List<Subscribe> getAll();
+   List<Subscribe> getAllByUserId(Long userId);
 
     void checkSubscribers(Event event);
 
