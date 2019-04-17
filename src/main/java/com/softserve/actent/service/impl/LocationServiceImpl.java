@@ -45,6 +45,12 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    public Location get(Long id) {
+        return locationRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(ExceptionMessages.LOCATION_NOT_FOUND, ExceptionCode.NOT_FOUND));
+    }
+
+    @Override
     public Location getByAddress(String address) {
         if (!locationRepository.existsByAddress(address)) {
             return addNew(address);
