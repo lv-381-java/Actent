@@ -5,30 +5,16 @@ import axios from 'axios';
 export default class Location
     extends React.Component {
     state = {
-        address: {},
-        locations: [],
+        locations: []
     };
 
     componentDidMount() {
         this.getLocations();
     }
 
-    handleChange = name => value => {
-        this.setState({
-            [name]: value,
-        }, () => console.log("state " + this.state.address.value));
-
-    };
-
-    handleAddress = value => {
-        this.setState({address: value}, () => {
-            this.getLocations()
-        });
-    };
-
     getLocations = () => {
-        if (this.state.address && this.state.address.length > 0) {
-            let url = `http://localhost:8080/api/v1/locations/autocomplete/${this.state.address}`;
+        if (this.props.address && this.props.address.length > 0) {
+            let url = `http://localhost:8080/api/v1/locations/autocomplete/${this.props.address}`;
 
             axios.get(url)
                 .then(response => {
@@ -42,15 +28,38 @@ export default class Location
         }
         ;
     };
+
+    handleChange = name => value => {
+        // this.setState({
+        //     address: value.value,
+        //     isSet: true
+        // });
+        this.props.setAddress(value.value)
+
+    };
+
+    handleAddress = value => {
+        if (value && value.length > 0) {
+            this.props.setAddress(value)
+        }
+
+        // this.setState({address: value}, () => {
+        //     this.getLocations()
+        // });
+
+    };
+
+
     handleAddLocation = () => {
-        if (this.state.address.value && this.state.address.value.length > 0) {
-            console.log("address    " + this.state.address.value)
-            let url = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address.value}`;
+
+        if (this.props.address && this.props.address.length > 0) {
+
+            let url = `http://localhost:8080/api/v1/locations/byAddress/${this.props.address}`;
 
             axios.get(url)
                 .then(response => {
                     const savedId = response.data;
-                    console.log("return id " + savedId.id);
+
                     this.props.setLocationId(savedId.id);
                 })
                 .catch(function (error) {
@@ -60,7 +69,15 @@ export default class Location
         ;
     };
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.address != this.props.address) {
+            this.getLocations();
+        }
+        return true;
+    }
+
     render() {
+        console.log(this.props.address);
         return (
             <div className="form-group">
                 <label>Location</label>
@@ -70,16 +87,17 @@ export default class Location
                             value: location.address,
                             label: location.address
                         }))}
-                        value={this.state.address}
+                        value={this.props.address}
                         onChange={this.handleChange("address")}
-                        placeholder="Enter location"
+                        placeholder={this.props.address ? this.props.address : "Enter location"}
                         onInputChange={this.handleAddress}
                     />
 
                 </div>
+                {this.props.address}
                 <button
                     className={'btn btn-primary'}
-                    onClick={this.handleAddLocation()}
+                    onClick={this.handleAddLocation}
                 >
                     Save Location
                 </button>
