@@ -10,7 +10,6 @@ import Confirm from './component/confirm/Confirm';
 import Menu from './component/EventFilter/Menu';
 import Footer from './component/EventFilter/Footer';
 import Chat from './component/chat/Chat';
-import NewLocation from './component/createevent/NewLocation';
 
 import {Route, Switch, Redirect} from 'react-router-dom';
 import ReviewForm from './component/review/ReviewForm';
@@ -41,7 +40,10 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
-                <Menu/>
+
+                {/*<Menu {...this.props} userId={this.state.currentUserId} />*/}
+
+                <Menu userId={this.state.currentUserId} />
                 <Switch>
                     <Route path='/auth' component={SignInUp}/>
                     <Route path='/show/:id' component={ShowEvent}/>
@@ -72,7 +74,6 @@ export default class App extends React.Component {
                                 : console.log('Waiting for currentUserId...')
                         }
                     />
-                    <Route path='/location' render={() => <NewLocation/>}/>
                     <Route path='/userEvents' render={() => <UserEventsPage/>}/>
                     <Route path='/users/userEvents' component={UserEventsPage}/>
                     <Route path='/createEvent' render={() => <FormContainer/>}/>

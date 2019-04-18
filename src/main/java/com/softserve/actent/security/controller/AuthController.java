@@ -4,6 +4,7 @@ import com.softserve.actent.model.dto.IdDto;
 import com.softserve.actent.model.entity.Role;
 import com.softserve.actent.model.entity.Status;
 import com.softserve.actent.model.entity.User;
+import com.softserve.actent.notification.EmailNotification;
 import com.softserve.actent.security.JwtTokenProvider;
 import com.softserve.actent.security.model.dto.request.SignInDto;
 import com.softserve.actent.security.model.dto.request.SignUpDto;
@@ -52,6 +53,9 @@ public class AuthController {
     @Autowired
     private Verification verification;
 
+    @Autowired
+    private EmailNotification emailNotification;
+
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
     public JwtAuthResponseDto authenticateUser(@Validated @RequestBody SignInDto signInDto) {
@@ -81,7 +85,13 @@ public class AuthController {
         user.setStatus(Status.NON_VERIFIED);
         user.setUuid(verification.createUuidWithSalt());
         user = userService.add(user);
-        sendEmail.sendSimpleEmail(user.getEmail(), user);
+//        sendEmail.sendSimpleEmail(user.getEmail(), user);
+
+        String confirmUrl = "http://localhost:3000/confirm?login=" + user.getLogin() + "&uuid=" + user.getUuid();
+        String content = "To verify your account and have all advantages of our service, " +
+                "you need to click on the link below. \n \n" + confirmUrl + "\n\nWish you success!\nSincerely yourth, Actent's team";
+        String subject = "Verification mail";
+        emailNotification.sendEmail(user.getEmail(), subject, content);
 
         return new IdDto(user.getId());
     }

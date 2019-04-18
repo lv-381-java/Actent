@@ -25,6 +25,17 @@
     width: 50vw;
 }
 
+.send {
+    float: right;
+}
+
+.chat-image {
+    display: flex;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 10%;
+}
+
 #chat-page ul {
     list-style-type: none;
     background-color: #FFF;
@@ -32,6 +43,19 @@
     padding: 0 20px 0px 20px;
     position:absolute;
     bottom: 14vh;
+}
+
+.show-button-first {
+    z-index: 100;
+    float: right;
+}
+
+#chat-page ul li:hover {
+    background-color: #66707D;
+}
+
+.buttonsActions {
+    display: flex;
 }
 
 #chat-page ul li {

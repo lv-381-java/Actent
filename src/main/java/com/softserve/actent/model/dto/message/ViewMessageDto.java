@@ -16,4 +16,12 @@ public abstract class ViewMessageDto {
     private String senderLogin;
 
     private String messageType;
+
+    private Long senderId;
+
+    private Long chatId;
+
+    private String lastEditTime;
+    
+    private boolean delete;
 }

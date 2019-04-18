@@ -15,4 +15,6 @@ public interface ChatService {
     Chat updateChat(Chat chat, Long chatId);
     
     Chat unBanUserFromChat(Long chatId, Long userId);
+
+    Long getCountOfMessages(Long chatId);
 }
