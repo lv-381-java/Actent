@@ -92,6 +92,7 @@ public class MessageController {
                                                            @PathVariable(value = "size") @Positive @NonNull int size) {
 
         return viewMessageConverter.convertToDto(messageService.getCurrentMessagesByChatId(id, PageRequest.of(page, size)));
+
     }
 
     @GetMapping(value = "/messages/{id}")
@@ -113,7 +114,6 @@ public class MessageController {
         Message message = modelMapper.map(createMessageDto, Message.class);
         message.setSender(userService.get(currentUser.getId()));
         Message message1 = messageService.update(message, id);
-
         message.setChat(chatService.getChatById(createMessageDto.getChatId()));
         return viewMessageConverter.convertToDto(message1);
     }

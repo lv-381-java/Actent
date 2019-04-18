@@ -1,9 +1,9 @@
 import React from 'react';
 import { MDBCol } from 'mdbreact';
 
-export default class SelectCity extends React.Component {
+export default class SelectLocation extends React.Component {
   setValue = event => {
-        this.props.setCity(event.target.value);
+        this.props.setLocation(event.target.value);
   };
   render() {
     return (
@@ -11,7 +11,7 @@ export default class SelectCity extends React.Component {
         <input
           className='form-control form-control-lg'
           type='text'
-          placeholder='name'
+          placeholder='location'
           aria-label='Search'
           onChange={this.setValue}
         />

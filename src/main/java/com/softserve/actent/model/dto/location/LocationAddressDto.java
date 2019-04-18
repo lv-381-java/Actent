@@ -5,8 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CountryDto {
+public class LocationAddressDto {
 
-    private Long id;
-    private String name;
+    private String address;
 }

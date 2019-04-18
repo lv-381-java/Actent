@@ -12,11 +12,7 @@ public class EventSpecification {
     private static final String EVENT_CATEGORY = "category";
     private static final String CATEGORY_ID = "id";
     private static final String EVENT_ADDRESS = "address";
-    private static final String EVENT_CITY = "city";
-    private static final String CITY_NAME = "name";
     private static final String EVENT_START_DATE = "startDate";
-    private static final Long POSITIVE_NUMBER = 0L;
-
 
     public static Specification<Event> getTitle(String title) {
         return (Specification<Event>) (root, query, cb) ->
@@ -30,15 +26,15 @@ public class EventSpecification {
                         : cb.isTrue(root.get(EVENT_CATEGORY).get(CATEGORY_ID).in(categoriesId));
     }
 
-    public static Specification<Event> getCity(String city) {
+    public static Specification<Event> getLocation(String address) {
         return (Specification<Event>) (root, query, cb) ->
-                (city == null || city.isEmpty()) ? null
-                        : cb.equal(root.get(EVENT_ADDRESS).get(EVENT_CITY).get(CITY_NAME), city);
+                (address == null || address.isEmpty()) ? null
+                        : cb.like(root.get(EVENT_ADDRESS).get(EVENT_ADDRESS), "%" + address + "%");
     }
 
     public static Specification<Event> getDate(LocalDateTime dateFrom, LocalDateTime dateTo) {
         return (Specification<Event>) (root, query, cb) -> {
-            if (dateFrom == null && dateTo == null ) {
+            if (dateFrom == null && dateTo == null) {
                 return null;
             } else if (dateTo == null && dateFrom.isAfter(LocalDateTime.now())) {
                 return cb.greaterThanOrEqualTo(root.get(EVENT_START_DATE), dateFrom);

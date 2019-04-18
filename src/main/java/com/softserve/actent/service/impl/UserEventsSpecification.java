@@ -12,7 +12,6 @@ public class UserEventsSpecification {
     private static final String TYPE = "type";
     private static final String CATEGORY = "category";
     private static final String NAME = "name";
-    private static final String CITY = "city";
     private static final String ADDRESS = "address";
 
 
@@ -42,32 +41,18 @@ public class UserEventsSpecification {
     }
 
     public static Specification<EventUser> getUserType(EventUserType type) {
-        return (Specification<EventUser>) (root, query, criteriaBuilder) -> {
-            if (type == null) {
-                return null;
-            } else {
-                return criteriaBuilder.equal(root.get(TYPE), type);
-            }
-        };
+        return (Specification<EventUser>) (root, query, criteriaBuilder) ->
+                type == null ? null : criteriaBuilder.equal(root.get(TYPE), type);
+
     }
 
     public static Specification<EventUser> getCategory(String name) {
-        return (Specification<EventUser>) (root, query, criteriaBuilder) -> {
-            if (name == null) {
-                return null;
-            } else {
-                return criteriaBuilder.equal(root.get(EVENT).get(CATEGORY).get(NAME), name);
-            }
-        };
+        return (Specification<EventUser>) (root, query, criteriaBuilder) ->
+                name == null ? null : criteriaBuilder.equal(root.get(EVENT).get(CATEGORY).get(NAME), name);
     }
 
-    public static Specification<EventUser> getCity(String name) {
-        return (Specification<EventUser>) (root, query, criteriaBuilder) -> {
-            if (name == null || name.isEmpty()) {
-                return null;
-            } else {
-                return criteriaBuilder.equal(root.get(EVENT).get(ADDRESS).get(CITY).get(NAME), name);
-            }
-        };
+    public static Specification<EventUser> getLocation(String address) {
+        return (Specification<EventUser>) (root, query, criteriaBuilder) ->
+                (address == null || address.isEmpty()) ? null : criteriaBuilder.like(root.get(EVENT).get(ADDRESS).get(ADDRESS), "%" + address + "%");
     }
 }

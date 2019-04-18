@@ -5,7 +5,37 @@ import Axios from 'axios';
 class ShowEvent extends React.Component {
     state = {
         eventId: Number(this.props.match.params.id),
-        reviews: ['first review', 'second review', 'third review', 'fff review', 'fourth review', 'fifth review', 'sixth review', 'seventh review', 'eight review', 'ten review', 'eleven review', 'twelve review', 'thirteen review', 'fourteen review', '15 review', '16 review', '17 review', '18 review', '19 review', '20 review', '21 review', '22 review', '23 review', '24 review', '25 review', '26 review', '27 review', '28 review', '29 review'],
+        reviews: [
+            'first review',
+            'second review',
+            'third review',
+            'fff review',
+            'fourth review',
+            'fifth review',
+            'sixth review',
+            'seventh review',
+            'eight review',
+            'ten review',
+            'eleven review',
+            'twelve review',
+            'thirteen review',
+            'fourteen review',
+            '15 review',
+            '16 review',
+            '17 review',
+            '18 review',
+            '19 review',
+            '20 review',
+            '21 review',
+            '22 review',
+            '23 review',
+            '24 review',
+            '25 review',
+            '26 review',
+            '27 review',
+            '28 review',
+            '29 review',
+        ],
         creatorId: undefined,
         participants: undefined,
         spectators: undefined,
@@ -16,10 +46,22 @@ class ShowEvent extends React.Component {
         this.getEvent();
         this.getParticipants();
     }
+    addSubscribe = () => {
+        const data = { category: this.state.category, city: this.state.location };
+        console.log(data);
+        Axios.post(`/subscribers`, data)
+            .then(res => {
+                console.log(res.data);
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+    };
 
     getEvent = () => {
         Axios.get(`http://localhost:8080/api/v1/events/${this.state.eventId}`)
             .then(eve => {
+                console.log(eve.data);
                 this.setState({
                     title: eve.data['title'],
                     description: eve.data['description'],
@@ -38,6 +80,7 @@ class ShowEvent extends React.Component {
                     creatorId: eve.data.Creator.id,
                     creatorFirstName: eve.data.Creator.firstName,
                     creatorLastName: eve.data.Creator.lastName,
+                    location: eve.data.Location.address,
                 });
             })
             .catch(function(error) {
@@ -86,6 +129,8 @@ class ShowEvent extends React.Component {
                     spectators={this.state.spectators}
                     eventId={this.state.eventId}
                     eventUserList={this.state.eventUserList}
+                    currentUserId={this.props.currentUserId}
+                    addSubscribe={this.addSubscribe}
                 />
             </div>
         );

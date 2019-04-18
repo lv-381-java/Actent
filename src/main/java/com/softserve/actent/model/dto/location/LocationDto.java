@@ -9,4 +9,6 @@ public class LocationDto {
 
     private Long id;
     private String address;
+    private Double latitude;
+    private Double longtitude;
 }

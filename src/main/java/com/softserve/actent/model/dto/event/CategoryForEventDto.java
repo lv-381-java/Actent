@@ -12,7 +12,5 @@ public class CategoryForEventDto {
 
     private Long id;
     private String name;
-
-    @JsonProperty("Parent id")
     private Long parentId;
 }
