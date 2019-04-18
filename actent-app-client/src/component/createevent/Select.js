@@ -4,7 +4,6 @@ export default class Select extends React.Component {
     constructor(props) {
         super(props);
     }
-
     render() {
         return (
             <div className="form-group">
@@ -25,7 +24,10 @@ export default class Select extends React.Component {
                             </option>
                         );
                     })}
+
                 </select>
+                <span>{this.props.errorMessage}</span>
             </div>)
+
     }
 }

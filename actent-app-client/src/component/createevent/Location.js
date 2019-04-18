@@ -37,7 +37,6 @@ class Location extends React.Component {
     handleChangeRegions = (event) => {
         if (event.target.value === "None") {
             this.setState({region: undefined});
-            // this.props.setCategoryId(undefined)
         } else {
             this.setState({region: event.target.value}, () => (this.getCities())
             );
