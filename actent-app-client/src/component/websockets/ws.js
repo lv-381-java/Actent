@@ -113,6 +113,7 @@ export function showMessageOutputPrepend(messageOutput) {
         let t = new Date().getTime();
         configureAxios();
         getCurrentUser().then(res => {
+
             if(res.data.id == this.id.slice(13, 15)){
                 ReactDOM.render(<Confirm
                         key={t} messageId={this.id.slice(4,6)}
@@ -155,7 +156,7 @@ export function showMessageOutput(messageOutput) {
     } else {
         messageElement.classList.add('chat-message');
     }
-    messageElement.setAttribute("id","msg_" + messageOutput.id + "sender_" + messageOutput.senderId);
+    messageElement.setAttribute("id","msg_" + messageOutput.id + "_sender_" + messageOutput.senderId);
 
     let avatarElement = document.createElement('i');
     messageElement.appendChild(avatarElement);
@@ -205,10 +206,11 @@ export function showMessageOutput(messageOutput) {
         let t = new Date().getTime();
         configureAxios();
         getCurrentUser().then(res => {
-            if(res.data.id == this.id.slice(13, 15)){
+            let mas = this.id.split("_");
+            if(res.data.id == mas[3]){
                 ReactDOM.render(<Confirm
-                        key={t} messageId={this.id.slice(4,6)}
-                        senderId={this.id.slice(13, 15)}
+                        key={t} messageId={mas[1]}
+                        senderId={mas[3]}
                         open={true}
                         chatId={messageOutput.chatId}
                     />,
@@ -271,7 +273,7 @@ export function deleteURL(messageId, senderId){
 
 function deleteMessage(messageId, senderId){
     let messageArea = document.getElementById('messageArea');
-    let message = document.getElementById(`msg_${messageId}sender_${senderId}`);
+    let message = document.getElementById(`msg_${messageId}_sender_${senderId}`);
     messageArea.removeChild(message);
 }
 
