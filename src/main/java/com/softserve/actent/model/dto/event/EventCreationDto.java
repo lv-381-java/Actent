@@ -2,6 +2,8 @@ package com.softserve.actent.model.dto.event;
 
 import com.softserve.actent.constant.NumberConstants;
 import com.softserve.actent.constant.StringConstants;
+import com.softserve.actent.model.entity.AccessType;
+import com.softserve.actent.utils.enumValidator.Enum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -52,6 +54,7 @@ public class EventCreationDto {
     @Positive(message = StringConstants.LOCATION_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
     private Long locationId;
 
+    @Enum(enumClass = AccessType.class, ignoreCase = true, message = StringConstants.WRONG_ACCESS_TYPE)
     @NotBlank(message = StringConstants.ACCESS_TYPE_CAN_NOT_BE_NULL_OR_EMPTY)
     private String accessType;
 

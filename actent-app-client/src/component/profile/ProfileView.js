@@ -1,7 +1,13 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.css';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { MDBTable, MDBTableBody, MDBTableHead, MDBRow, MDBCol, MDBBtn, MDBCollapse } from 'mdbreact';
 import { Redirect } from 'react-router-dom';
+import { Route, Link, NavLink, BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
+import SubscriptionsItem from './subscriptionsItem';
 
 export const s3Root = 'https://s3.ap-south-1.amazonaws.com/';
 
@@ -15,8 +21,45 @@ export default class ProfileView extends React.Component {
     constructor(props) {
         super(props);
     }
+    state = {
+        colapse: '',
+        subscriptions: [],
+    };
+    componentDidMount() {
+        this.getAllSubscription();
+    }
+
+    getAllSubscription = () => {
+        axios
+            .get(`/getSubscriptions`)
+            .then(res => {
+                let subscriptions = res.data;
+                this.setState({ subscriptions: subscriptions });
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+    };
+    deleteSubscription = id => {
+        axios.get(`/subscribers/${id}`).catch(function(error) {
+            console.error(error);
+        });
+    };
+
+    toggleCollapse = collapseID => () => {
+        let colapse = this.state.colapse;
+
+        colapse === collapseID ? this.setState({ colapse: '' }) : this.setState({ colapse: collapseID });
+    };
+    deleteSubcription = event => {
+        let id = Object.assign({}, event.target);
+        console.log(id);
+        this.deleteSubcription(id);
+        console.log(id);
+    };
 
     render() {
+        let subscriptions = this.state.subscriptions;
         const editBtn = this.props.isMyProfile ? (
             <Button
                 style={{ marginLeft: '20px' }}
@@ -24,8 +67,7 @@ export default class ProfileView extends React.Component {
                 color='primary'
                 variant='contained'
                 disabled={this.props.profileData.id === ''}
-                onClick={this.props.onEditClick}
-            >
+                onClick={this.props.onEditClick}>
                 Edit
             </Button>
         ) : (
@@ -34,16 +76,21 @@ export default class ProfileView extends React.Component {
                 color='secondary'
                 variant='contained'
                 disabled={this.props.profileData.id === ''}
-                href={`${this.props.link}`}
-            >
+                href={`${this.props.link}`}>
                 Add review
             </Button>
         );
 
         const userEvents = this.props.isMyProfile ? (
-            <Button label='My events' color='primary' variant='contained' disabled={this.props.profileData.id === ''}>
-                My Events
-            </Button>
+            <NavLink to={`userEvents`}>
+                <Button
+                    label='My events'
+                    color='primary'
+                    variant='contained'
+                    disabled={this.props.profileData.id === ''}>
+                    My Events
+                </Button>
+            </NavLink>
         ) : null;
 
         const img =
@@ -104,6 +151,41 @@ export default class ProfileView extends React.Component {
 
                 <div className='styleLowerMain2'>
                     {userEvents} {editBtn}
+                    <Button
+                        label='My events'
+                        color='primary'
+                        variant='contained'
+                        onClick={this.toggleCollapse('subscriptions')}>
+                        My Subscriptions
+                    </Button>
+                </div>
+                <div className='styleLowerMain2'>
+                    <MDBCol style={{ maxWidth: '100%' }}>
+                        <MDBCollapse id='subscriptions' isOpen={this.state.colapse}>
+                            <MDBTable hover btn>
+                                <MDBTableHead>
+                                    <tr>
+                                        <th>category</th>
+                                        <th>location</th>
+                                        <th>delete</th>
+                                    </tr>
+                                </MDBTableHead>
+                                <MDBTableBody>
+                                    {subscriptions.map(subscription => {
+                                        return (
+                                            <SubscriptionsItem
+                                                getAllSubscription={this.getAllSubscription}
+                                                key={`${subscription.id}`}
+                                                category={subscription.category}
+                                                city={subscription.city}
+                                                id={subscription.id}
+                                            />
+                                        );
+                                    })}
+                                </MDBTableBody>
+                            </MDBTable>
+                        </MDBCollapse>
+                    </MDBCol>
                 </div>
             </div>
         );

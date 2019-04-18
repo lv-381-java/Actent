@@ -53,10 +53,6 @@ public class TagControllerTest {
     @MockBean
     private ChatRepository chatRepository;
     @MockBean
-    private CityRepository cityRepository;
-    @MockBean
-    private CountryRepository countryRepository;
-    @MockBean
     private EquipmentRepository equipmentRepository;
     @MockBean
     private EventRepository eventRepository;
@@ -68,8 +64,6 @@ public class TagControllerTest {
     private LocationRepository locationRepository;
     @MockBean
     private MessageRepository messageRepository;
-    @MockBean
-    private RegionRepository regionRepository;
     @MockBean
     private ReviewRepository reviewRepository;
     @MockBean

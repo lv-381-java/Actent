@@ -8,11 +8,9 @@ import com.softserve.actent.exceptions.security.AccessDeniedException;
 import com.softserve.actent.exceptions.validation.IncorrectEmailException;
 import com.softserve.actent.model.entity.User;
 import com.softserve.actent.repository.UserRepository;
-import com.softserve.actent.service.CityService;
-import com.softserve.actent.service.ImageService;
 import com.softserve.actent.service.LocationService;
+import com.softserve.actent.service.ImageService;
 import com.softserve.actent.service.UserService;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +24,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final CityService cityService;
+    private final LocationService locationService;
     private final ImageService imageService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           CityService cityService,
+                           LocationService locationService,
                            ImageService imageService) {
 
         this.userRepository = userRepository;
-        this.cityService = cityService;
+        this.locationService = locationService;
         this.imageService = imageService;
     }
 
@@ -74,7 +72,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setBio(user.getBio());
 
             if (user.getLocation() != null){
-                existingUser.setLocation(cityService.get(user.getLocation().getId()));
+                existingUser.setLocation(locationService.get(user.getLocation().getId()));
             }
             if (user.getAvatar() != null){
                 existingUser.setAvatar(imageService.get(user.getAvatar().getId()));

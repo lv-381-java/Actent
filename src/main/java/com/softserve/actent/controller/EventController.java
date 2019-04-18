@@ -5,12 +5,11 @@ import com.softserve.actent.constant.UrlConstants;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.exceptions.validation.ValidationException;
 import com.softserve.actent.model.dto.IdDto;
-import com.softserve.actent.model.dto.converter.EventConverter;
-import com.softserve.actent.model.dto.converter.EventCreationConverter;
+import com.softserve.actent.model.dto.converter.UltraEventConverter;
 import com.softserve.actent.model.dto.event.EventCreationDto;
-import com.softserve.actent.model.dto.event.EventDto;
 import com.softserve.actent.model.dto.event.EventFilterDto;
 import com.softserve.actent.model.dto.event.EventUpdateDto;
+import com.softserve.actent.model.dto.event.UltraEventDto;
 import com.softserve.actent.model.entity.Event;
 import com.softserve.actent.repository.EventFilterRepository;
 import com.softserve.actent.service.EventService;
@@ -18,6 +17,8 @@ import com.softserve.actent.service.impl.EventSpecification;
 import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -43,68 +44,78 @@ public class EventController {
 
     private static final String url = "/events";
     private final EventService eventService;
-    private final EventCreationConverter eventCreationConverter;
-    private final EventConverter eventConverter;
     private final ModelMapper modelMapper;
+    private final UltraEventConverter ultraEventConverter;
     private final EventFilterRepository eventFilterRepository;
 
     @Autowired
     public EventController(EventService eventService,
-                           EventCreationConverter eventCreationConverter,
-                           EventConverter eventConverter,
                            ModelMapper modelMapper,
+                           UltraEventConverter ultraEventConverter,
                            EventFilterRepository eventFilterRepository) {
 
         this.eventService = eventService;
-        this.eventCreationConverter = eventCreationConverter;
-        this.eventConverter = eventConverter;
         this.modelMapper = modelMapper;
+        this.ultraEventConverter = ultraEventConverter;
         this.eventFilterRepository = eventFilterRepository;
     }
 
-    @GetMapping(value = url + "/all")
+    @GetMapping(value = url + "/all/{page}/{size}")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventDto> getActiveEvents() {
 
-        List<Event> eventList = eventService.findActiveEvents();
-        return eventConverter.convertToDto(eventList);
+    public List<UltraEventDto> getActiveEvents(@PathVariable
+                                          @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
+                                                  int page,
+                                          @PathVariable
+                                          @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
+                                          @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
+                                                  int size) {
+
+        Page<Event> eventPage = eventService.findActiveEvents(PageRequest.of(page, size));
+        System.out.println(eventPage.getTotalElements());
+        return ultraEventConverter.convertToDtoList(eventPage.getContent(),"ostap");
+    }
+
+    @GetMapping(value = url + "/totalElements")
+    @ResponseStatus(HttpStatus.OK)
+    public Long getTotalElements() {
+
+        Page<Event> eventPage = eventService.findActiveEvents(PageRequest.of(0, 1));
+        return eventPage.getTotalElements();
     }
 
     @GetMapping(value = url + "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EventDto getEventById(@PathVariable
+    public UltraEventDto getEventById(@PathVariable
                                  @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
-                                 @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
-                                         Long id) {
+                                 @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO) Long id) {
 
         Event event = eventService.get(id);
-        return eventConverter.convertToDto(event);
+        return ultraEventConverter.convertToDto(event, "full");
     }
 
     @PostMapping(value = url + "/filter")
-    public List<EventDto> getEventsWithFilter(
-            @RequestBody EventFilterDto eventFilterDto) {
+    public List<UltraEventDto> getEventsWithFilter(@RequestBody EventFilterDto eventFilterDto) {
         System.out.println(eventFilterDto);
         List<Event> result = eventFilterRepository.findAll(EventSpecification.getTitle(eventFilterDto.getTitle())
                 .and(EventSpecification.getCategory(eventFilterDto.getCategoriesId()))
-                .and(EventSpecification.getCity(eventFilterDto.getCityName()))
+                .and(EventSpecification.getLocation(eventFilterDto.getLocationAddress()))
                 .and(EventSpecification.getDate(eventFilterDto.getDateFrom(), eventFilterDto.getDateTo())));
-        return eventConverter.convertToDto(result);
+        return ultraEventConverter.convertToDtoList(result, "ostap");
     }
 
     @GetMapping(value = url + "/title/{title}")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventDto> getByTitle(@PathVariable
+    public List<UltraEventDto> getByTitle(@PathVariable
                                      @NotNull(message = StringConstants.TITLE_SHOULD_NOT_BE_BLANK)
-                                     @Length(message = StringConstants.TITLE_LENGTH_IS_TO_LONG)
-                                             String title) {
+                                     @Length(message = StringConstants.TITLE_LENGTH_IS_TO_LONG) String title) {
 
         if (title == null || title.isEmpty()) {
             throw new ValidationException(StringConstants.TITLE_SHOULD_NOT_BE_BLANK, ExceptionCode.VALIDATION_FAILED);
         }
 
         List<Event> eventList = eventService.getByTitle(title);
-        return eventConverter.convertToDto(eventList);
+        return ultraEventConverter.convertToDtoList(eventList, "ostap");
     }
 
     @PostMapping(value = url)
@@ -112,7 +123,7 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addEvent(@Validated @RequestBody EventCreationDto eventCreationDto) {
 
-        Event event = eventCreationConverter.convertToEntity(eventCreationDto);
+        Event event = ultraEventConverter.convertToEntity(eventCreationDto);
         event = eventService.add(event);
 
         return new IdDto(event.getId());
@@ -121,16 +132,15 @@ public class EventController {
     @PutMapping(value = url + "/{id}")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
-    public EventDto updateEventById(@Validated @RequestBody EventUpdateDto eventUpdateDto,
-                                    @PathVariable
+    public UltraEventDto updateEventById(@Validated @RequestBody EventUpdateDto eventUpdateDto,
+                                         @PathVariable
                                     @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
-                                    @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
-                                            Long id) {
+                                    @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO) Long id) {
 
         Event event = modelMapper.map(eventUpdateDto, Event.class);
         event = eventService.update(event, id);
 
-        return eventConverter.convertToDto(event);
+        return ultraEventConverter.convertToDto(event, "full");
     }
 
     @DeleteMapping(value = url + "/{id}")
@@ -138,9 +148,18 @@ public class EventController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteEventById(@PathVariable
                                 @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
-                                @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
-                                        Long id) {
+                                @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO) Long id) {
 
         eventService.delete(id);
     }
+
+    @GetMapping(value = url + "/all/{type}")
+    @ResponseStatus(HttpStatus.OK)
+    public UltraEventDto getAllWithType(@PathVariable(value = "type", required = false) String type) {
+
+        List<Event> eventList = eventService.getAll();
+
+        return ultraEventConverter.convertToDto(eventList.get(0), type);
+    }
+
 }

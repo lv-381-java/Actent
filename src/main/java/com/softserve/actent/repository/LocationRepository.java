@@ -1,13 +1,13 @@
 package com.softserve.actent.repository;
 
+
 import com.softserve.actent.model.entity.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
+    Location findByAddress(String address);
 
-    List<Location> findAllByCity_Id(Long cityId);
+    Boolean existsByAddress(String address);
 }

@@ -36,17 +36,8 @@ public class NumberConstants {
     public static final short MIN_SCORE_VALUE = 1;
     public static final short MAX_SCORE_VALUE = 5;
 
-    public static final short COUNTRY_MIN_LENGTH = 3;
-    public static final short COUNTRY_MAX_LENGTH = 30;
-
-    public static final short REGION_MIN_LENGTH = 5;
-    public static final short REGION_MAX_LENGTH = 30;
-
-    public static final short CITY_MIN_LENGTH = 4;
-    public static final short CITY_MAX_LENGTH = 25;
-
-    public static final short LOCATION_MIN_LENGTH = 5;
-    public static final short LOCATION_MAX_LENGTH = 50;
+    public static final short LOCATION_MIN_LENGTH = 2;
+    public static final short LOCATION_MAX_LENGTH = 100;
 
     public static final short MIN_VALUE_FOR_CATEGORY_NAME = 1;
     public static final short MAX_VALUE_FOR_CATEGORY_NAME = 30;

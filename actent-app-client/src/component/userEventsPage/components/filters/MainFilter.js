@@ -1,5 +1,5 @@
 import React from 'react';
-import SelectCity from './SelectCity';
+import SelectLocation from './SelectLocation';
 import UserTypeFilter from './UserTypeFilter';
 import CategoryFilter from './CategoryFilter';
 
@@ -13,8 +13,8 @@ export default class MainFilter extends React.Component {
       <div style={style}>
         <div className='row'>
           <div className='col-md-4'>
-            <h5>Select city</h5>
-            <SelectCity setCity={this.props.setCity} />
+            <h5>Select location</h5>
+            <SelectLocation setLocation={this.props.setLocation} />
           </div>
           <div className='col-md-4'>
             <h5>Select user type</h5>

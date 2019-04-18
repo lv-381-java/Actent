@@ -6,20 +6,9 @@ const style = {
     height: 'calc(1.5em + 1.75rem + 2px)',
 };
 export default class HeaderInput extends Component {
-    state = {
-        findEvent: this.props.findEvent,
-    };
-
     handleChange = event => {
-        this.setState({ findEvent: event.target.value });
-    };
-
-    enterPressed = event => {
         let code = event.keyCode || event.which;
-        console.log(code);
-        if (code === 13) {
-            this.props.setTitle(this.state.findEvent);
-        }
+        this.props.setTitle(event.target.value, code);
     };
 
     render() {
@@ -27,9 +16,9 @@ export default class HeaderInput extends Component {
             <MDBCol md='6'>
                 <input
                     style={style}
-                    name='findEvent'
+                    value={this.props.showTitleName}
                     onChange={this.handleChange}
-                    onKeyPress={this.enterPressed}
+                    onKeyPress={this.handleChange}
                     className='form-control form-control-lg'
                     type='text'
                     placeholder='Find an event'

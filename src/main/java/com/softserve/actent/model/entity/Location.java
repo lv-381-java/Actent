@@ -12,7 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -20,7 +19,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "locations", uniqueConstraints = {@UniqueConstraint(columnNames = {"address", "city_id"})})
+@Table(name = "locations", uniqueConstraints =
+        {@UniqueConstraint(columnNames = {"address", "latitude", "longtitude"})})
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,12 +30,12 @@ public class Location {
     @NotBlank(message = StringConstants.EMPTY_LOCATION)
     @Length(min = NumberConstants.LOCATION_MIN_LENGTH,
             max = NumberConstants.LOCATION_MAX_LENGTH,
-            message = StringConstants.LOCATION_LENGTH_BETWEEN_FIVE_AND_FIFTY_SYMBOLS)
+            message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS)
     @Column(nullable = false,
             length = NumberConstants.LOCATION_MAX_LENGTH)
     private String address;
 
-    @NonNull
-    @ManyToOne
-    private City city;
+    private Double latitude;
+
+    private Double longtitude;
 }

@@ -15,13 +15,16 @@ import com.softserve.actent.repository.EventRepository;
 import com.softserve.actent.repository.ImageRepository;
 import com.softserve.actent.repository.LocationRepository;
 import com.softserve.actent.repository.UserRepository;
-import com.softserve.actent.service.ChatService;
 import com.softserve.actent.service.EventService;
+import com.softserve.actent.service.SubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,6 +36,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
     private final ChatRepository chatRepository;
+    private final SubscribeService subscribeService;
 
     @Autowired
     public EventServiceImpl(EventRepository eventRepository,
@@ -40,7 +44,8 @@ public class EventServiceImpl implements EventService {
                             LocationRepository locationRepository,
                             CategoryRepository categoryRepository,
                             ImageRepository imageRepository,
-                            ChatRepository chatRepository) {
+                            ChatRepository chatRepository,
+                            SubscribeService subscribeService) {
 
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
@@ -48,6 +53,7 @@ public class EventServiceImpl implements EventService {
         this.categoryRepository = categoryRepository;
         this.imageRepository = imageRepository;
         this.chatRepository = chatRepository;
+        this.subscribeService = subscribeService;
     }
 
     @Override
@@ -73,28 +79,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findActiveEvents() {
-        return eventRepository.findByStartDateIsGreaterThanEqual(LocalDateTime.now());
+    public Page<Event> findActiveEvents(Pageable pageable) {
+        return eventRepository.findByStartDateIsGreaterThanEqual(LocalDateTime.now(), pageable);
     }
 
     @Override
     public List<Event> getByTitle(String title) {
-
         List<Event> events = eventRepository.findByTitle(title);
-
-        if (events == null) {
-            throw new DataNotFoundException(ExceptionMessages.EVENT_BY_THIS_TITLE_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
-        }
-
+        nullHunter(events, ExceptionMessages.EVENT_BY_THIS_TITLE_IS_NOT_FOUND);
         return events;
     }
 
     @Override
     public Event update(Event event, Long id) {
 
-        if (event == null || id == null) {
-            throwResourceNotFound(ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
-        }
+        nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
+        nullHunter(id, ExceptionMessages.ID_CAN_NOT_BE_NULL);
 
         Event preparedEvent = getPreparedEventFromDataBase(event, id);
         return getUpdatedEvent(preparedEvent);
@@ -112,8 +112,12 @@ public class EventServiceImpl implements EventService {
     protected Event getSavedEvent(Event event) {
 
         event.setChat(createChat());
-        return eventRepository.save(event);
+        event=eventRepository.save(event);
+        subscribeService.checkSubscribers(event);
+        return event;
     }
+
+
 
     @Transactional
     protected Event getUpdatedEvent(Event event) {
@@ -168,9 +172,7 @@ public class EventServiceImpl implements EventService {
         if (event.getChat() == null) {
             event.setChat(eventFromBase.getChat());
         } else {
-            if (!chatRepository.existsById(event.getChat().getId())) {
-                throwResourceNotFound(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND);
-            }
+            isChatExist(event.getChat().getId());
         }
     }
 
@@ -179,9 +181,7 @@ public class EventServiceImpl implements EventService {
         if (event.getImage() == null) {
             event.setImage(eventFromBase.getImage());
         } else {
-            if (!imageRepository.existsById(event.getImage().getId())) {
-                throwResourceNotFound(ExceptionMessages.IMAGE_NOT_FOUND_WITH_ID);
-            }
+            isImageExist(event.getImage().getId());
         }
     }
 
@@ -190,9 +190,7 @@ public class EventServiceImpl implements EventService {
         if (event.getCategory() == null) {
             event.setCategory(eventFromBase.getCategory());
         } else {
-            if (!categoryRepository.existsById(event.getCategory().getId())) {
-                throwResourceNotFound(ExceptionMessages.CATEGORY_IS_NOT_FOUND);
-            }
+            isCategoryExist(event.getCategory().getId());
         }
     }
 
@@ -201,9 +199,7 @@ public class EventServiceImpl implements EventService {
         if (event.getAddress() == null) {
             event.setAddress(eventFromBase.getAddress());
         } else {
-            if (!locationRepository.existsById(event.getAddress().getId())) {
-                throwResourceNotFound(ExceptionMessages.LOCATION_NOT_FOUND);
-            }
+            isLocationExist(event.getAddress().getId());
         }
     }
 
@@ -212,7 +208,7 @@ public class EventServiceImpl implements EventService {
         if (event.getCreator() == null) {
             event.setCreator(eventFromBase.getCreator());
         } else {
-            throwResourceNotFound(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND);
+            isUserExist(event.getCreator().getId());
         }
     }
 
@@ -293,43 +289,53 @@ public class EventServiceImpl implements EventService {
 
     private void checkEventAndEventFieldsForNull(Event event) {
 
-        if (event == null) {
-            throwResourceNotFound(ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
-        }
-
-        if (event.getCreator() == null) {
-            throwResourceNotFound(ExceptionMessages.EVENT_CREATOR_CAN_NOT_BE_NULL);
-        }
-
-        if (event.getAddress() == null) {
-            throwResourceNotFound(ExceptionMessages.EVENT_ADDRESS_CAN_NOT_BE_NULL);
-        }
-
-        if (event.getCategory() == null) {
-            throwResourceNotFound(ExceptionMessages.EVENT_CATEGORY_CAN_NOT_BE_NULL);
-        }
-
-        if (event.getAccessType() == null) {
-            throwResourceNotFound(ExceptionMessages.EVENT_ACCESS_TYPE_CAN_NOT_BE_NULL);
-        }
+        nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
+        nullHunter(event.getCategory(), ExceptionMessages.EVENT_CREATOR_CAN_NOT_BE_NULL);
+        nullHunter(event.getAddress(), ExceptionMessages.EVENT_ADDRESS_CAN_NOT_BE_NULL);
+        nullHunter(event.getCategory(), ExceptionMessages.EVENT_CATEGORY_CAN_NOT_BE_NULL);
+        nullHunter(event.getAccessType(), ExceptionMessages.EVENT_ACCESS_TYPE_CAN_NOT_BE_NULL);
     }
 
     private void checkForExistenceResource(Event event) {
 
-        if (!userRepository.existsById(event.getCreator().getId())) {
-            throwResourceNotFound(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND);
-        }
+        isUserExist(event.getCreator().getId());
+        isLocationExist(event.getAddress().getId());
+        isCategoryExist(event.getCategory().getId());
+    }
 
-        if (!locationRepository.existsById(event.getAddress().getId())) {
-            throwResourceNotFound(ExceptionMessages.LOCATION_NOT_FOUND);
-        }
-
-        if (!categoryRepository.existsById(event.getCategory().getId())) {
-            throwResourceNotFound(ExceptionMessages.CATEGORY_IS_NOT_FOUND);
+    private void nullHunter(Object object, String message) {
+        if (Objects.isNull(object)) {
+            throw new DataNotFoundException(message, ExceptionCode.NOT_FOUND);
         }
     }
 
-    private void throwResourceNotFound(String message) {
-        throw new DataNotFoundException(message, ExceptionCode.NOT_FOUND);
+    private void isUserExist(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new DataNotFoundException(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
+        }
+    }
+
+    private void isLocationExist(Long id) {
+        if (!locationRepository.existsById(id)) {
+            throw new DataNotFoundException(ExceptionMessages.LOCATION_NOT_FOUND, ExceptionCode.NOT_FOUND);
+        }
+    }
+
+    private void isCategoryExist(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new DataNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
+        }
+    }
+
+    private void isChatExist(Long id) {
+        if (!chatRepository.existsById(id)) {
+            throw new DataNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
+        }
+    }
+
+    private void isImageExist(Long id) {
+        if (!imageRepository.existsById(id)) {
+            throw new DataNotFoundException(ExceptionMessages.IMAGE_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
+        }
     }
 }

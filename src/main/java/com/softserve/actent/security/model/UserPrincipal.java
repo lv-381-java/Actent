@@ -33,7 +33,7 @@ public class UserPrincipal implements UserDetails {
 
     private Image avatar;
 
-    private City location;
+    private Location location;
 
     private String bio;
 
