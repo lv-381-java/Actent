@@ -10,6 +10,8 @@ public interface LocationService {
 
     Location getByAddress(String address);
 
+    Location getByCoordinates(String address);
+
     List<Location> getAllAutocomplete(String address);
 }
 

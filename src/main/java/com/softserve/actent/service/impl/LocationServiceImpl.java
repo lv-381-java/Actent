@@ -60,6 +60,11 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
+    public Location getByCoordinates(String address) {
+        return locationRepository.findByAddress(address);
+    }
+
+    @Override
     public List<Location> getAllAutocomplete(String address) {
         ArrayList<Location> locations = null;
         StringBuilder jsonResults = new StringBuilder();
