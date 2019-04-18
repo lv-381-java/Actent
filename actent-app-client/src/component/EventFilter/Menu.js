@@ -25,7 +25,6 @@ export default class Menu extends Component {
         this.state = {
             collapse: false,
             isWideEnough: false,
-            // userId: props.userId,
         };
         this.onClick = this.onClick.bind(this);
     }
@@ -36,8 +35,9 @@ export default class Menu extends Component {
         });
     }
 
-    handleLogOut = _ => {
+    handleLogOut = () => {
         removeAuthorizationToken();
+        window.location.href = "/"
     };
 
     render() {
@@ -73,7 +73,7 @@ export default class Menu extends Component {
                                     this.props.userId !== undefined ?
                                     <MDBDropdownMenu className='dropdown-default' right>
                                         <MDBDropdownItem href='/profile'>Profile</MDBDropdownItem>
-                                        <MDBDropdownItem href='/' onClick={this.handleLogOut}>
+                                        <MDBDropdownItem href='' onClick={this.handleLogOut}>
                                             Log Out
                                         </MDBDropdownItem>
                                     </MDBDropdownMenu>

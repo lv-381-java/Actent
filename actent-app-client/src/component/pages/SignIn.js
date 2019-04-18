@@ -32,7 +32,7 @@ export default class SignIn extends React.Component {
                 response.data.accessToken
                     ? this.handleLogin(response.data.accessToken)
                     : Promise.reject('Access token is undefined.');
-                this.props.history.push('/');
+                window.location.href = "/";
             })
             .catch(error => {
                 NotificationManager.error('Invalid E-mail or Password!', 'Error!', 5000);

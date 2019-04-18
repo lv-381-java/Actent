@@ -28,7 +28,6 @@ export default class App extends React.Component {
     setCurrentUser = _ => {
         getCurrentUser()
             .then(res => {
-                console.log("user id" + res.data.id);
                 this.setState({
                     currentUser: res.data,
                     currentUserId: res.data.id,
@@ -41,6 +40,8 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
+
+                {/*<Menu {...this.props} userId={this.state.currentUserId} />*/}
 
                 <Menu userId={this.state.currentUserId} />
                 <Switch>
