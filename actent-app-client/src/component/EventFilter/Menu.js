@@ -83,15 +83,6 @@ export default class Menu extends Component {
                                         <MDBDropdownItem href='/auth/signUp'>Sign Up</MDBDropdownItem>
                                     </MDBDropdownMenu>
                                 }
-
-                                {/*<MDBDropdownMenu className='dropdown-default' right>*/}
-                                    {/*<MDBDropdownItem href='/auth/signIn'>Sign In</MDBDropdownItem>*/}
-                                    {/*<MDBDropdownItem href='/auth/signUp'>Sign Up</MDBDropdownItem>*/}
-                                    {/*<MDBDropdownItem href='/profile'>Profile</MDBDropdownItem>*/}
-                                    {/*<MDBDropdownItem href='/' onClick={this.handleLogOut}>*/}
-                                        {/*Log Out*/}
-                                    {/*</MDBDropdownItem>*/}
-                                {/*</MDBDropdownMenu>*/}
                             </MDBDropdown>
                         </MDBNavItem>
                     </MDBNavbarNav>
