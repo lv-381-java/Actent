@@ -32,21 +32,13 @@ class FormContainer extends Component {
             duration: "",
             imageId: "",
             locationId: undefined,
-            // startDate: "2099-12-12T12:12",
-            startDate: "",
-            title: "",
+            startDate: '2019-12-12T21:11:54',
+            title: undefined,
             accessOptions: ["public", "private"],
             errorTitle: undefined,
             errorDescription: undefined,
-            errorCapacity: undefined,
-            errorCategory: undefined,
-            errorAccessType: undefined,
-            errorStartDate: "",
-            errorDuration:"",
             formQueryStatus: undefined,
-            imageName: "",
-            imageData: {},
-            filePath: undefined,
+            address: ""
         };
     }
 
@@ -321,6 +313,10 @@ class FormContainer extends Component {
         );
     };
 
+    setAddress = (address) => {
+        this.setState({address: address});
+    }
+
     render() {
         return (
             <div className="mainWrapper">
@@ -371,6 +367,8 @@ class FormContainer extends Component {
                 <Location
                     value={this.state.locationId}
                     setLocationId={this.setLocationId}
+                    address={this.state.address}
+                    setAddress={this.setAddress}
                 />
                 <div>Start Date</div>
                 {/*<MuiPickersUtilsProvider utils={DateFnsUtils}>*/}
