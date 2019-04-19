@@ -3,6 +3,7 @@ import Title from './title/Title.jsx';
 import Window from './window/Window.jsx';
 import Info from './info/Info.jsx';
 import Chat from '../chat/Chat';
+import './Show.css'
 import Participant from './button/Participant.jsx';
 import Spectator from './button/Spectator.jsx';
 import Subscribe from './button/Subscribe';
@@ -138,8 +139,8 @@ class Show extends React.Component {
                                 spectators={this.props.spectators}
                             />
                         </div>
-                        {console.log(this.props.chat)}
-                        <div className='card-chat box-chat'>
+                            {console.log(this.props.chat)}
+                        <div>
                             {this.props.chat != undefined ? <Chat chatId={this.props.chat} /> : console.log("waiting for chat id")}
                         </div>
                         <Subscribe addSubscribe={this.props.addSubscribe} />

@@ -77,6 +77,7 @@ class ShowEvent extends React.Component {
     getEvent = () => {
         Axios.get(`http://localhost:8080/api/v1/events/${this.state.eventId}`)
             .then(eve => {
+                console.log('event - ', eve.data)
                 this.setState({
                     title: eve.data['title'],
                     description: eve.data['description'],
@@ -85,7 +86,7 @@ class ShowEvent extends React.Component {
                     chat: eve.data.Chat.id,
 
                     equipments: eve.data['equipments'],
-                    
+
                     creationDate: eve.data.creationDate,
                     startDate: eve.data['startDate'],
                     duration: eve.data['duration'],

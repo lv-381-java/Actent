@@ -72,6 +72,8 @@ public class EventConverter {
         eventFullDto.setUserForEventDto(getCreator(event.getCreator()));
         eventFullDto.setEquipments(getEquipmentsIfTheyAre(event));
         eventFullDto.setEventForEventUserDtoList(getEventsUsers(event));
+        System.out.println(event.getImage());
+        eventFullDto.setImage(event.getImage());
         // todo: add tags
         // todo: add reviews
         return eventFullDto;

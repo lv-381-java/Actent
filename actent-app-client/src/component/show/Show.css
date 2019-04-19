@@ -24,14 +24,6 @@
     align-self: flex-end;
 }
 
-.b-1 {
-
-}
-
-.b-2 {
-
-}
-
 .box-chat {
     display: flex;
     -webkit-transition: all 0.3s;
@@ -56,11 +48,8 @@
 }
 
 .card-info {
-    padding: 10px;
-    height: 40%;
-    min-width: 500px;
+    padding: 5px;
     max-height: 500px;
-    min-height: 500px;
     flex-wrap: wrap;
 }
 
