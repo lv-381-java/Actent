@@ -18,10 +18,6 @@ class Spectator extends React.Component {
             assigne: this.props.assigne,
             assID: this.props.assID,
         })
-        console.log('assigne CDM - ', this.state.assigne)
-        console.log('assID CDM - ', this.state.assID)
-        console.log('assigne CDM - ', this.props.assigne)
-        console.log('assID CDM - ', this.props.assID)
     }
 
     assigneAsParticipant = () => {
