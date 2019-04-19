@@ -63,4 +63,7 @@ public class ExceptionMessages {
     public static final String JSON_ERROR = "Error processing JSON results";
     public static final String API_URL_ERROR = "Error processing API URL";
     public static final String CONNECTION_ERROR = "Error connecting to API";
+
+    public static final String LOGIN_IS_TOO_SHORT = "Login must be at least five symbols long.";
+    public static final String PASSWORD_IS_TOO_SHORT = "Password must be at least six symbols long.";
 }

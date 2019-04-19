@@ -53,7 +53,7 @@ export default class Profile extends React.Component {
                     birthday: response.data['birthDate'],
                     bio: response.data['bio'],
                     interests: response.data['interests'],
-                    avatonAddReviewClick: response.data['avatar'],
+                    avatar: response.data['avatar'],
                     email: response.data['email'],
                     phone: response.data['phone'],
                 });
