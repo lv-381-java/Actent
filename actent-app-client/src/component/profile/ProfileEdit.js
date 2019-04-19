@@ -105,6 +105,11 @@ export default class ProfileEdit extends React.Component {
     };
 
     getBirthday = () => {
+        console.log(this.state.birthday.getFullYear() +
+            '-' +
+            this.handleDigitsInMonth(this.state.birthday.getMonth() + 1) +
+            '-' +
+            this.handleDigitsInDate(this.state.birthday.getDate()));
         if (this.state.birthday !== null) {
             return (
                 this.state.birthday.getFullYear() +
@@ -123,7 +128,7 @@ export default class ProfileEdit extends React.Component {
     };
 
     handleDigitsInMonth = i => {
-        return i < 10 ? `0${i + 1}` : i;
+        return i < 10 ? `0${i}` : i;
     };
 
     saveUserSettings = () => {
@@ -141,6 +146,8 @@ export default class ProfileEdit extends React.Component {
             phone: this.state.phone,
             avatarId: this.state.imageId,
         };
+
+        console.log(data);
 
         axios.put(url, data).then(() => {
             this.props.onCloseClick();
