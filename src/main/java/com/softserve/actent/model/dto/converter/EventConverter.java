@@ -20,12 +20,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class UltraEventConverter {
+public class EventConverter {
 
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UltraEventConverter(ModelMapper modelMapper) {
+    public EventConverter(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 

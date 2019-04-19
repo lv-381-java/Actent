@@ -137,7 +137,7 @@ export default class ProfileView extends React.Component {
                 </div>
 
                 <div className='styleLowerMain2'>
-                   {editBtn}
+                    {editBtn}
                     <Button
                         label='My events'
                         color='primary'
@@ -151,7 +151,7 @@ export default class ProfileView extends React.Component {
                             color='primary'
                             variant='contained'
 
-                            >
+                        >
                             My Events
                         </Button>
                     </NavLink>

@@ -23,6 +23,7 @@ public class StringConstants {
     public static final String USER_EMAIL_NOT_VALID = "User's email not valid";
     public static final String USER_PHONE_IS_NOT_VALID = "Phone is not valid";
     public static final String USER_CANNOT_WRITE_REVIEW_ABOUT_HIMSELF = "You cannot write a review about yourself";
+    public static final String EVENT_USER_TYPE_IS_NOT_CORRECT = "Event user type is not correct. Should be participant or spectator.";
 
     public static final String EMPTY_LOCATION = "Location can't be empty";
     public static final String LOCATION_ID_POSITIVE_AND_GREATER_THAN_ZERO = "Location id must be positive and greater than zero";

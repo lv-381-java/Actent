@@ -5,35 +5,45 @@ import TextArea from "./TextArea";
 import Select from "./Select";
 import Button from "./Button";
 import Category from "./Category";
-import {DatePicker, MuiPickersUtilsProvider, TimePicker} from "material-ui-pickers";
-import DateFnsUtils from "@date-io/date-fns";
 import Location from "./Location";
 import TextField from '@material-ui/core/TextField';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import './styles.css';
 import {getCurrentUser} from "../../util/apiUtils";
+import FileUpload from "../profile/FileUpload";
+import {apiUrl} from "../profile/Profile";
+import axios from "axios";
+import {getImageUrl} from "../profile/ProfileView";
 
 
 class FormContainer extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            accessType: undefined,
-            capacity: undefined,
+            accessType: "",
+            capacity: "",
             categoryId: undefined,
             creatorId: undefined,
-            description: undefined,
-            duration: undefined,
-            imageId: null,
+            description: "",
+            duration: "",
+            imageId: "",
             locationId: undefined,
-            startDate: '2019-12-12T21:11:54',
-            title: undefined,
+            startDate: "",
+            title: "",
             accessOptions: ["public", "private"],
             errorTitle: undefined,
             errorDescription: undefined,
+            errorCapacity: undefined,
+            errorCategory: undefined,
+            errorLocation: undefined,
+            errorAccessType: undefined,
+            errorStartDate: "",
+            errorDuration:"",
             formQueryStatus: undefined,
+            imageName: "",
+            imageData: {},
+            filePath: undefined,
             address: ""
         };
     }
@@ -53,19 +63,18 @@ class FormContainer extends Component {
     handleTitle = (e) => {
         const value = e.target.value;
         this.setState({title: value});
-    }
+    };
 
     handleInput = (e) => {
         let value = e.target.value;
         let name = e.target.name;
         this.setState({[name]: value});
-    }
+    };
 
-    handleDateChange = (e) => {
-        // let value = Date.parse(e);
+    handleDateChange = e => {
         let value = e.target.value;
         this.setState({startDate: value});
-    }
+    };
 
     handleDuration = (e) => {
         let value = e.target.value;
@@ -73,24 +82,150 @@ class FormContainer extends Component {
         let h = 1000 * 60 * 60 * (+value[0]);
         let m = 1000 * 60 * (+value[1]);
         this.setState({duration: h + m});
-    }
+    };
 
     handleTextArea = (e) => {
         console.log("Inside handleTextArea");
         let value = e.target.value;
         this.setState({description: value});
-    }
+    };
+    isTitleValid = (title) => {
+        let errorTitle = "";
+        if (title === '') {
+            errorTitle = "This field shouldn't be empty";
+            this.setState({errorTitle});
+            return false;
+        }
+        if (title.length < 3) {
+            errorTitle = "Title must be at least 3 characters";
+            this.setState({errorTitle});
+            return false;
+        }
+        this.setState({errorTitle});
+        return true;
+    };
+
+    isStartDateValid = (startDate) => {
+        let errorStartDate = "";
+        if (startDate === '') {
+            errorStartDate = "Incorrect date format";
+            this.setState({errorStartDate});
+            return false;
+        }
+        if (Date.parse(startDate) < Date.now()) {
+            errorStartDate = "Start date cannot be past";
+            this.setState({errorStartDate});
+            return false;
+        }
+        this.setState({errorStartDate});
+        return true;
+    };
+
+    isCapacityValid = (capacity) => {
+        let errorCapacity = "";
+        if (capacity === '') {
+            errorCapacity = "This field shouldn't be empty";
+            this.setState({errorCapacity});
+            return false;
+        }
+        if (capacity > 100) {
+            errorCapacity = "Capacity must be from 1 to 100";
+            this.setState({errorCapacity});
+            return false;
+        }
+        this.setState({errorCapacity});
+        return true;
+    };
+
+    isCategoryValid = (category) => {
+        let errorCategory = "";
+        if (!category) {
+            errorCategory = "This field shouldn't be empty";
+            this.setState({errorCategory});
+            return false;
+        }
+        this.setState({errorCategory});
+        return true;
+    };
+    isLocationValid = (location) => {
+        let errorLocation = "";
+        if (!location) {
+            errorLocation = "This field shouldn't be empty";
+            this.setState({errorLocation});
+            return false;
+        }
+        this.setState({errorLocation});
+        return true;
+    };
+
+    isAccessTypeValid = (accessType) => {
+        let errorAccessType = "";
+        if (!accessType) {
+            errorAccessType = "This field shouldn't be empty";
+            this.setState({errorAccessType});
+            return false;
+        }
+        this.setState({errorAccessType});
+        return true;
+    };
+
+
+    isDescriptionValid = (description) => {
+        let errorDescription = "";
+        if (description === '') {
+            errorDescription = "This field shouldn't be empty";
+            this.setState({errorDescription});
+            return false;
+        }
+
+        if (description.length < 3 || description.length > 350) {
+            errorDescription = "Description must be at least 3 and not more 350 characters";
+            this.setState({errorDescription});
+            return false;
+        }
+        this.setState({errorDescription});
+        return true;
+    };
+
+    isDurationValid = (duration) => {
+        let errorDuration = "";
+        if (!duration) {
+            errorDuration = "Wrong duration format. Must be hh:mm";
+            this.setState({errorDuration});
+            return false;
+        }
+        this.setState({errorDuration});
+        return true;
+    };
+
+    isFormValid = () => {
+        return this.isTitleValid(this.state.title)
+            && this.isCapacityValid(this.state.capacity)
+            && this.isDurationValid(this.state.duration)
+            && this.isCategoryValid(this.state.categoryId)
+            && this.isStartDateValid(this.state.startDate)
+            && this.isAccessTypeValid(this.state.accessType)
+            && this.isDescriptionValid(this.state.description)
+            && this.isLocationValid(this.state.locationId)
+            ;
+    };
 
     handleFormSubmit = (e) => {
         e.preventDefault();
-
-        if (!this.isFormValid()) return;
 
         let eventData = this.state;
 
         this.setState({
             formQueryStatus: 0
         });
+
+        if (!this.isFormValid()) {
+            this.setState({
+                formQueryStatus: 2
+            });
+            return {};
+        }
+
         fetch("http://localhost:8080/api/v1/events", {
             method: "POST",
             body: JSON.stringify(eventData),
@@ -109,47 +244,12 @@ class FormContainer extends Component {
                 return response;
             })
             .then(response => {
-                response.json().then(data => {
-                    console.log("Successful" + data);
-                });
+                response.json()
+                    .then(data => {
+                        console.log("Successful" + data);
+                    });
             });
-    }
-
-    isTitleValid = (title) => {
-        let isValid = true;
-        let errorTitle = "";
-        if (title === '') {
-            errorTitle = "This fiels shouldn't be empty";
-            isValid = false;
-        }
-
-        if (title.length < 3) {
-            errorTitle = "Min 3 symbols";
-            isValid = false;
-        }
-        this.setState({errorTitle});
-        return isValid;
-    }
-
-    isDescriptionValid = (description) => {
-        let isValid = true;
-        let errorDescription = "";
-        if (description === '') {
-            errorDescription = "This fiels shouldn't be empty";
-            isValid = false;
-        }
-
-        if (description.length < 10) {
-            errorDescription = "Min 10 symbols";
-            isValid = false;
-        }
-        this.setState({errorDescription});
-        return isValid;
-    }
-
-    isFormValid = () => {
-        return this.isTitleValid(this.state.title) && this.isDescriptionValid(this.state.description);
-    }
+    };
 
     handleClearForm = (e) => {
         e.preventDefault();
@@ -157,20 +257,68 @@ class FormContainer extends Component {
             accessType: "",
             capacity: "",
             categoryId: "",
-            creatorId: 1,
             description: "",
             duration: "",
             locationId: "",
             title: "",
         });
-    }
+    };
     setCategoryId = (categoryId) => {
-        this.setState({categoryId: categoryId});
-    }
+        this.setState({categoryId: categoryId, hasChildCategory: true});
+    };
 
     setLocationId = (locationId) => {
         this.setState({locationId: locationId});
-    }
+    };
+    saveUserPhoto = () => {
+        const uploadUrl = apiUrl + '/storage/uploadFile/';
+        const addImageUrl = apiUrl + '/images/';
+        const requestTimeout = 30000;
+
+        axios
+            .post(uploadUrl, this.state.imageData, {
+                timeout: requestTimeout,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then(response => {
+                this.setState({
+                    imageName: response.data,
+                    imageData: {
+                        filePath: response.data,
+                    },
+                });
+            })
+            .then(() => {
+                axios
+                    .post(addImageUrl, this.state.imageData, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => {
+                        this.setState({
+                            imageId: response.data.id
+                        });
+                    });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+
+    fetchData = (imageData, imageName) => {
+        this.setState(
+            {
+                imageData: imageData,
+                imageName: imageName,
+            },
+            () => {
+                this.saveUserPhoto();
+            },
+        );
+    };
 
     setAddress = (address) => {
         this.setState({address: address});
@@ -187,7 +335,7 @@ class FormContainer extends Component {
                     value={this.state.title}
                     placeholder={"Enter event title"}
                     handleChange={this.handleTitle}
-                    error={this.state.errorTitle}
+                    errorMessage={this.state.errorTitle}
                 />
 
                 <Input
@@ -199,13 +347,14 @@ class FormContainer extends Component {
                     value={this.state.capacity}
                     placeholder={"Enter capacity of event"}
                     handleChange={this.handleInput}
+                    errorMessage={this.state.errorCapacity}
                 />
                 <p>Duration(hh:mm)</p>
                 <TextField
                     id="time"
                     name={"Duration(hh:mm)"}
                     type="time"
-                    defaultValue="01:00"
+                    defaultValue=""
                     onChange={this.handleDuration}
                     InputLabelProps={{
                         shrink: true,
@@ -214,38 +363,40 @@ class FormContainer extends Component {
                         step: 900, // 15 min
                     }}
                 />
+                <p></p>
+                <span>{this.state.errorDuration}</span>
                 <Category
                     value={this.state.categoryId}
                     setCategoryId={this.setCategoryId}
+                    errorMessage={this.state.errorCategory}
                 />
                 <Location
                     value={this.state.locationId}
                     setLocationId={this.setLocationId}
                     address={this.state.address}
                     setAddress={this.setAddress}
+                    errorMessage={this.state.errorLocation}
                 />
                 <div>Start Date</div>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <DatePicker
-                        minDate={this.state.startDate}
-                        margin="normal"
-                        label="Date picker"
-                        value={this.state.startDate}
-                        // onChange={this.handleDateChange}
-                    />
-                    <TimePicker
-                        margin="normal"
-                        label="Time picker"
-                        value={this.state.startDate}
-                        // onChange={this.handleDateChange}
-                    />
-                </MuiPickersUtilsProvider>
+                <TextField
+                    id="datetime-local"
+                    type="datetime-local"
+                    onChange={this.handleDateChange}
+                    defaultValue=""
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+                <p></p>
+                <span>{this.state.errorStartDate}</span>
+
                 <Select title={'Access'}
                         name={'accessType'}
                         options={this.state.accessOptions}
                         value={this.state.accessType}
-                        placeholder={'Enter access type of event'}
+                        placeholder={'Select access type of event'}
                         handleChange={this.handleInput}
+                        errorMessage={this.state.errorAccessType}
                 />
                 <TextArea
                     title={"Description "}
@@ -254,9 +405,12 @@ class FormContainer extends Component {
                     name={"description"}
                     handleChange={this.handleTextArea}
                     placeholder={"Describe details about event"}
-                    error={this.state.errorDescription}
+                    errorMessage={this.state.errorDescription}
                 />
-
+                <div className="imagePreview">
+                    <img src={getImageUrl(this.state.imageName)}/>
+                </div>
+                <FileUpload fetchData={this.fetchData} handleSavePhoto={this.handleSavePhoto}/>
 
                 {this.state.formQueryStatus === 0 && (<div>Status: Sending request...</div>)}
                 {this.state.formQueryStatus === 1 && (<div>Status: Event created successfully</div>)}

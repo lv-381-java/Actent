@@ -3,43 +3,44 @@ import Title from './title/Title.jsx';
 import Window from './window/Window.jsx';
 import Info from './info/Info.jsx';
 import Chat from './chat/Chat.jsx';
-//import './Show.css';
 import Participant from './button/Participant.jsx';
 import Spectator from './button/Spectator.jsx';
 import Subscribe from './button/Subscribe';
 
 class Show extends React.Component {
+
     state = {
-        userId: this.props.currentUserId,
+        userId: undefined,
         isParticipant: false,
         isSpectator: false,
         assID: undefined,
     };
 
-    static getDerivedStateFromProps(props, state) {
-        if (state.userId !== props.currentUserId) {
-            state.userId = props.currentUserId;
-        }
+    // static getDerivedStateFromProps(props, state) {
 
-        if (state.userId !== undefined) {
-            props.eventUserList.forEach(e => {
-                if (e.userId == state.userId) {
-                    if (e.eventUserType === 'PARTICIPANT') {
-                        state.isParticipant = true;
-                        state.isSpectator = false;
-                        state.assID = e.id;
-                    } else {
-                        state.isParticipant = false;
-                        state.isSpectator = true;
-                        state.assID = e.id;
-                    }
-                }
-            });
-        }
-    }
+    //     if (state.userId !== props.currentUserId) {
+    //         state.userId = props.currentUserId;
+    //     }
+
+    //     if (state.userId !== undefined) {
+    //         props.eventUserList.forEach(e => {
+    //             if (e.userId == state.userId) {
+    //                 if (e.eventUserType === 'PARTICIPANT') {
+    //                     state.isParticipant = true;
+    //                     state.isSpectator = false;
+    //                     state.assID = e.id;
+    //                 } else {
+    //                     state.isParticipant = false;
+    //                     state.isSpectator = true;
+    //                     state.assID = e.id;
+    //                 }
+    //             }
+    //         });
+    //     }
+    // }
 
     isAssigne = () => {
-        return this.state.isParticipant || this.state.isSpectator;
+        return this.props.isParticipant || this.props.isSpectator;
     };
 
     setIsParticipant = () => {
@@ -55,6 +56,7 @@ class Show extends React.Component {
             isSpectator: true,
         });
     };
+
     setUnassigne = () => {
         this.setState({
             isParticipant: false,
@@ -63,11 +65,27 @@ class Show extends React.Component {
     };
 
     render() {
-        console.log('render ', this.state.userId);
-        console.log('render ', this.state.assID);
-        console.log('assige method', this.isAssigne());
-        console.log('isPart', this.state.isParticipant);
-        console.log('isSpec', this.state.isSpectator);
+
+        const button = (!this.isAssigne() || this.state.isParticipant) ? (  <div className='b-1'>
+
+        <Participant
+            setIsParticipant={this.setIsParticipant}
+            setUnassigne={this.setUnassigne}
+            currentUserId={this.props.currentUserId}
+            eventId={this.props.eventId}
+            assigne={this.state.assigne}
+            assID={this.state.assID}
+        />
+    </div>) : ( <div className='b-2'>
+                                    <Spectator
+                                        setUnassigne={this.setUnassigne}
+                                        setIsSpectator={this.setIsSpectator}
+                                        currentUserId={this.props.currentUserId}
+                                        eventId={this.props.eventId}
+                                        assigne={this.state.isSpectator}
+                                        assID={this.state.assID}
+                                    />
+                                </div>);
         return (
             <div className='container-fluid'>
                 <div className='row'>
@@ -77,31 +95,7 @@ class Show extends React.Component {
                         </div>
 
                         <div className='but'>
-                            {(!this.isAssigne() || this.state.isParticipant) && (
-                                <div className='b-1'>
-                                    <Participant
-                                        setIsParticipant={this.setIsParticipant}
-                                        setUnassigne={this.setUnassigne}
-                                        currentUserId={this.state.userId}
-                                        eventId={this.props.eventId}
-                                        assigne={this.state.assigne}
-                                        assID={this.state.assID}
-                                    />
-                                </div>
-                            )}
-
-                            {(!this.isAssigne() || this.state.isSpectator) && (
-                                <div className='b-2'>
-                                    <Spectator
-                                        setUnassigne={this.setUnassigne}
-                                        setIsSpectator={this.setIsSpectator}
-                                        currentUserId={this.state.userId}
-                                        eventId={this.props.eventId}
-                                        assigne={this.state.isSpectator}
-                                        assID={this.state.assID}
-                                    />
-                                </div>
-                            )}
+                        {button}
                         </div>
 
                         <div className='card-window'>
