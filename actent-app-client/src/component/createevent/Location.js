@@ -1,34 +1,24 @@
 import React from 'react';
 import Select from 'react-select';
 import axios from 'axios';
+import {MDBIcon} from "mdbreact";
+import Link from '@material-ui/core/Link';
 
 export default class Location
     extends React.Component {
     state = {
-        address: {},
         locations: [],
+        address: "",
+        locationQueryStatus: undefined
     };
 
     componentDidMount() {
         this.getLocations();
     }
 
-    handleChange = name => value => {
-        this.setState({
-            [name]: value,
-        }, () => console.log("state " + this.state.address.value));
-
-    };
-
-    handleAddress = value => {
-        this.setState({address: value}, () => {
-            this.getLocations()
-        });
-    };
-
     getLocations = () => {
-        if (this.state.address && this.state.address.length > 0) {
-            let url = `http://localhost:8080/api/v1/locations/autocomplete/${this.state.address}`;
+        if (this.props.address && this.props.address.length > 0) {
+            let url = `http://localhost:8080/api/v1/locations/autocomplete/${this.props.address}`;
 
             axios.get(url)
                 .then(response => {
@@ -42,15 +32,46 @@ export default class Location
         }
         ;
     };
-    handleAddLocation = () => {
-        if (this.state.address.value && this.state.address.value.length > 0) {
-            console.log("address    " + this.state.address.value)
-            let url = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address.value}`;
 
+    handleChange = name => value => {
+        this.setState({
+            address: value.value,
+            isSet: true
+        });
+        this.props.setAddress(value.value)
+
+    };
+
+    handleAddress = value => {
+        if (value && value.length > 0) {
+            this.props.setAddress(value)
+        }
+
+        this.setState({address: value}, () => {
+            this.getLocations()
+        });
+    };
+
+
+    handleAddLocation = () => {
+        if (this.props.address && this.props.address.length > 0) {
+            let url = `http://localhost:8080/api/v1/locations/byAddress/${this.props.address}`;
             axios.get(url)
+                .then((response) => {
+                    let status = +response.status;
+                    if (status >= 200 && status < 300) {
+                        this.setState({locationQueryStatus: 1});
+                    } else {
+                        this.setState({locationQueryStatus: 2});
+                    }
+                    return response;
+                }, (err) => {
+                    console.log('error', err);
+                    this.setState({locationQueryStatus: 2});
+                    return JSON.stringify({});
+                })
                 .then(response => {
                     const savedId = response.data;
-                    console.log("return id " + savedId.id);
                     this.props.setLocationId(savedId.id);
                 })
                 .catch(function (error) {
@@ -60,26 +81,46 @@ export default class Location
         ;
     };
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.address != this.props.address) {
+            this.getLocations();
+        }
+        return true;
+    }
+
     render() {
+        console.log(this.props.address);
         return (
             <div className="form-group">
                 <label>Location</label>
-                <div className="selectStyle">
-                    <Select
+                <div className="selectStyle address">
+                    {
+                        this.props.address !== ""
+                        &&(<Link rel="noopener"
+                                 target="_blank"
+                                 href={`https://www.google.com/maps/place/${this.props.address}`}>
+                            <MDBIcon icon="map" size="2x"/>
+                        </Link>)
+                    }
+                    <Select className="find_addres_fild"
                         options={this.state.locations.map(location => ({
                             value: location.address,
                             label: location.address
                         }))}
                         value={this.state.address}
                         onChange={this.handleChange("address")}
-                        placeholder="Enter location"
+                        placeholder={this.props.address ? this.props.address : "To continue please enter address and press Save Location"}
                         onInputChange={this.handleAddress}
                     />
-
+                    <span>{this.props.errorMessage}</span>
                 </div>
+
+                {this.state.locationQueryStatus === 0 && (<div>Sending request...</div>)}
+                {this.state.locationQueryStatus === 1 && (<div>Location created successfully</div>)}
+                {this.state.locationQueryStatus === 2 && (<div>Something went wrong.....</div>)}
                 <button
                     className={'btn btn-primary'}
-                    onClick={this.handleAddLocation()}
+                    onClick={this.handleAddLocation}
                 >
                     Save Location
                 </button>

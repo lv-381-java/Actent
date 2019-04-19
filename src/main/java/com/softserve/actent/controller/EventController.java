@@ -5,7 +5,7 @@ import com.softserve.actent.constant.UrlConstants;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.exceptions.validation.ValidationException;
 import com.softserve.actent.model.dto.IdDto;
-import com.softserve.actent.model.dto.converter.UltraEventConverter;
+import com.softserve.actent.model.dto.converter.EventConverter;
 import com.softserve.actent.model.dto.event.EventCreationDto;
 import com.softserve.actent.model.dto.event.EventFilterDto;
 import com.softserve.actent.model.dto.event.EventUpdateDto;
@@ -45,18 +45,18 @@ public class EventController {
     private static final String url = "/events";
     private final EventService eventService;
     private final ModelMapper modelMapper;
-    private final UltraEventConverter ultraEventConverter;
+    private final EventConverter eventConverter;
     private final EventFilterRepository eventFilterRepository;
 
     @Autowired
     public EventController(EventService eventService,
                            ModelMapper modelMapper,
-                           UltraEventConverter ultraEventConverter,
+                           EventConverter eventConverter,
                            EventFilterRepository eventFilterRepository) {
 
         this.eventService = eventService;
         this.modelMapper = modelMapper;
-        this.ultraEventConverter = ultraEventConverter;
+        this.eventConverter = eventConverter;
         this.eventFilterRepository = eventFilterRepository;
     }
 
@@ -73,7 +73,7 @@ public class EventController {
 
         Page<Event> eventPage = eventService.findActiveEvents(PageRequest.of(page, size));
         System.out.println(eventPage.getTotalElements());
-        return ultraEventConverter.convertToDtoList(eventPage.getContent(),"ostap");
+        return eventConverter.convertToDtoList(eventPage.getContent(),"ostap");
     }
 
     @GetMapping(value = url + "/totalElements")
@@ -91,7 +91,7 @@ public class EventController {
                                  @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO) Long id) {
 
         Event event = eventService.get(id);
-        return ultraEventConverter.convertToDto(event, "full");
+        return eventConverter.convertToDto(event, "full");
     }
 
     @PostMapping(value = url + "/filter")
@@ -101,7 +101,7 @@ public class EventController {
                 .and(EventSpecification.getCategory(eventFilterDto.getCategoriesId()))
                 .and(EventSpecification.getLocation(eventFilterDto.getLocationAddress()))
                 .and(EventSpecification.getDate(eventFilterDto.getDateFrom(), eventFilterDto.getDateTo())));
-        return ultraEventConverter.convertToDtoList(result, "ostap");
+        return eventConverter.convertToDtoList(result, "ostap");
     }
 
     @GetMapping(value = url + "/title/{title}")
@@ -115,7 +115,7 @@ public class EventController {
         }
 
         List<Event> eventList = eventService.getByTitle(title);
-        return ultraEventConverter.convertToDtoList(eventList, "ostap");
+        return eventConverter.convertToDtoList(eventList, "ostap");
     }
 
     @PostMapping(value = url)
@@ -123,7 +123,7 @@ public class EventController {
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addEvent(@Validated @RequestBody EventCreationDto eventCreationDto) {
 
-        Event event = ultraEventConverter.convertToEntity(eventCreationDto);
+        Event event = eventConverter.convertToEntity(eventCreationDto);
         event = eventService.add(event);
 
         return new IdDto(event.getId());
@@ -140,7 +140,7 @@ public class EventController {
         Event event = modelMapper.map(eventUpdateDto, Event.class);
         event = eventService.update(event, id);
 
-        return ultraEventConverter.convertToDto(event, "full");
+        return eventConverter.convertToDto(event, "full");
     }
 
     @DeleteMapping(value = url + "/{id}")
@@ -159,7 +159,7 @@ public class EventController {
 
         List<Event> eventList = eventService.getAll();
 
-        return ultraEventConverter.convertToDto(eventList.get(0), type);
+        return eventConverter.convertToDto(eventList.get(0), type);
     }
 
 }

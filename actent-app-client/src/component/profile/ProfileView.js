@@ -1,11 +1,8 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.css';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { MDBTable, MDBTableBody, MDBTableHead, MDBRow, MDBCol, MDBBtn, MDBCollapse } from 'mdbreact';
-import { Redirect } from 'react-router-dom';
-import { Route, Link, NavLink, BrowserRouter } from 'react-router-dom';
+import {MDBTable, MDBTableBody, MDBTableHead, MDBCol, MDBCollapse} from 'mdbreact';
+import {NavLink} from "react-router-dom";
 import axios from 'axios';
 import SubscriptionsItem from './subscriptionsItem';
 
@@ -21,10 +18,12 @@ export default class ProfileView extends React.Component {
     constructor(props) {
         super(props);
     }
+
     state = {
         colapse: '',
         subscriptions: [],
     };
+
     componentDidMount() {
         this.getAllSubscription();
     }
@@ -34,14 +33,14 @@ export default class ProfileView extends React.Component {
             .get(`/getSubscriptions`)
             .then(res => {
                 let subscriptions = res.data;
-                this.setState({ subscriptions: subscriptions });
+                this.setState({subscriptions: subscriptions});
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error(error);
             });
     };
     deleteSubscription = id => {
-        axios.get(`/subscribers/${id}`).catch(function(error) {
+        axios.get(`/subscribers/${id}`).catch(function (error) {
             console.error(error);
         });
     };
@@ -49,7 +48,7 @@ export default class ProfileView extends React.Component {
     toggleCollapse = collapseID => () => {
         let colapse = this.state.colapse;
 
-        colapse === collapseID ? this.setState({ colapse: '' }) : this.setState({ colapse: collapseID });
+        colapse === collapseID ? this.setState({colapse: ''}) : this.setState({colapse: collapseID});
     };
     deleteSubcription = event => {
         let id = Object.assign({}, event.target);
@@ -62,7 +61,7 @@ export default class ProfileView extends React.Component {
         let subscriptions = this.state.subscriptions;
         const editBtn = this.props.isMyProfile ? (
             <Button
-                style={{ marginLeft: '20px' }}
+                style={{marginLeft: '20px'}}
                 label='Edit'
                 color='primary'
                 variant='contained'
@@ -80,22 +79,9 @@ export default class ProfileView extends React.Component {
                 Add review
             </Button>
         );
-
-        const userEvents = this.props.isMyProfile ? (
-            <NavLink to={`userEvents`}>
-                <Button
-                    label='My events'
-                    color='primary'
-                    variant='contained'
-                    disabled={this.props.profileData.id === ''}>
-                    My Events
-                </Button>
-            </NavLink>
-        ) : null;
-
         const img =
             this.props.profileData.avatar !== null ? (
-                <img src={getImageUrl(this.props.profileData.avatar.filePath)} alt='' className='imageStyle' />
+                <img src={getImageUrl(this.props.profileData.avatar.filePath)} alt='' className='imageStyle'/>
             ) : (
                 <img
                     src={'https://s3.ap-south-1.amazonaws.com/actent-res/1554136129708-default-user.png'}
@@ -105,6 +91,7 @@ export default class ProfileView extends React.Component {
             );
 
         return (
+
             <div className='styleMain'>
                 <div className='styleLowerMain1'>
                     <div className='styleContainer'>{img}</div>
@@ -134,8 +121,8 @@ export default class ProfileView extends React.Component {
                             <span className='styleSpan'>Address:</span>
                             {this.props.address !== null && this.props.address !== undefined
                                 ? `${this.props.profileData.address.name} , ${
-                                      this.props.profileData.address.regionCountryName
-                                  }`
+                                    this.props.profileData.address.regionCountryName
+                                    }`
                                 : null}
                         </p>
                         <p className='styleInput'>
@@ -150,7 +137,7 @@ export default class ProfileView extends React.Component {
                 </div>
 
                 <div className='styleLowerMain2'>
-                    {userEvents} {editBtn}
+                    {editBtn}
                     <Button
                         label='My events'
                         color='primary'
@@ -158,9 +145,19 @@ export default class ProfileView extends React.Component {
                         onClick={this.toggleCollapse('subscriptions')}>
                         My Subscriptions
                     </Button>
+                    <NavLink to={`/userEvents/${this.props.userId}`}>
+                        <Button
+                            label='My events'
+                            color='primary'
+                            variant='contained'
+
+                        >
+                            My Events
+                        </Button>
+                    </NavLink>
                 </div>
                 <div className='styleLowerMain2'>
-                    <MDBCol style={{ maxWidth: '100%' }}>
+                    <MDBCol style={{maxWidth: '100%'}}>
                         <MDBCollapse id='subscriptions' isOpen={this.state.colapse}>
                             <MDBTable hover btn>
                                 <MDBTableHead>
