@@ -1,5 +1,6 @@
 package com.softserve.actent.model.entity;
 
+import com.softserve.actent.constant.ExceptionMessages;
 import com.softserve.actent.constant.NumberConstants;
 import com.softserve.actent.constant.StringConstants;
 import lombok.Data;
@@ -8,10 +9,7 @@ import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +37,7 @@ public class User {
 
     @NonNull
     @NotBlank(message = StringConstants.EMPTY_USER_LOGIN)
+    @Size(min = NumberConstants.USER_LOGIN_MIN_LENGTH, message = ExceptionMessages.LOGIN_IS_TOO_SHORT)
     @Column(unique = true, nullable = false, length = NumberConstants.USER_LOGIN_MAX_LENGTH)
     private String login;
 
@@ -50,6 +49,7 @@ public class User {
 
     @NonNull
     @NotBlank(message = StringConstants.EMPTY_USER_PASSWORD)
+    @Size(min = NumberConstants.USER_PASSWORD_MIN_LENGTH, message = ExceptionMessages.PASSWORD_IS_TOO_SHORT)
     @Column(nullable = false)
     private String password;
 
