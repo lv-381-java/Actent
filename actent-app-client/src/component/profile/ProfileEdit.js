@@ -56,12 +56,13 @@ export default class ProfileEdit extends React.Component {
     };
 
     handlePhone = event => {
-        const regex = /^$|[0-9]{10,12}/;
-        if (regex.test(event.target.value === true)) {
-            this.setState({ phone: event.target.value, errorPhone: '' });
-        } else {
-            this.setState({ errorPhone: 'Phone number not valid' });
-        }
+        this.setState({ phone: event.target.value, errorPhone: '' });
+        // const regex = /^$|[0-9]{10,12}/;
+        // if (regex.test(event.target.value === true)) {
+        //     this.setState({ phone: event.target.value, errorPhone: '' });
+        // } else {
+        //     this.setState({ errorPhone: 'Phone number not valid' });
+        // }
     };
 
     handleLogin = event => {
@@ -223,14 +224,14 @@ export default class ProfileEdit extends React.Component {
                             id='tv_first_name'
                             onChange={this.handleFirstName}
                             label='First Name:'
-                            value={this.state.firstName}
+                            defaultValue={this.state.firstName}
                             fullWidth={true}
                         />
                         <TextField
                             id='tv_last_name'
                             onChange={this.handleLastName}
                             label='Last Name'
-                            value={this.state.lastName}
+                            defaultValue={this.state.lastName}
                             fullWidth={true}
                         />
                         <TextField
@@ -239,7 +240,7 @@ export default class ProfileEdit extends React.Component {
                             onChange={this.handleLogin}
                             fullWidth={true}
                             rowsMax={3}
-                            value={this.state.login}
+                            defaultValue={this.state.login}
                         />
                         {/* <TextField
                             id='tv_address'
@@ -253,11 +254,11 @@ export default class ProfileEdit extends React.Component {
                         <TextField
                             id='tv_phone'
                             label='Phone'
-                            // onChange={this.handlePhone}
+                            onChange={this.handlePhone}
                             fullWidth={true}
                             error={!!this.state.errorPhone}
                             helperText={this.state.errorPhone}
-                            value={this.state.phone !== null ? this.state.phone : ''}
+                            defaultValue={this.state.phone != null ? this.state.phone : ''}
                         />
                         <TextField
                             id='tv_email'
@@ -277,7 +278,7 @@ export default class ProfileEdit extends React.Component {
                             fullWidth={true}
                             format={'yyyy-MM-dd'}
                             onChange={this.handleBirthday}
-                            value={this.state.birthday}
+                            defaultValue={this.state.birthday}
                         />
 
                         <TextField
@@ -287,7 +288,7 @@ export default class ProfileEdit extends React.Component {
                             fullWidth={true}
                             multiline
                             rowsMax={3}
-                            value={this.state.bio !== null ? this.state.bio : ''}
+                            defaultValue={this.state.bio !== null ? this.state.bio : ''}
                             error={!!this.state.errorEmail}
                             helperText={this.state.errorEmail}
                         />
