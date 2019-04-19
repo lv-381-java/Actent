@@ -16,29 +16,6 @@ class Show extends React.Component {
         assID: undefined,
     };
 
-    // static getDerivedStateFromProps(props, state) {
-
-    //     if (state.userId !== props.currentUserId) {
-    //         state.userId = props.currentUserId;
-    //     }
-
-    //     if (state.userId !== undefined) {
-    //         props.eventUserList.forEach(e => {
-    //             if (e.userId == state.userId) {
-    //                 if (e.eventUserType === 'PARTICIPANT') {
-    //                     state.isParticipant = true;
-    //                     state.isSpectator = false;
-    //                     state.assID = e.id;
-    //                 } else {
-    //                     state.isParticipant = false;
-    //                     state.isSpectator = true;
-    //                     state.assID = e.id;
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }
-
     isAssigne = () => {
         return this.props.isParticipant || this.props.isSpectator;
     };
@@ -66,26 +43,59 @@ class Show extends React.Component {
 
     render() {
 
-        const button = (!this.isAssigne() || this.state.isParticipant) ? (  <div className='b-1'>
+        let button = undefined;
 
-        <Participant
-            setIsParticipant={this.setIsParticipant}
-            setUnassigne={this.setUnassigne}
-            currentUserId={this.props.currentUserId}
-            eventId={this.props.eventId}
-            assigne={this.state.assigne}
-            assID={this.state.assID}
-        />
-    </div>) : ( <div className='b-2'>
-                                    <Spectator
-                                        setUnassigne={this.setUnassigne}
-                                        setIsSpectator={this.setIsSpectator}
-                                        currentUserId={this.props.currentUserId}
-                                        eventId={this.props.eventId}
-                                        assigne={this.state.isSpectator}
-                                        assID={this.state.assID}
-                                    />
-                                </div>);
+        if (!this.isAssigne()) {
+
+            button = (
+                <div className='row'>
+                    <Participant
+                        setIsParticipant={this.setIsParticipant}
+                        setUnassigne={this.setUnassigne}
+                        currentUserId={this.props.currentUserId}
+                        eventId={this.props.eventId}
+                        assigne={this.props.isParticipant}
+                        assID={this.props.assID}
+                    />
+                    <Spectator
+                        setUnassigne={this.setUnassigne}
+                        setIsSpectator={this.setIsSpectator}
+                        currentUserId={this.props.currentUserId}
+                        eventId={this.props.eventId}
+                        assigne={this.props.isSpectator}
+                        assID={this.props.assID}
+                    />
+                </div>)
+
+        } else if (this.props.isParticipant) {
+
+            button = (   
+                <div className='row'>
+                    <Participant
+                        setIsParticipant={this.setIsParticipant}
+                        setUnassigne={this.setUnassigne}
+                        currentUserId={this.props.currentUserId}
+                        eventId={this.props.eventId}
+                        assigne={this.props.isParticipant}
+                        assID={this.props.assID}
+                    />
+                </div>)
+
+        } else {
+
+            button = (   
+                <div className='row'>
+                    <Spectator
+                        setUnassigne={this.setUnassigne}
+                        setIsSpectator={this.setIsSpectator}
+                        currentUserId={this.props.currentUserId}
+                        eventId={this.props.eventId}
+                        assigne={this.props.isSpectator}
+                        assID={this.props.assID}
+                    />
+                </div>)
+        }
+
         return (
             <div className='container-fluid'>
                 <div className='row'>

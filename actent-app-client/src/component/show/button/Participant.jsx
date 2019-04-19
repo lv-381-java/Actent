@@ -8,9 +8,9 @@ import Axios from 'axios';
 class Participant extends React.Component {
 
     state = {
-        id: undefined,
+        id: this.props.assID,
         open: false,
-        assigne: false
+        assigne: false,
     };
 
     componentDidMount() {
@@ -25,7 +25,6 @@ class Participant extends React.Component {
         
         Axios.post(`http://localhost:8080/api/v1/eventsUsers`, eventUser).then(eve => {
             this.setState({
-
                 id: eve.data.id,
                 assigne: true,
             });
@@ -61,7 +60,6 @@ class Participant extends React.Component {
 
     isPresent = () => {
         if (this.props.assigne) {
-            console.log(this.props.assigne)
             this.setState({
                 assigne: true,
             })

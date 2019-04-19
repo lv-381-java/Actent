@@ -8,19 +8,16 @@ import Axios from 'axios';
 class Spectator extends React.Component {
 
     state = {
+        id: this.props.assID,
         open: false,
-        assigne: this.props.assigne,
-        assID: this.props.assID,
+        assigne: false,
     };
 
     componentDidMount() {
-        this.setState({
-            assigne: this.props.assigne,
-            assID: this.props.assID,
-        })
+        this.isPresent();
     }
 
-    assigneAsParticipant = () => {
+    assigneAsSpectator = () => {
 
         let userId = this.props.currentUserId
         let eventId = this.props.eventId
@@ -40,10 +37,7 @@ class Spectator extends React.Component {
     };
 
     unassigneUser = () => {
-        console.log('assId', this.state.assID)
-        let id = parseInt(this.state.assID)
-        console.log('id', id)
-        Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${id}`).then(eve => {
+        Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${this.state.id}`).then(eve => {
             this.setState({
                 assigne: false,
             })
@@ -65,7 +59,16 @@ class Spectator extends React.Component {
     };
 
     isPresent = () => {
-
+        
+        if (this.props.assigne) {
+            this.setState({
+                assigne: true,
+            })
+        } else {
+            this.setState({
+                assigne: false,
+            })
+        }
     }
 
     handleUnAssignedUser = () => {
@@ -76,7 +79,7 @@ class Spectator extends React.Component {
 
     handleAssignedUserId = () => {
         this.props.setIsSpectator();
-        this.assigneAsParticipant();
+        this.assigneAsSpectator();
         this.handleClose();
     };
 

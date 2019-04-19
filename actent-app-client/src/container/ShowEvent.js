@@ -85,8 +85,7 @@ class ShowEvent extends React.Component {
                     chat: eve.data.Chat.id,
 
                     equipments: eve.data['equipments'],
-                    //reviews: eve.data.feedback,
-
+                    
                     creationDate: eve.data.creationDate,
                     startDate: eve.data['startDate'],
                     duration: eve.data['duration'],
