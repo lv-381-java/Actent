@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import axios from 'axios';
 
 
@@ -63,7 +62,6 @@ class Category extends React.Component {
                 } else {
                     this.props.setCategoryId(this.state.parentCategory);
                 }
-                // this.props.setCategoryId(categories.length ? undefined : this.state.parentCategory);
             })
     };
 
@@ -75,7 +73,6 @@ class Category extends React.Component {
                     <select className="browser-default custom-select" onChange={this.handleChangeParentCategories}
                             value={this.state.parentCategory}>
                         <option selected="selected">Select category of event</option>
-                        {/*<option key="None" value="None"></option>*/}
                         {this.state.parentCategories.map(a => {
                                 return (
                                     <option key={a.id} value={a.id}>{a.name}</option>
@@ -91,7 +88,6 @@ class Category extends React.Component {
                         <select className="browser-default custom-select" onChange={this.handleChangeChildCategories}
                                 value={this.state.childCategory}>
                             <option selected="selected">Select subcategory of event</option>
-                            {/*<option key="None" value="None"></option>*/}
                             {this.state.childCategories.map(a => {
                                     return (
                                         <option key={a.id} value={a.id}>{a.name}</option>

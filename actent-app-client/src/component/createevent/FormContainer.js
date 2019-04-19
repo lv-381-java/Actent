@@ -5,8 +5,6 @@ import TextArea from "./TextArea";
 import Select from "./Select";
 import Button from "./Button";
 import Category from "./Category";
-import {DatePicker, MuiPickersUtilsProvider, TimePicker} from "material-ui-pickers";
-import DateFnsUtils from "@date-io/date-fns";
 import Location from "./Location";
 import TextField from '@material-ui/core/TextField';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -28,16 +26,24 @@ class FormContainer extends Component {
             categoryId: undefined,
             creatorId: undefined,
             description: "",
-            // duration: 3600000,
             duration: "",
             imageId: "",
             locationId: undefined,
-            startDate: '2019-12-12T21:11:54',
-            title: undefined,
+            startDate: "",
+            title: "",
             accessOptions: ["public", "private"],
             errorTitle: undefined,
             errorDescription: undefined,
+            errorCapacity: undefined,
+            errorCategory: undefined,
+            errorLocation: undefined,
+            errorAccessType: undefined,
+            errorStartDate: "",
+            errorDuration:"",
             formQueryStatus: undefined,
+            imageName: "",
+            imageData: {},
+            filePath: undefined,
             address: ""
         };
     }
@@ -64,12 +70,6 @@ class FormContainer extends Component {
         let name = e.target.name;
         this.setState({[name]: value});
     };
-
-    // handleDateChange = date => {
-    //     // console.dir(date);
-    //     this.setState({startDate: date});
-    // };
-
 
     handleDateChange = e => {
         let value = e.target.value;
@@ -131,7 +131,6 @@ class FormContainer extends Component {
         if (capacity > 100) {
             errorCapacity = "Capacity must be from 1 to 100";
             this.setState({errorCapacity});
-            // console.log("checking capacity")
             return false;
         }
         this.setState({errorCapacity});
@@ -140,13 +139,22 @@ class FormContainer extends Component {
 
     isCategoryValid = (category) => {
         let errorCategory = "";
-        // console.log("checkingCat",category);
         if (!category) {
             errorCategory = "This field shouldn't be empty";
             this.setState({errorCategory});
             return false;
         }
         this.setState({errorCategory});
+        return true;
+    };
+    isLocationValid = (location) => {
+        let errorLocation = "";
+        if (!location) {
+            errorLocation = "This field shouldn't be empty";
+            this.setState({errorLocation});
+            return false;
+        }
+        this.setState({errorLocation});
         return true;
     };
 
@@ -178,6 +186,7 @@ class FormContainer extends Component {
         this.setState({errorDescription});
         return true;
     };
+
     isDurationValid = (duration) => {
         let errorDuration = "";
         if (!duration) {
@@ -197,6 +206,7 @@ class FormContainer extends Component {
             && this.isStartDateValid(this.state.startDate)
             && this.isAccessTypeValid(this.state.accessType)
             && this.isDescriptionValid(this.state.description)
+            && this.isLocationValid(this.state.locationId)
             ;
     };
 
@@ -204,9 +214,6 @@ class FormContainer extends Component {
         e.preventDefault();
 
         let eventData = this.state;
-        // let _startDate = this.state.startDate.toString();
-        // _startDate = _startDate.slice(0,_startDate.indexOf('(')-1);
-        // eventData["startDate"] = _startDate;
 
         this.setState({
             formQueryStatus: 0
@@ -347,7 +354,6 @@ class FormContainer extends Component {
                     id="time"
                     name={"Duration(hh:mm)"}
                     type="time"
-                    // defaultValue="01:00"
                     defaultValue=""
                     onChange={this.handleDuration}
                     InputLabelProps={{
@@ -369,41 +375,18 @@ class FormContainer extends Component {
                     setLocationId={this.setLocationId}
                     address={this.state.address}
                     setAddress={this.setAddress}
+                    errorMessage={this.state.errorLocation}
                 />
                 <div>Start Date</div>
-                {/*<MuiPickersUtilsProvider utils={DateFnsUtils}>*/}
-                    {/*<DatePicker*/}
-                        {/*// disablePast*/}
-                        {/*margin="normal"*/}
-                        {/*minDate={this.state.startDate}*/}
-                        {/*label="Date picker"*/}
-                        {/*value={this.state.startDate}*/}
-                        {/*onChange={this.handleDateChange}*/}
-                        {/*// errorMessage={this.state.errorStartDate}*/}
-                    {/*/>*/}
-                    {/*<TimePicker*/}
-                        {/*margin="normal"*/}
-                        {/*// minTime={this.state.startDate}*/}
-                        {/*label="Time picker"*/}
-                        {/*value={this.state.startDate}*/}
-                        {/*onChange={this.handleDateChange}*/}
-                        {/*errorMessage={this.state.errorStartDate}*/}
-                    {/*/>*/}
-                {/*</MuiPickersUtilsProvider>*/}
                 <TextField
                     id="datetime-local"
-                    // label="Next appointment"
                     type="datetime-local"
                     onChange={this.handleDateChange}
-                    // error ={!!this.state.errorStartDate}
-                    // helperText={this.state.errorStartDate}
-                    // defaultValue="2019-12-12T12:12"
                     defaultValue=""
                     InputLabelProps={{
                         shrink: true,
                     }}
                 />
-                {/*<p>{this.state.startDate}</p>*/}
                 <p></p>
                 <span>{this.state.errorStartDate}</span>
 

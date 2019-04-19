@@ -5,7 +5,8 @@ import axios from 'axios';
 export default class Location
     extends React.Component {
     state = {
-        locations: []
+        locations: [],
+        locationQueryStatus: undefined
     };
 
     componentDidMount() {
@@ -30,23 +31,13 @@ export default class Location
     };
 
     handleChange = name => value => {
-        // this.setState({
-        //     address: value.value,
-        //     isSet: true
-        // });
-        this.props.setAddress(value.value)
-
+          this.props.setAddress(value.value)
     };
 
     handleAddress = value => {
         if (value && value.length > 0) {
             this.props.setAddress(value)
         }
-
-        // this.setState({address: value}, () => {
-        //     this.getLocations()
-        // });
-
     };
 
 
@@ -57,6 +48,19 @@ export default class Location
             let url = `http://localhost:8080/api/v1/locations/byAddress/${this.props.address}`;
 
             axios.get(url)
+                .then((response) => {
+                    let status = +response.status;
+                    if (status >= 200 && status < 300) {
+                        this.setState({locationQueryStatus: 1});
+                    } else {
+                        this.setState({locationQueryStatus: 2});
+                    }
+                    return response;
+                }, (err) => {
+                    console.log('error', err);
+                    this.setState({locationQueryStatus: 2});
+                    return JSON.stringify({});
+                })
                 .then(response => {
                     const savedId = response.data;
 
@@ -89,12 +93,14 @@ export default class Location
                         }))}
                         value={this.props.address}
                         onChange={this.handleChange("address")}
-                        placeholder={this.props.address ? this.props.address : "Enter location"}
+                        placeholder={this.props.address ? this.props.address : "To continue please enter address and press Save Location"}
                         onInputChange={this.handleAddress}
                     />
-
+                    <span>{this.props.errorMessage}</span>
                 </div>
-                {this.props.address}
+                {this.state.locationQueryStatus === 0 && (<div>Sending request...</div>)}
+                {this.state.locationQueryStatus === 1 && (<div>Location created successfully</div>)}
+                {this.state.locationQueryStatus === 2 && (<div>Something went wrong.....</div>)}
                 <button
                     className={'btn btn-primary'}
                     onClick={this.handleAddLocation}
