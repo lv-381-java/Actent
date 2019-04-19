@@ -67,7 +67,6 @@ public class User {
     @ManyToOne
     private Location location;
 
-    @NonNull
     @Length(max = NumberConstants.USER_BIO_MAX_LENGTH)
     @Column(length = NumberConstants.USER_BIO_MAX_LENGTH)
     private String bio;
