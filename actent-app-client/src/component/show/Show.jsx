@@ -49,6 +49,7 @@ class Show extends React.Component {
 
             button = (
                 <div className='row'>
+  
                     <Participant
                         setIsParticipant={this.setIsParticipant}
                         setUnassigne={this.setUnassigne}
@@ -57,6 +58,7 @@ class Show extends React.Component {
                         assigne={this.props.isParticipant}
                         assID={this.props.assID}
                     />
+
                     <Spectator
                         setUnassigne={this.setUnassigne}
                         setIsSpectator={this.setIsSpectator}
@@ -65,6 +67,7 @@ class Show extends React.Component {
                         assigne={this.props.isSpectator}
                         assID={this.props.assID}
                     />
+
                 </div>)
 
         } else if (this.props.isParticipant) {
@@ -104,8 +107,8 @@ class Show extends React.Component {
                             <Title title={this.props.title} />
                         </div>
 
-                        <div className='but'>
-                        {button}
+                        <div className='col-md-6'>
+                            {button}
                         </div>
 
                         <div className='card-window'>
