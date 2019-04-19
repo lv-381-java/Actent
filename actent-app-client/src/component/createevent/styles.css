@@ -10,7 +10,14 @@
 
 .selectStyle select{
     margin-bottom:12px;
+}
+.address{
+    display: flex;
+}
 
+.find_addres_fild{
+    flex-grow: 1;
+    margin-left: 5px;
 }
 
 h1{
