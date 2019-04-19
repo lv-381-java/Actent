@@ -147,12 +147,11 @@ export default class ProfileView extends React.Component {
                     </Button>
                     <NavLink to={`/userEvents/${this.props.userId}`}>
                         <Button
-                            label='My events'
+                            label='Events'
                             color='primary'
                             variant='contained'
-
                         >
-                            My Events
+                            {this.props.isMyProfile ? 'My events' : "Events"}
                         </Button>
                     </NavLink>
                 </div>
