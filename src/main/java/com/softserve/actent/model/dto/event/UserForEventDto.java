@@ -15,5 +15,4 @@ public class UserForEventDto {
     private String sex;
     private String role;
     private String birthDate;
-    private String email;
 }

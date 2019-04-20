@@ -1,12 +1,14 @@
 package com.softserve.actent.model.dto.converter;
 
 import com.softserve.actent.constant.ExceptionMessages;
+import com.softserve.actent.constant.StringConstants;
 import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.dto.TagDto;
 import com.softserve.actent.model.dto.equipment.EquipmentDto;
 import com.softserve.actent.model.dto.event.*;
 import com.softserve.actent.model.dto.eventUser.EventUserForEventDto;
+import com.softserve.actent.model.dto.review.ReviewDto;
 import com.softserve.actent.model.entity.*;
 
 import org.modelmapper.ModelMapper;
@@ -75,7 +77,7 @@ public class EventConverter {
         eventFullDto.setEventForEventUserDtoList(getEventsUsers(event));
         eventFullDto.setImage(event.getImage());
         eventFullDto.setTags(getTags(event));
-        // todo: add reviews
+        eventFullDto.setFeedback(getReviews(event));
         return eventFullDto;
     }
 
@@ -119,6 +121,18 @@ public class EventConverter {
             tags = event.getTags().stream().map(e -> modelMapper.map(e, TagDto.class)).collect(Collectors.toList());
         }
         return tags;
+    }
+    private List<ReviewForEventDto> getReviews(Event event) {
+        List<ReviewForEventDto> reviews = null;
+        if (event.getFeedback() != null) {
+            reviews = event.getFeedback().stream().map(this::getReviewDto).collect(Collectors.toList());
+        }
+        return reviews;
+    }
+    private ReviewForEventDto getReviewDto(Review review) {
+        ReviewForEventDto reviewForEventDto = modelMapper.map(review, ReviewForEventDto.class);
+        reviewForEventDto.setAuthor(getCreator(review.getAuthor()));
+        return reviewForEventDto;
     }
 
     private EventUserForEventDto getEventUserForEventDto(EventUser eventUser) {

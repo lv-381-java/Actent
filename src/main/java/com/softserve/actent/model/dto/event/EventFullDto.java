@@ -20,5 +20,6 @@ public class EventFullDto extends ShowEventDto {
 
     private List<EventUserForEventDto> eventForEventUserDtoList;
     private List<TagDto> tags;
-    private List<Review> feedback;
+    private List<ReviewForEventDto> feedback;
+
 }
