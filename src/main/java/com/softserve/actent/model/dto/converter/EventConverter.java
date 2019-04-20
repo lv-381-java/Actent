@@ -3,6 +3,7 @@ package com.softserve.actent.model.dto.converter;
 import com.softserve.actent.constant.ExceptionMessages;
 import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
+import com.softserve.actent.model.dto.TagDto;
 import com.softserve.actent.model.dto.equipment.EquipmentDto;
 import com.softserve.actent.model.dto.event.*;
 import com.softserve.actent.model.dto.eventUser.EventUserForEventDto;
@@ -40,7 +41,7 @@ public class EventConverter {
 
     public List<UltraEventDto> convertToDtoList(List<Event> events, String type) {
         nullHunter(events, ExceptionMessages.EVENT_LIST_IS_NULL);
-        return getList(events, getMethod(type));
+        return getEventDtoList(events, getMethod(type));
     }
 
     private MinimalEventDto getMinimalEventDto(Event event) {
@@ -70,11 +71,10 @@ public class EventConverter {
         eventFullDto.setCategoryForEventDto(getCategory(event.getCategory()));
         eventFullDto.setChatForEventDto(getChat(event.getChat()));
         eventFullDto.setUserForEventDto(getCreator(event.getCreator()));
-        eventFullDto.setEquipments(getEquipmentsIfTheyAre(event));
+        eventFullDto.setEquipments(getEquipments(event));
         eventFullDto.setEventForEventUserDtoList(getEventsUsers(event));
-        System.out.println(event.getImage());
         eventFullDto.setImage(event.getImage());
-        // todo: add tags
+        eventFullDto.setTags(getTags(event));
         // todo: add reviews
         return eventFullDto;
     }
@@ -91,7 +91,7 @@ public class EventConverter {
     private UserForEventDto getCreator(User user) {
         return modelMapper.map(user, UserForEventDto.class);
     }
-    private List<EquipmentDto> getEquipmentsIfTheyAre(Event event) {
+    private List<EquipmentDto> getEquipments(Event event) {
         if (event.getEquipments() == null) {
             return null;
         }
@@ -113,6 +113,14 @@ public class EventConverter {
 
         return eventUserForEvenDtoList;
     }
+    private List<TagDto> getTags(Event event) {
+        List<TagDto> tags = null;
+        if (event.getTags() != null) {
+            tags = event.getTags().stream().map(e -> modelMapper.map(e, TagDto.class)).collect(Collectors.toList());
+        }
+        return tags;
+    }
+
     private EventUserForEventDto getEventUserForEventDto(EventUser eventUser) {
         EventUserForEventDto eventUserForEvenDto = new EventUserForEventDto();
         eventUserForEvenDto.setId(eventUser.getId());
@@ -133,7 +141,7 @@ public class EventConverter {
             throw new DataNotFoundException(message, ExceptionCode.NOT_FOUND);
         }
     }
-    private List<UltraEventDto> getList(List<Event> events, Function<Event, UltraEventDto> function) {
+    private List<UltraEventDto> getEventDtoList(List<Event> events, Function<Event, UltraEventDto> function) {
         List<UltraEventDto> ultraEventDtoList = new ArrayList<>();
         for (Event event : events) {
             ultraEventDtoList.add(function.apply(event));
