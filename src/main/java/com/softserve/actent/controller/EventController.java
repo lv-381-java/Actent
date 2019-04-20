@@ -62,7 +62,6 @@ public class EventController {
 
     @GetMapping(value = url + "/all/{page}/{size}")
     @ResponseStatus(HttpStatus.OK)
-
     public List<UltraEventDto> getActiveEvents(@PathVariable
                                           @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
                                                   int page,

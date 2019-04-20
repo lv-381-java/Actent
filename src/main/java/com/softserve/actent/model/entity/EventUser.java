@@ -27,11 +27,11 @@ public class EventUser {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
     private User user;
 
     @Enumerated(EnumType.ORDINAL)

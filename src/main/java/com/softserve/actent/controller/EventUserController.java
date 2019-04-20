@@ -75,7 +75,6 @@ public class EventUserController {
         return eventsUsersConverter.convertToDto(eventUser);
     }
 
-    // todo: To do appropriate way !!! =========------------------------------------------------------------------------------------------------------------------------------------
     @GetMapping(value = url + "/events/{id}")
     @ResponseStatus(HttpStatus.OK)
     public List<EventUserShowDto> getEventUserByEventId(@PathVariable
@@ -84,20 +83,7 @@ public class EventUserController {
                                                             Long id) {
 
         List<EventUser> eventUserList = eventUserService.getByEventId(id);
-
-        List<EventUserShowDto> eventUserShowDtoList = new ArrayList<>();
-        EventUserShowDto eventUserShowDto;
-
-        for (EventUser eventUser : eventUserList) {
-            eventUserShowDto = new EventUserShowDto();
-            eventUserShowDto.setId(eventUser.getId());
-            eventUserShowDto.setEventId(eventUser.getEvent().getId());
-            eventUserShowDto.setUserId(eventUser.getUser().getId());
-            eventUserShowDto.setEventUserType(eventUser.getType());
-            eventUserShowDtoList.add(eventUserShowDto);
-        }
-
-        return eventUserShowDtoList;
+        return eventsUsersConverter.convertToListShowDto(eventUserList);
     }
 
     @PutMapping(value = url + "/{id}")
