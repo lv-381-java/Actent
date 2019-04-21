@@ -32,7 +32,7 @@ public class EventConverter {
         this.modelMapper = modelMapper;
     }
 
-    public UltraEventDto convertToDto(Event event, String type) {
+    public UltraEventDto convertToDto(Event event, EventDtoType type) {
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         return getMethod(type).apply(event);
     }
@@ -41,7 +41,7 @@ public class EventConverter {
         return extractEvent(eventCreationDto);
     }
 
-    public List<UltraEventDto> convertToDtoList(List<Event> events, String type) {
+    public List<UltraEventDto> convertToDtoList(List<Event> events, EventDtoType type) {
         nullHunter(events, ExceptionMessages.EVENT_LIST_IS_NULL);
         return getEventDtoList(events, getMethod(type));
     }
@@ -162,17 +162,17 @@ public class EventConverter {
         }
         return ultraEventDtoList;
     }
-    private Function<Event, UltraEventDto> getMethod(String type) {
+    private Function<Event, UltraEventDto> getMethod(EventDtoType type) {
 
-        if (type != null && !type.isEmpty()) {
+        if (type != null) {
             switch (type) {
-                case "minimal":
+                case MINIMAL:
                     return this::getMinimalEventDto;
-                case "ostap":
+                case FOR_LIST:
                     return this::getOstapDto;
-                case "show":
+                case DETAIL:
                     return this::getShowEventDto;
-                case "full":
+                case FULL:
                     return this::getFullEventDto;
             }
         }
