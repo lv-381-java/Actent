@@ -17,7 +17,7 @@ const Event = props => {
                     <p className='lead'>{props.description}</p>
                     <div className='row'>
                         <div className='col-md-8'>
-                            <NavLink to={`show/${props.eventId}`}>
+                            <NavLink to={`/show/${props.eventId}`}>
                                 <MDBBtn>Go to Event</MDBBtn>
                             </NavLink>
                         </div>

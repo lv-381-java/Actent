@@ -4,6 +4,7 @@ public class NumberConstants {
 
     public static final int DURATION_MIN_VALUE = 900000;
     public static final short TITLE_MIN_LENGTH = 3;
+    public static final int EVENT_CACHE_CAPACITY = 1000;
     public static final short TITLE_MAX_LENGTH = 100;
     public static final short DESCRIPTION_MAX_LENGTH = 500;
     public static final short MIN_VALUE_FOR_START_DATE = 0;

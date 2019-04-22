@@ -12,6 +12,8 @@ import com.softserve.actent.repository.EventUserRepository;
 import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.EventUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -88,6 +90,25 @@ public class EventUserServiceImpl implements EventUserService {
         User user = new User();
         user.setId(id);
         return eventUserRepository.findByUser(user);
+    }
+    @Override
+    public List<EventUser> getAllAssignedEventsForThisTime(Long userId, String startDate, String endDate) {
+        return eventUserRepository.findAllAssignedEventsForThisTime(userId, startDate, endDate);
+    }
+
+    @Override
+    public Page<EventUser> getAllByUserId(Long userId, Pageable pageable) {
+        return eventUserRepository.findAllByUser_Id(userId, pageable);
+    }
+
+    @Override
+    public Page<EventUser> getAllByUserIdPastEvents(Long userId, Pageable pageable) {
+        return eventUserRepository.findAllByUser_IdAndPastEvents(userId,pageable);
+    }
+
+    @Override
+    public Page<EventUser> getAllByUserIdFutureEvents(Long userId, Pageable pageable) {
+        return eventUserRepository.findAllByUser_IdAndFutureEvents(userId,pageable);
     }
 
     private void checkForCorrectAddedData(EventUser eventUser) {

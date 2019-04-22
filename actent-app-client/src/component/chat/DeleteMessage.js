@@ -25,15 +25,9 @@ export default class Delete extends React.Component{
     //TODO: hide the main dialog after deleting message
     deleteMessage = () => {
         deleteURL(this.state.messageId, this.state.senderId);
-            // .then(response => {
             NotificationManager.info('Your message is successfully deleted', 'Deleted', 5000);
-            // let messageArea = document.getElementById('messageArea');
-            // let message = document.getElementById(`msg_${this.state.messageId}sender_${this.state.senderId}`);
-            // messageArea.removeChild(message);
-        // }).catch(() => {
-        //     NotificationManager.error('Something went wrong!', 'Error!', 5000);
-        // });
         this.dialogClose();
+        this.props.parentClose();
     };
 
     dialogClose = () => {

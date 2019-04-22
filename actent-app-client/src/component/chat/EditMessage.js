@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {NotificationContainer, NotificationManager} from "react-notifications";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
-import {getMessageSendDate, updateURL} from '../websockets/ws';
+import {updateURL} from '../websockets/ws';
 
 export default class EditMessage extends React.Component{
 
@@ -46,15 +46,10 @@ export default class EditMessage extends React.Component{
             NotificationManager.info('That was the same message (((', 'OK', 5000);
             this.dialogClose();
         }else{
-
             updateURL(this.state.chatId, this.state.editMessage, this.state.senderId, this.state.messageId);
-
-            // document.getElementById(`textField_${this.state.messageId}`).textContent = this.state.editMessage;
-            // let time = getMessageSendDate(new Date());
-            // document.getElementById(`editTime_${this.state.messageId}`).textContent = "Edited at: " + time.hours + ":" + time.minutes + ":" + time.seconds;
-
             NotificationManager.info('Your message is successfully edited', 'Edited', 5000);
             this.dialogClose();
+            this.props.parentClose();
         }
     };
 

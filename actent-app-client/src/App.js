@@ -40,10 +40,7 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
-
-                {/*<Menu {...this.props} userId={this.state.currentUserId} />*/}
-
-                <Menu userId={this.state.currentUserId} />
+                <Menu userId={this.state.currentUserId}/>
                 <Switch>
                     <Route path='/home' component={RenderEventFilterPage}/>
                     <Route path='/auth' component={SignInUp}/>
@@ -75,16 +72,13 @@ export default class App extends React.Component {
                                 : console.log('Waiting for currentUserId...')
                         }
                     />
-                    <Route path='/userEvents/:userId'
-                           render={props => <UserEventsPage {...props}/>}/>
+                    <Route path='/userEvents/:userId' render={props => <UserEventsPage {...props}/>}/>
                     <Route path='/createEvent' render={() => <FormContainer/>}/>
                     <Route path='/confirm' component={Confirm}/>
-                    <Route path='/chat' render={() => <Chat chatId={1}/>}/>
                     <Route path='/addReview/:targetId' render={props => <ReviewForm {...props} />}/>
                     <Route path='/reviews/:userId' render={props => <ReviewList {...props} />}/>
 
                     <Route render={() => { return (<Redirect to="/home"/>)}}/>
-
                 </Switch>
                 <Footer/>
             </div>
