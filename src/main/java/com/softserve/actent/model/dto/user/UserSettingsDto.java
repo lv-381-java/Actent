@@ -45,7 +45,7 @@ public class UserSettingsDto {
     @Positive(message = StringConstants.USER_AVATAR_ID_SHOULD_BE_GREATER_THAN_ZERO)
     private Long avatarId;
 
-    private UserLocationDto location;
+    private Long locationId;
 
     @Size(max = NumberConstants.USER_BIO_MAX_LENGTH, message = StringConstants.BIO_TOO_LONG)
     private String bio;

@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setLogin(user.getLogin());
             existingUser.setPhone(user.getPhone());
             existingUser.setEmail(user.getEmail());
-            existingUser.setBirthDate(user.getBirthDate());
+            existingUser.setBirthDate(user.getBirthDate().plusDays(1L));
             existingUser.setBio(user.getBio());
 
             if (user.getLocation() != null){

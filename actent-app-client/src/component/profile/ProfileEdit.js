@@ -7,19 +7,22 @@ import styles from './style.css';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
 // import { DatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DatePicker from 'material-ui/DatePicker';
+import Location from "../createevent/Location";
 // import DateFnsUtils from '@date-io/date-fns';
 
 export default class ProfileEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            errorLocation: undefined,
+            locationId: undefined,
             userId: this.props.profileData.userId,
             firstName: this.props.profileData.firstName,
             lastName: this.props.profileData.lastName,
             email: this.props.profileData.email,
             phone: this.props.profileData.phone,
             login: this.props.profileData.login,
-            address: this.props.profileData.address,
+            address: '',
             birthday: new Date(this.props.profileData.birthday),
             bio: this.props.profileData.bio,
             interests: this.props.profileData.interests,
@@ -138,7 +141,7 @@ export default class ProfileEdit extends React.Component {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             login: this.state.login,
-            address: this.state.address,
+            locationId: this.state.locationId,
             birthDate: this.getBirthday(),
             bio: this.state.bio,
             interests: this.state.interests,
@@ -202,6 +205,13 @@ export default class ProfileEdit extends React.Component {
                 this.saveUserPhoto();
             },
         );
+    };
+
+    setLocationId = (locationId) => {
+        this.setState({locationId: locationId});
+    };
+    setAddress = (address) => {
+        this.setState({address: address});
     };
 
     render() {
@@ -298,6 +308,14 @@ export default class ProfileEdit extends React.Component {
                             defaultValue={this.state.bio !== null ? this.state.bio : ''}
                             error={!!this.state.errorEmail}
                             helperText={this.state.errorEmail}
+                        />
+                        <Location
+                            className='editUserLocation'
+                            value={this.state.locationId}
+                            setLocationId={this.setLocationId}
+                            address={this.state.address}
+                            setAddress={this.setAddress}
+                            errorMessage={this.state.errorLocation}
                         />
                     </div>
                     <div className='styleButtons'>

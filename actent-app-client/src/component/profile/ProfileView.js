@@ -117,14 +117,18 @@ export default class ProfileView extends React.Component {
                             <span className='styleSpan'>Phone:</span>
                             {this.props.profileData.phone}
                         </p>
-                        <p className='styleInput'>
-                            <span className='styleSpan'>Address:</span>
-                            {this.props.address !== null && this.props.address !== undefined
-                                ? `${this.props.profileData.address.name} , ${
-                                    this.props.profileData.address.regionCountryName
-                                    }`
-                                : null}
-                        </p>
+
+                        { this.props.profileData.address != null && this.props.profileData.address != undefined ?
+                            <p className='styleInput'>
+                                <span className='styleSpan'>Address:</span>
+                                {this.props.profileData.address.address}
+                            </p>
+                            :    console.log("address is null") }
+
+                        {/*<p className='styleInput'>*/}
+                            {/*<span className='styleSpan'>Address:</span>*/}
+                            {/*{this.props.profileData.address.address}*/}
+                        {/*</p>*/}
                         <p className='styleInput'>
                             <span className='styleSpan'>Birth Date:</span>
                             {this.props.profileData.birthday}
