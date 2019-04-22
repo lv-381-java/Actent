@@ -35,13 +35,17 @@ export default class UserEventsPage extends React.Component {
     };
 
     getEvents() {
+        let userId = this.props.match.params.userId;
+        if (userId === undefined) {
+            return
+        }
         let url = '/eventsUsers/';
         if (this.state.selectTab === 0) {
-            url += `allEvents/1`;
+            url += `allEvents/${userId}`;
         } else if (this.state.selectTab === 1) {
-            url += `futureEvents/1`;
+            url += `futureEvents/${userId}`;
         } else if (this.state.selectTab === 2) {
-            url += `pastEvents/1`;
+            url += `pastEvents/${userId}`;
         }
         if (this.state.filterCategory || this.state.filterAddress || this.state.filterUserType) {
             url += '?';
@@ -77,7 +81,8 @@ export default class UserEventsPage extends React.Component {
             <div style={style}>
                 <div>
                     <PageTitle/>
-                    <MainFilter setLocation={this.setLocation} setUserType={this.setUserType} setCategory={this.setCategory}/>
+                    <MainFilter setLocation={this.setLocation} setUserType={this.setUserType}
+                                setCategory={this.setCategory}/>
                     <TabContainer setSelectTab={this.setSelectTab} selectTab={this.state.selectTab}
                                   events={this.state.events}/>
                 </div>

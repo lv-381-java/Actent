@@ -23,10 +23,11 @@ public class StringConstants {
     public static final String USER_EMAIL_NOT_VALID = "User's email not valid";
     public static final String USER_PHONE_IS_NOT_VALID = "Phone is not valid";
     public static final String USER_CANNOT_WRITE_REVIEW_ABOUT_HIMSELF = "You cannot write a review about yourself";
+    public static final String EVENT_USER_TYPE_IS_NOT_CORRECT = "Event user type is not correct. Should be participant or spectator.";
 
     public static final String EMPTY_LOCATION = "Location can't be empty";
     public static final String LOCATION_ID_POSITIVE_AND_GREATER_THAN_ZERO = "Location id must be positive and greater than zero";
-    public static final String LOCATION_SHOULD_BE_BETWEEN_3_AND_100_SYMBOLS = "Location should be between 3 and 100 symbols";
+    public static final String LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS = "Location should be between 2 and 100 symbols";
 
     public static final String CHAT_TYPE_NOT_BE_BLANK = "Chat type can`t be blank";
     public static final String TITLE_LENGTH_IS_TO_LONG = "Title length is to long";
@@ -53,6 +54,8 @@ public class StringConstants {
     public static final String START_DATE_CAN_NOT_BE_PAST = "Start date can not be past";
     public static final String DURATION_CAN_NOT_BE_LESS_THAN_TEN_MINUTES = "Duration can not be less than ten minutes";
     public static final String WRONG_ACCESS_TYPE = "Access type can be public or private.";
+    public static final String EVENT_DTO_TYPE_IS_NOT_EXIST = "Event dto type is not exist.";
+    public static final String EVENT_DTO_TYPE_CAN_NOT_BE_NULL_OR_BLANK = "Event dto type can not be null or blank.";
 
     public static final String IMAGE_FILE_PATH_SHOULD_NOT_BE_BLANK = "Image file path shouldn't be empty";
 

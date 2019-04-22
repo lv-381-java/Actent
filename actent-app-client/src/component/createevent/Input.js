@@ -1,9 +1,9 @@
 import React from "react";
+import './styles.css';
 
 const Input = props => {
-    //console.log(props.value);
     return (
-        <div className={'form-group' + (props.isError ? ' has-error' : '')}>
+        <div className='form-group'>
             <label htmlFor={props.name} className="form-label">
                 {props.title}
             </label>
@@ -19,7 +19,7 @@ const Input = props => {
                 placeholder={props.placeholder}
                 {...props}
             />
-            {props.testVal}
+            <span>{props.errorMessage}</span>
         </div>
     );
 };

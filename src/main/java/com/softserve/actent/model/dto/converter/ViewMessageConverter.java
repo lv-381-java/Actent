@@ -34,8 +34,10 @@ public class ViewMessageConverter implements IModelMapperConverter<Message, View
         if (entity.getMessageType().equals(MessageType.TEXT)) {
             ViewTextMessageDto viewTextMessageDto = modelMapper.map(entity, ViewTextMessageDto.class);
 
-            if (entity.getLastEditTime() != null) {
-                viewTextMessageDto.setSendTime(entity.getLastEditTime().toString());
+            if (entity.getLastEditTime().equals(entity.getSendTime())) {
+                viewTextMessageDto.setLastEditTime(null);
+            }else{
+                viewTextMessageDto.setLastEditTime(entity.getLastEditTime().toString());
             }
             return viewTextMessageDto;
 

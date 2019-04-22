@@ -9,78 +9,46 @@ class Spectator extends React.Component {
 
     state = {
         open: false,
-        assigne: this.props.assigne,
-        assID: this.props.assID,
     };
 
-    componentDidMount() {
-        this.setState({
-            assigne: this.props.assigne,
-            assID: this.props.assID,
-        })
-        console.log('assigne CDM - ', this.state.assigne)
-        console.log('assID CDM - ', this.state.assID)
-        console.log('assigne CDM - ', this.props.assigne)
-        console.log('assID CDM - ', this.props.assID)
-    }
-
-    assigneAsParticipant = () => {
+    assigneAsSpectator = () => {
 
         let userId = this.props.currentUserId
         let eventId = this.props.eventId
         let eventUser = {userId, eventId, eventUserType: 'SPECTATOR'}
         
         Axios.post(`http://localhost:8080/api/v1/eventsUsers`, eventUser).then(eve => {
-            this.setState({
-                id: eve.data.id,
-                assigne: true,
-            });
+            this.props.setAssigneIdInButton(eve.data.id);
         }).catch(error => {
-            this.setState({
-                assigne: true,
-            });
             console.log(error);
         });
     };
 
     unassigneUser = () => {
-        console.log('assId', this.state.assID)
-        let id = parseInt(this.state.assID)
-        console.log('id', id)
-        Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${id}`).then(eve => {
-            this.setState({
-                assigne: false,
-            })
+        Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${this.props.assID}`).then(eve => {
         }
         ).catch(error => {
-            this.setState({
-                assigne: false,
-            });
             console.log(error);
         });
     }
 
     handleClickOpen = () => {
-        this.setState({ ...this.state, open: true });
+        this.setState({ open: true });
     };
 
     handleClose = () => {
-        this.setState({ ...this.state, open: false });
+        this.setState({ open: false });
     };
 
-    isPresent = () => {
-
-    }
-
     handleUnAssignedUser = () => {
-        this.props.setUnassigne();
+        this.props.setValue(false);
         this.unassigneUser();
         this.handleClose();
     }
 
     handleAssignedUserId = () => {
-        this.props.setIsSpectator();
-        this.assigneAsParticipant();
+        this.props.setValue(true);
+        this.assigneAsSpectator();
         this.handleClose();
     };
 
@@ -93,7 +61,7 @@ class Spectator extends React.Component {
     
         if (this.props.currentUserId) {
 
-            if (this.state.assigne) {
+            if (this.props.assigne) {
 
                 assigneButton = (
                         <div>

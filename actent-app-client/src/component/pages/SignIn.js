@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { saveAuthorizationToken, setAuthorizationHeader, getTokenFromCredentials } from '../../util/apiUtils';
@@ -33,7 +32,7 @@ export default class SignIn extends React.Component {
                 response.data.accessToken
                     ? this.handleLogin(response.data.accessToken)
                     : Promise.reject('Access token is undefined.');
-                this.props.history.push('/');
+                window.location.href = "/";
             })
             .catch(error => {
                 NotificationManager.error('Invalid E-mail or Password!', 'Error!', 5000);

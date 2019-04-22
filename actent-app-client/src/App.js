@@ -39,18 +39,14 @@ export default class App extends React.Component {
     };
 
     render() {
-        console.log(this.state.currentUserId);
         return (
             <div>
-                <Menu />
+                <Menu userId={this.state.currentUserId} />
                 <Switch>
+                    <Route path='/home' component={RenderEventFilterPage} />
                     <Route path='/auth' component={SignInUp} />
-                    <Route
-                        path='/show/:id'
-                        render={props => <ShowEvent {...props} currentUserId={this.state.currentUserId} />}
-                    />
-                    {/* <Route path='/show/:id' component={ShowEvent } /> */}
-                    <Route path='/show' render={() => <ShowEvent currentUserId={this.state.currentUserId} />} />
+                    <Route path='/show/:id' component={ShowEvent} />
+                    <Route path='/show' render={() => <ShowEvent />} />
                     <Route
                         path='/profile'
                         render={
@@ -77,15 +73,16 @@ export default class App extends React.Component {
                                 : console.log('Waiting for currentUserId...')
                         }
                     />
-                    <Route path='/userEvents' render={() => <UserEventsPage />} />
-                    <Route path='/users/userEvents' component={UserEventsPage} />
+                    <Route path='/userEvents/:userId' render={props => <UserEventsPage {...props} />} />
                     <Route path='/createEvent' render={() => <FormContainer />} />
                     <Route path='/confirm' component={Confirm} />
-                    <Route path='/chat' render={() => <Chat chatId={1} />} />
                     <Route path='/addReview/:targetId' render={props => <ReviewForm {...props} />} />
                     <Route path='/reviews/:userId' render={props => <ReviewList {...props} />} />
-                    <Route exact path='/' component={RenderEventFilterPage} />
-                    <Route path='/oauth2/redirect' component={OAuth2RedirectHandler} />
+                    <Route
+                        render={() => {
+                            return <Redirect to='/home' />;
+                        }}
+                    />
                 </Switch>
                 <Footer />
             </div>

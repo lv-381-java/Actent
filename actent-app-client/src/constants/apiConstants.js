@@ -17,3 +17,9 @@ export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect';
 export const GOOGLE_AUTH_URL = API_BASE_URL_OAUTH2 + '/oauth2/authorize/google?redirect_uri=' + OAUTH2_REDIRECT_URI;
 export const FACEBOOK_AUTH_URL = API_BASE_URL_OAUTH2 + '/oauth2/authorize/facebook?redirect_uri=' + OAUTH2_REDIRECT_URI;
 export const GITHUB_AUTH_URL = API_BASE_URL_OAUTH2 + '/oauth2/authorize/github?redirect_uri=' + OAUTH2_REDIRECT_URI;
+
+export const API_CURRENT_MESSAGES = '/currentMessages';
+export const API_PAGE_MESSAGES = 'pageNumber';
+export const API_PAGE_SIZE_20 = '20';
+export const API_CHAT_URL = '/chats';
+export const API_CHAT_COUNT_URL = '/count';

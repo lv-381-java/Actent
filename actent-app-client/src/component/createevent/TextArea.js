@@ -9,9 +9,11 @@ const TextArea = props => (
             rows={props.rows}
             cols={props.cols}
             value={props.value}
+            error={props.error}
             onChange={props.handleChange}
             placeholder={props.placeholder}
         />
+        <span>{props.errorMessage}</span>
     </div>
 );
 

@@ -16,7 +16,7 @@ public class LocationCreateDto {
     @NotBlank(message = StringConstants.EMPTY_LOCATION)
     @Length(min = NumberConstants.LOCATION_MIN_LENGTH,
             max = NumberConstants.LOCATION_MAX_LENGTH,
-            message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_3_AND_100_SYMBOLS)
+            message = StringConstants.LOCATION_SHOULD_BE_BETWEEN_2_AND_100_SYMBOLS)
     private String address;
 
     private Double latitude;
