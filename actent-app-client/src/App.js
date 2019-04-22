@@ -78,6 +78,7 @@ export default class App extends React.Component {
                     <Route path='/confirm' component={Confirm} />
                     <Route path='/addReview/:targetId' render={props => <ReviewForm {...props} />} />
                     <Route path='/reviews/:userId' render={props => <ReviewList {...props} />} />
+                    <Route path='/oauth2/redirect' component={OAuth2RedirectHandler} />
                     <Route
                         render={() => {
                             return <Redirect to='/home' />;

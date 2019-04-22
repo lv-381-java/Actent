@@ -47,12 +47,6 @@ public class User {
     @Email
     private String email;
 
-
-    @NonNull
-    @NotBlank(message = StringConstants.EMPTY_USER_PASSWORD)
-    @Size(min = NumberConstants.USER_PASSWORD_MIN_LENGTH, message = ExceptionMessages.PASSWORD_IS_TOO_SHORT)
-    @Column(nullable = false)
-
     private String password;
 
     @Pattern(regexp = "(^$|[0-9]{10})", message = StringConstants.USER_PHONE_IS_NOT_VALID)

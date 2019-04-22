@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ACCESS_TOKEN } from '../../constants/apiConstants';
 import { Redirect } from 'react-router-dom';
+import { saveAuthorizationToken, setAuthorizationHeader, getTokenFromCredentials } from '../../util/apiUtils';
 
 export default class OAuth2RedirectHandler extends Component {
     getUrlParameter(name) {
@@ -19,27 +20,14 @@ export default class OAuth2RedirectHandler extends Component {
 
         if (token) {
             console.log(token);
-            localStorage.setItem(ACCESS_TOKEN, token);
-            return (
-                <Redirect
-                    to={{
-                        pathname: '/profile',
-                        state: { from: this.props.location },
-                    }}
-                />
-            );
+            saveAuthorizationToken(token);
+            setAuthorizationHeader();
+            window.location.href = "/";
+
         } else {
-            return (
-                <Redirect
-                    to={{
-                        pathname: '/login',
-                        state: {
-                            from: this.props.location,
-                            error: error,
-                        },
-                    }}
-                />
-            );
+            window.location.href = "/";
         }
+        return(<div></div>);
+
     }
 }

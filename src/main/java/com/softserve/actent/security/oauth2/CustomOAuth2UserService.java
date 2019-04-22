@@ -69,7 +69,8 @@ public class  CustomOAuth2UserService extends DefaultOAuth2UserService {
                     newUser.setRoleset(Collections.singleton(userRole));
                     return userRepository.save(newUser);
                 });
-            }else throw new ValidationException(ExceptionMessages.USER_BY_THIS_EMAIL_IS_EXIST, ExceptionCode.DUPLICATE_VALUE);
+                //todo change
+            }else throw new ValidationException(ExceptionMessages.MESSAGE_NOT_FOUND, ExceptionCode.DUPLICATE_VALUE);
 
     }
 
