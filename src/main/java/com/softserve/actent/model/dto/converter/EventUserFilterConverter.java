@@ -4,6 +4,7 @@ import com.softserve.actent.model.dto.eventUser.EventUserFilterDto;
 import com.softserve.actent.model.entity.EventUser;
 import com.softserve.actent.utils.modelmapper.IModelMapperConverter;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +12,7 @@ public class EventUserFilterConverter implements IModelMapperConverter<EventUser
 
     private final ModelMapper modelMapper;
 
+    @Autowired
     public EventUserFilterConverter(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
