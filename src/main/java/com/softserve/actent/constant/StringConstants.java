@@ -54,6 +54,8 @@ public class StringConstants {
     public static final String START_DATE_CAN_NOT_BE_PAST = "Start date can not be past";
     public static final String DURATION_CAN_NOT_BE_LESS_THAN_TEN_MINUTES = "Duration can not be less than ten minutes";
     public static final String WRONG_ACCESS_TYPE = "Access type can be public or private.";
+    public static final String EVENT_DTO_TYPE_IS_NOT_EXIST = "Event dto type is not exist.";
+    public static final String EVENT_DTO_TYPE_CAN_NOT_BE_NULL_OR_BLANK = "Event dto type can not be null or blank.";
 
     public static final String IMAGE_FILE_PATH_SHOULD_NOT_BE_BLANK = "Image file path shouldn't be empty";
 

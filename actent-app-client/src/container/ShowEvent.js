@@ -13,40 +13,33 @@ class ShowEvent extends React.Component {
         spectators: undefined,
         eventUserList: [],
         userId: undefined,
-        isParticipant: undefined,
-        isSpectator: undefined,
+        isParticipant: false,
+        isSpectator: false,
         assID: undefined,
     };
 
     componentDidMount() {
         this.getEvent();
         this.getParticipants();
-         
+        this.setButtonsState();
     }
 
     setButtonsState() {
         if (this.state.userId) {
             this.state.eventUserList.map(e => {
                 if (e.userId == this.state.userId) {
-                    console.log(e)
                     if (e.eventUserType === 'PARTICIPANT') {
-                        console.log("in if")
                         this.setState({
-                            isParticipant:true,
-                            isSpectator:false,
+                            isParticipant: true,
+                            isSpectator: false,
                             assID:e.id
                         });
-                        this.state.isParticipant = true;
-                        this.state.isSpectator = false;
-                        this.state.assID = e.id;
                     } else {
-                        console.log("in else ")
-                     
                         this.setState({
-                            isParticipant:false,
-                            isSpectator:true,
-                            assID:e.id
-                        }, ()=>console.log(this.state.isParticipant, this.state.isSpectator, this.state.assID));
+                            isParticipant: false,
+                            isSpectator: true,
+                            assID: e.id,
+                        })
                     }
                 }
             });
@@ -64,11 +57,7 @@ class ShowEvent extends React.Component {
 
     addSubscribe = () => {
         const data = { category: this.state.category, city: this.state.location };
-        console.log(data);
         Axios.post(`/subscribers`, data)
-            .then(res => {
-                console.log(res.data);
-            })
             .catch(function(error) {
                 console.error(error);
             });
@@ -80,13 +69,9 @@ class ShowEvent extends React.Component {
                 this.setState({
                     title: eve.data['title'],
                     description: eve.data['description'],
-
                     image: eve.data['image'],
                     chat: eve.data.Chat.id,
-
                     equipments: eve.data['equipments'],
-                    //reviews: eve.data.feedback,
-
                     creationDate: eve.data.creationDate,
                     startDate: eve.data['startDate'],
                     duration: eve.data['duration'],
@@ -105,12 +90,22 @@ class ShowEvent extends React.Component {
 
     getParticipants = () => {
         Axios.get(`http://localhost:8080/api/v1/eventsUsers/events/${this.state.eventId}`).then(res => {
-        
           let eventUserList = res.data;
-        
           this.setState({ eventUserList }, () => this.setCurrentUserId());
         });
     };
+
+    setParticipantFromButton = param => {
+        this.setState({ isParticipant: param })
+    }
+
+    setSpectatorFromButton = param => {
+        this.setState({ isSpectator: param })
+    }
+
+    setAssigneIdInButton = id => {
+        this.setState({ assID: id })
+    }
 
     render() {
         return (
@@ -140,6 +135,9 @@ class ShowEvent extends React.Component {
                     isParticipant={this.state.isParticipant}
                     isSpectator={this.state.isSpectator}
                     assID={this.state.assID}
+                    setParticipantFromButton={this.setParticipantFromButton}
+                    setSpectatorFromButton={this.setSpectatorFromButton}
+                    setAssigneIdInButton={this.setAssigneIdInButton}
                 />
             </div>
         );

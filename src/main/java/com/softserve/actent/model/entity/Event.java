@@ -62,17 +62,17 @@ public class Event {
     @NonNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(nullable = false)
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
     private User creator;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
     private Location address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
     private Image image;
 
     private Integer capacity;
@@ -91,7 +91,7 @@ public class Event {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
     private Category category;
 
     @ManyToMany
@@ -103,7 +103,7 @@ public class Event {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_id")
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
     private Chat chat;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
