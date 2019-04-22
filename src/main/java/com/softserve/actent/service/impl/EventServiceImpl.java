@@ -117,8 +117,6 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
-
-
     @Transactional
     protected Event getUpdatedEvent(Event event) {
 
