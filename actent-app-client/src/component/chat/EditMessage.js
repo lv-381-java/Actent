@@ -46,11 +46,10 @@ export default class EditMessage extends React.Component{
             NotificationManager.info('That was the same message (((', 'OK', 5000);
             this.dialogClose();
         }else{
-
             updateURL(this.state.chatId, this.state.editMessage, this.state.senderId, this.state.messageId);
-
             NotificationManager.info('Your message is successfully edited', 'Edited', 5000);
             this.dialogClose();
+            this.props.parentClose();
         }
     };
 
