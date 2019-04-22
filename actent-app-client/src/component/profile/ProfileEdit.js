@@ -259,15 +259,6 @@ export default class ProfileEdit extends React.Component {
                             rowsMax={3}
                             defaultValue={this.state.login}
                         />
-                        {/* <TextField
-                            id='tv_address'
-                            label='Address'
-                            onChange={this.handleAddress}
-                            fullWidth={true}
-                            multiline
-                            rowsMax={3}
-                            value={this.state.address !== null ? this.state.address.name : ''}
-                        /> */}
                         <TextField
                             id='tv_phone'
                             label='Phone'
