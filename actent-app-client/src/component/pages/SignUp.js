@@ -7,6 +7,8 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
 import { registerUser } from '../../util/apiUtils';
 
+import GoogleLogin from 'react-google-login';
+
 export default class SignUp extends React.Component {
     state = {
         name: undefined,
@@ -54,6 +56,16 @@ export default class SignUp extends React.Component {
             return false;
         }
     };
+    responseGoogleSuccess = response => {
+        let userName = response.w3.ofa;
+        let userSurname = response.w3.wea;
+        let userEmail = response.w3.U3;
+        this.setState({
+            surname: userSurname,
+            username: userName,
+            email: userEmail,
+        });
+    };
 
     sendData = event => {
         event.preventDefault();
@@ -76,6 +88,9 @@ export default class SignUp extends React.Component {
     };
 
     render() {
+        const responseGoogle = response => {
+            console.log(response);
+        };
         return (
             <div className='FormCenter'>
                 <form className='FormFields'>
@@ -98,6 +113,7 @@ export default class SignUp extends React.Component {
                             label='Surname'
                             className='FormField__Input'
                             type='text'
+                            value={this.state.surname}
                             name='surname'
                             autoComplete='surname'
                             margin='normal'
@@ -112,6 +128,7 @@ export default class SignUp extends React.Component {
                             className='FormField__Input'
                             type='text'
                             name='username'
+                            value={this.state.username}
                             autoComplete='username'
                             margin='normal'
                             variant='outlined'
@@ -149,6 +166,7 @@ export default class SignUp extends React.Component {
                             className='FormField__Input'
                             type='email'
                             name='email'
+                            value={this.state.email}
                             autoComplete='email'
                             margin='normal'
                             variant='outlined'
@@ -161,14 +179,19 @@ export default class SignUp extends React.Component {
                             variant='contained'
                             color='primary'
                             disabled={!this.isValid()}
-                            onClick={this.sendData}
-                        >
+                            onClick={this.sendData}>
                             Sign up
                         </Button>
                         <Link to='/auth/sign-in' className='FormField__Link'>
                             I'm already member
                         </Link>
                     </div>
+                    <GoogleLogin
+                        clientId='469535828427-l1e7su82oc0bvirtdgmh26krf5p9kj5s.apps.googleusercontent.com' //CLIENTID NOT CREATED YET
+                        buttonText='LOGIN WITH GOOGLE'
+                        onSuccess={this.responseGoogleSuccess}
+                        onFailure={responseGoogle}
+                    />
                 </form>
                 <NotificationContainer />
             </div>

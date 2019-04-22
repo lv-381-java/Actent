@@ -81,4 +81,6 @@ public class ExceptionMessages {
     public static final String NO_LOCATIONS_IN_BASE = "There are no locations in base";
     public static final String NO_LOCATIONS_IN_THIS_CITY_IN_BASE = "There are no locations in this city in base";
     public static final String USER_BY_THIS_LOGIN_IS_NOT_FOUND = "User by this login is not found.";
+
+    public static final String USER_BY_THIS_EMAIL_IS_EXIST = "User by this email is exist please, login again in login form";
 }

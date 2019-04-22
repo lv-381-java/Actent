@@ -88,7 +88,7 @@ public class MessageController {
                                                            @Positive(message = StringConstants.CHAT_ID_SHOULD_BE_POSITIVE) Long id,
                                                            Pageable pageable) {
         System.out.println(pageable);
-        return viewMessageConverter.convertToDto(messageService.getCurrentMessagesByChatId(id, new PageRequest(1,10)));
+        return viewMessageConverter.convertToDto(messageService.getCurrentMessagesByChatId(id, PageRequest.of(1,10)));
     }
 
     @GetMapping(value = "/messages/{id}")

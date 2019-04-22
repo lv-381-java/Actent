@@ -2,9 +2,9 @@ package com.softserve.actent.model.entity;
 
 import com.softserve.actent.constant.NumberConstants;
 import com.softserve.actent.constant.StringConstants;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -48,12 +48,10 @@ public class User {
     @Email
     private String email;
 
-    @NonNull
-    @NotBlank(message = StringConstants.EMPTY_USER_PASSWORD)
-    @Column(nullable = false)
+
     private String password;
 
-    @Pattern(regexp="(^$|[0-9]{10})", message = StringConstants.USER_PHONE_IS_NOT_VALID)
+    @Pattern(regexp = "(^$|[0-9]{10})", message = StringConstants.USER_PHONE_IS_NOT_VALID)
     private String phone;
 
     @Column
@@ -99,6 +97,7 @@ public class User {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     @Column(length = NumberConstants.USER_ROLE_MAX_LENGTH)
+    @Fetch(FetchMode.JOIN)
     private Set<Role> roleset;
 
     @Enumerated(EnumType.STRING)
@@ -110,4 +109,7 @@ public class User {
     @NonNull
     @ManyToOne
     private Subscribe subscribers;
+
+    private String providerId;
+
 }

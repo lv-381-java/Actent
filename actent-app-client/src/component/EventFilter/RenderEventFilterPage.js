@@ -6,7 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import Pagination from 'react-js-pagination';
 import './pagination.css';
-
+import GoogleButton from 'react-google-button';
+import { GOOGLE_AUTH_URL, FACEBOOK_AUTH_URL, GITHUB_AUTH_URL, ACCESS_TOKEN } from '../../constants/apiConstants';
 const cartStyle = {
     paddingTop: '2rem',
 };
@@ -35,6 +36,7 @@ export default class RenderEventFilterPage extends React.Component {
         categoryButtonColor: 'info',
 
         collapseID: '',
+        checked: undefined,
     };
 
     componentDidMount() {
@@ -67,6 +69,7 @@ export default class RenderEventFilterPage extends React.Component {
                 cityButtonColor: 'info',
                 categoryButtonColor: 'info',
                 collapseID: '',
+                checked: false,
             },
 
             () => this.getEvents(),
@@ -94,7 +97,6 @@ export default class RenderEventFilterPage extends React.Component {
     deleteFilterCategorieId = categoriesId => {
         let filterCategories = this.state.filterCategories.filter(id => id !== categoriesId);
         this.setState({ filterCategories: filterCategories }, () => this.eventsFilter());
-        console.log(this.state.filterCategories.length);
         if (filterCategories.length === 0) {
             this.setState({ categoryButtonColor: 'info' });
         } else {
@@ -205,12 +207,20 @@ export default class RenderEventFilterPage extends React.Component {
 
     render() {
         let events = this.state.events;
+
         return (
             <div>
                 <BrowserRouter>
                     <Header setTitle={this.setFilterTitle} showTitleName={this.state.showTitleName} />
                 </BrowserRouter>
                 <div className='container'>
+                    <a href={GOOGLE_AUTH_URL}>
+                        <GoogleButton
+                            onClick={() => {
+                                console.log('Google button clicked');
+                            }}
+                        />
+                    </a>
                     <FilterBody
                         isEmptyFilters={this.isEmptyFilters}
                         cleanFilter={this.cleanFilter}
@@ -233,6 +243,7 @@ export default class RenderEventFilterPage extends React.Component {
                         setDateButtonColor={this.setDateButtonColor}
                         collapseID={this.state.collapseID}
                         setCollapseID={this.setCollapseID}
+                        checked={this.state.checked}
                     />
                     <div className='row'>
                         {events.map(event => {

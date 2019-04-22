@@ -14,4 +14,9 @@ public class JwtAuthResponseDto {
     public JwtAuthResponseDto(String accessToken) {
         this.accessToken = accessToken;
     }
+
+    public String toJson(){
+        return ("{\n"+"\"accessToken\": "+"\""+getAccessToken()+"\",\n"+
+                "\"tokenType\": "+"\""+getTokenType()+"\"\n" +"}");
+    }
 }

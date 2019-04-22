@@ -14,6 +14,7 @@ import Chat from './component/chat/Chat';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import ReviewForm from './component/review/ReviewForm';
 import ReviewList from './component/review/ReviewList';
+import OAuth2RedirectHandler from './component/oauth2/OAuth2RedirectHendler';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -38,15 +39,18 @@ export default class App extends React.Component {
     };
 
     render() {
-        console.log(this.state.currentUserId)
+        console.log(this.state.currentUserId);
         return (
             <div>
                 <Menu />
                 <Switch>
                     <Route path='/auth' component={SignInUp} />
-                    <Route path='/show/:id'  render={props => <ShowEvent {...props} currentUserId={this.state.currentUserId} />} />
+                    <Route
+                        path='/show/:id'
+                        render={props => <ShowEvent {...props} currentUserId={this.state.currentUserId} />}
+                    />
                     {/* <Route path='/show/:id' component={ShowEvent } /> */}
-                    <Route path='/show' render={() => <ShowEvent currentUserId={this.state.currentUserId}/>} />
+                    <Route path='/show' render={() => <ShowEvent currentUserId={this.state.currentUserId} />} />
                     <Route
                         path='/profile'
                         render={
@@ -74,13 +78,14 @@ export default class App extends React.Component {
                         }
                     />
                     <Route path='/userEvents' render={() => <UserEventsPage />} />
-                    <Route path='/users/userEvents'component={UserEventsPage} />
+                    <Route path='/users/userEvents' component={UserEventsPage} />
                     <Route path='/createEvent' render={() => <FormContainer />} />
                     <Route path='/confirm' component={Confirm} />
                     <Route path='/chat' render={() => <Chat chatId={1} />} />
                     <Route path='/addReview/:targetId' render={props => <ReviewForm {...props} />} />
                     <Route path='/reviews/:userId' render={props => <ReviewList {...props} />} />
                     <Route exact path='/' component={RenderEventFilterPage} />
+                    <Route path='/oauth2/redirect' component={OAuth2RedirectHandler} />
                 </Switch>
                 <Footer />
             </div>
