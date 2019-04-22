@@ -12,34 +12,10 @@ class Show extends React.Component {
 
     state = {
         userId: undefined,
-        isParticipant: false,
-        isSpectator: false,
-        assID: undefined,
     };
 
     isAssigne = () => {
         return this.props.isParticipant || this.props.isSpectator;
-    };
-
-    setIsParticipant = () => {
-        this.setState({
-            isParticipant: true,
-            isSpectator: false,
-        });
-    };
-
-    setIsSpectator = () => {
-        this.setState({
-            isParticipant: false,
-            isSpectator: true,
-        });
-    };
-
-    setUnassigne = () => {
-        this.setState({
-            isParticipant: false,
-            isSpectator: false,
-        });
     };
 
     render() {
@@ -52,21 +28,21 @@ class Show extends React.Component {
                 <div className='row'>
   
                     <Participant
-                        setIsParticipant={this.setIsParticipant}
-                        setUnassigne={this.setUnassigne}
                         currentUserId={this.props.currentUserId}
                         eventId={this.props.eventId}
                         assigne={this.props.isParticipant}
                         assID={this.props.assID}
+                        setValue={this.props.setParticipantFromButton}
+                        setAssigneIdInButton={this.props.setAssigneIdInButton}
                     />
 
                     <Spectator
-                        setUnassigne={this.setUnassigne}
-                        setIsSpectator={this.setIsSpectator}
                         currentUserId={this.props.currentUserId}
                         eventId={this.props.eventId}
                         assigne={this.props.isSpectator}
                         assID={this.props.assID}
+                        setValue={this.props.setSpectatorFromButton}
+                        setAssigneIdInButton={this.props.setAssigneIdInButton}
                     />
 
                 </div>)
@@ -76,12 +52,12 @@ class Show extends React.Component {
             button = (   
                 <div className='row'>
                     <Participant
-                        setIsParticipant={this.setIsParticipant}
-                        setUnassigne={this.setUnassigne}
                         currentUserId={this.props.currentUserId}
                         eventId={this.props.eventId}
                         assigne={this.props.isParticipant}
                         assID={this.props.assID}
+                        setValue={this.props.setParticipantFromButton}
+                        setAssigneIdInButton={this.props.setAssigneIdInButton}
                     />
                 </div>)
 
@@ -90,12 +66,12 @@ class Show extends React.Component {
             button = (   
                 <div className='row'>
                     <Spectator
-                        setUnassigne={this.setUnassigne}
-                        setIsSpectator={this.setIsSpectator}
                         currentUserId={this.props.currentUserId}
                         eventId={this.props.eventId}
                         assigne={this.props.isSpectator}
                         assID={this.props.assID}
+                        setValue={this.props.setSpectatorFromButton}
+                        setAssigneIdInButton={this.props.setAssigneIdInButton}
                     />
                 </div>)
         }
@@ -139,7 +115,7 @@ class Show extends React.Component {
                                 spectators={this.props.spectators}
                             />
                         </div>
-                            {console.log(this.props.chat)}
+                           
                         <div>
                             {this.props.chat != undefined ? <Chat chatId={this.props.chat} /> : console.log("waiting for chat id")}
                         </div>

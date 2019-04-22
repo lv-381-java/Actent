@@ -8,14 +8,8 @@ import Axios from 'axios';
 class Spectator extends React.Component {
 
     state = {
-        id: this.props.assID,
         open: false,
-        assigne: false,
     };
-
-    componentDidMount() {
-        this.isPresent();
-    }
 
     assigneAsSpectator = () => {
 
@@ -24,61 +18,36 @@ class Spectator extends React.Component {
         let eventUser = {userId, eventId, eventUserType: 'SPECTATOR'}
         
         Axios.post(`http://localhost:8080/api/v1/eventsUsers`, eventUser).then(eve => {
-            this.setState({
-                id: eve.data.id,
-                assigne: true,
-            });
+            this.props.setAssigneIdInButton(eve.data.id);
         }).catch(error => {
-            this.setState({
-                assigne: true,
-            });
             console.log(error);
         });
     };
 
     unassigneUser = () => {
-        Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${this.state.id}`).then(eve => {
-            this.setState({
-                assigne: false,
-            })
+        Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${this.props.assID}`).then(eve => {
         }
         ).catch(error => {
-            this.setState({
-                assigne: false,
-            });
             console.log(error);
         });
     }
 
     handleClickOpen = () => {
-        this.setState({ ...this.state, open: true });
+        this.setState({ open: true });
     };
 
     handleClose = () => {
-        this.setState({ ...this.state, open: false });
+        this.setState({ open: false });
     };
 
-    isPresent = () => {
-        
-        if (this.props.assigne) {
-            this.setState({
-                assigne: true,
-            })
-        } else {
-            this.setState({
-                assigne: false,
-            })
-        }
-    }
-
     handleUnAssignedUser = () => {
-        this.props.setUnassigne();
+        this.props.setValue(false);
         this.unassigneUser();
         this.handleClose();
     }
 
     handleAssignedUserId = () => {
-        this.props.setIsSpectator();
+        this.props.setValue(true);
         this.assigneAsSpectator();
         this.handleClose();
     };
@@ -92,7 +61,7 @@ class Spectator extends React.Component {
     
         if (this.props.currentUserId) {
 
-            if (this.state.assigne) {
+            if (this.props.assigne) {
 
                 assigneButton = (
                         <div>
