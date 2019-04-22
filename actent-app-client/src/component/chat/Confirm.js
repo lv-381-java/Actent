@@ -45,10 +45,11 @@ export default class Confirm extends React.Component{
                                                            senderId={this.state.senderId}
                                                            messageText={this.state.messageText}
                                                            chatId={this.state.chatId}
+                                                           parentClose={this.dialogClose}
                                                       />
                                                    : null
                     }
-                    <Delete messageId={this.state.messageId} senderId={this.state.senderId}/>
+                    <Delete messageId={this.state.messageId} senderId={this.state.senderId} parentClose={this.dialogClose} />
                 </DialogContent>
             </Dialog>
         );
