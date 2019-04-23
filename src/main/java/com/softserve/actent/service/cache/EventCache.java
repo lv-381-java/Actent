@@ -56,6 +56,7 @@ public class EventCache {
             case IMAGE: return this::getImage;
             case CHAT: return this::getChat;
             case REVIEW: return this::getReview;
+            case TAG: return this::getTag;
             default: return null;
         }
     }
@@ -91,4 +92,10 @@ public class EventCache {
                 .anyMatch(r -> r.getId().equals(changedId));
     }
 
+    private boolean getTag(Long storedId, Long changedId) {
+        return eventStore.get(storedId)
+                .getTags()
+                .stream()
+                .anyMatch(t -> t.getId().equals(changedId));
+    }
 }

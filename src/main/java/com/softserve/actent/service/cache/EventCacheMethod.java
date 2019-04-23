@@ -8,5 +8,6 @@ public enum EventCacheMethod {
     IMAGE,
     CHAT,
     REVIEW,
+    TAG,
 
 }
