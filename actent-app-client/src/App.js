@@ -9,7 +9,6 @@ import {configureAxios, getCurrentUser} from './util/apiUtils';
 import Confirm from './component/confirm/Confirm';
 import Menu from './component/EventFilter/Menu';
 import Footer from './component/EventFilter/Footer';
-import Chat from './component/chat/Chat';
 
 import {Route, Switch, Redirect} from 'react-router-dom';
 import ReviewForm from './component/review/ReviewForm';
