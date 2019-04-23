@@ -6,6 +6,8 @@ import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Tag;
 import com.softserve.actent.repository.TagRepository;
 import com.softserve.actent.service.TagService;
+import com.softserve.actent.service.cache.EventCache;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,14 @@ import java.util.Optional;
 @Service
 public class TagServiceImpl implements TagService {
 
+    private final EventCache eventCache;
     private final TagRepository tagRepository;
 
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository) {
+    public TagServiceImpl(TagRepository tagRepository,
+                          EventCache eventCache) {
         this.tagRepository = tagRepository;
+        this.eventCache = eventCache;
     }
 
     @Override
@@ -41,6 +46,7 @@ public class TagServiceImpl implements TagService {
 
         if (optionalTag.isPresent()) {
             tag.setId(id);
+            eventCache.cacheRefresh(id, EventCacheMethod.TAG);
             return tagRepository.save(tag);
         } else {
             throw new DataNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
@@ -66,6 +72,7 @@ public class TagServiceImpl implements TagService {
         Optional<Tag> optionalReview = tagRepository.findById(id);
 
         if (optionalReview.isPresent()) {
+            eventCache.cacheRefresh(id, EventCacheMethod.TAG);
             tagRepository.deleteById(id);
         } else {
             throw new DataNotFoundException(ExceptionMessages.TAG_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
