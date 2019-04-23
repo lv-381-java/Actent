@@ -10,9 +10,10 @@ import com.softserve.actent.model.entity.ChatType;
 import com.softserve.actent.model.entity.User;
 import com.softserve.actent.repository.ChatRepository;
 import com.softserve.actent.repository.MessageRepository;
-import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.ChatService;
 import com.softserve.actent.service.UserService;
+import com.softserve.actent.service.cache.EventCache;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +25,17 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRepository chatRepository;
     private final UserService userService;
     private final MessageRepository messageRepository;
+    private final EventCache eventCache;
 
     @Autowired
-    public ChatServiceImpl(ChatRepository chatRepository, UserRepository userRepository, UserService userService, MessageRepository messageRepository) {
+    public ChatServiceImpl(ChatRepository chatRepository,
+                           UserService userService,
+                           MessageRepository messageRepository,
+                           EventCache eventCache) {
         this.chatRepository = chatRepository;
         this.userService = userService;
         this.messageRepository = messageRepository;
+        this.eventCache = eventCache;
     }
 
     @Transactional
@@ -62,6 +68,7 @@ public class ChatServiceImpl implements ChatService {
     public void deleteChatById(Long chatId) {
 
         if (chatRepository.existsById(chatId)) {
+            eventCache.cacheRefresh(chatId, EventCacheMethod.CHAT);
             chatRepository.deleteById(chatId);
         } else {
             throw new DataNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND,
@@ -74,6 +81,7 @@ public class ChatServiceImpl implements ChatService {
     public Chat updateChat(Chat chat, Long chatId) {
         if (chatRepository.existsById(chatId)) {
             chat.setId(chatId);
+            eventCache.cacheRefresh(chatId, EventCacheMethod.CHAT);
             return chatRepository.save(chat);
         } else {
             throw new DataNotFoundException(ExceptionMessages.CHAT_BY_THIS_ID_IS_NOT_FOUND,
@@ -86,13 +94,12 @@ public class ChatServiceImpl implements ChatService {
         User user = userService.get(userId);
         Chat chat = getChatById(chatId);
 
-        if(chat.getBannedUsers().contains(user)){
+        if (chat.getBannedUsers().contains(user)){
             throw new DataNotFoundException(StringConstants.USER_BY_SUCH_ID_IS_ALREADY_EXISTS_IN_LIST_OF_BANNED_USERS_IN_THIS_CHAT,
                     ExceptionCode.DUPLICATE_VALUE);
-        }else{
+        } else {
             chat.getBannedUsers().add(user);
             chat = updateChat(chat, chatId);
-
             return chat;
         }
     }
@@ -117,12 +124,11 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Long getCountOfMessages(Long chatId) {
-        if(chatRepository.existsById(chatId)){
+        if (chatRepository.existsById(chatId)){
             return messageRepository.countByChatId(chatId);
-        }else{
+        } else {
             throw new DataNotFoundException(StringConstants.CHAT_ID_SHOULD_BE_POSITIVE,
                     ExceptionCode.NOT_FOUND);
         }
-
     }
 }
