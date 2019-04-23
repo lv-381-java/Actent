@@ -30,6 +30,7 @@ public class EventCache {
         return eventStore.containsKey(id);
     }
 
+    // todo: Save wrapper !!!
     public void delete(Long id) {
         eventStore.remove(id);
     }
@@ -51,6 +52,7 @@ public class EventCache {
         switch (method) {
             case CREATOR: return this::getCreator;
             case CATEGORY: return this::getCategory;
+            case LOCATION: return this::getLocation;
             default: return null;
         }
     }
@@ -65,6 +67,10 @@ public class EventCache {
 
     private boolean getCategory(Long storedId, Long changedId) {
         return eventStore.get(storedId).getCategory().getId().equals(changedId);
+    }
+
+    private boolean getLocation(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getAddress().getId().equals(changedId);
     }
 
 }
