@@ -17,7 +17,7 @@ public class EventCache {
     private static final SimpleLRUCache<Long, Event> eventStore =
             new SimpleLRUCache<>(NumberConstants.EVENT_CACHE_CAPACITY);
 
-    public void save(Event event) {
+    public synchronized void save(Event event) {
         eventStore.put(event.getId(), event);
     }
 
@@ -31,11 +31,6 @@ public class EventCache {
 
     public boolean contains(Long id) {
         return eventStore.containsKey(id);
-    }
-
-    // todo: Save wrapper !!!
-    public void delete(Long id) {
-        eventStore.remove(id);
     }
 
     public void cacheRefresh(Long id, EventCacheMethod method) {
@@ -53,6 +48,7 @@ public class EventCache {
 
     private BiFunction<Long, Long, Boolean> getFunction(EventCacheMethod method) {
         switch (method) {
+            case EVENT: return this::getEvent;
             case CREATOR: return this::getCreator;
             case CATEGORY: return this::getCategory;
             case LOCATION: return this::getLocation;
@@ -64,8 +60,12 @@ public class EventCache {
         }
     }
 
-    private void deleteAll(List<Long> keys) {
+    private synchronized void deleteAll(List<Long> keys) {
         keys.forEach(eventStore::remove);
+    }
+
+    private boolean getEvent(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getId().equals(changedId);
     }
 
     private boolean getCreator(Long storedId, Long changedId) {

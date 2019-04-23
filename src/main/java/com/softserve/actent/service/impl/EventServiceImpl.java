@@ -18,6 +18,7 @@ import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.cache.EventCache;
 import com.softserve.actent.service.EventService;
 import com.softserve.actent.service.SubscribeService;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -100,7 +101,6 @@ public class EventServiceImpl implements EventService {
 
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         nullHunter(id, ExceptionMessages.ID_CAN_NOT_BE_NULL);
-        eventCache.delete(id);
         Event preparedEvent = getPreparedEventFromDataBase(event, id);
         return getUpdatedEvent(preparedEvent);
     }
@@ -110,7 +110,7 @@ public class EventServiceImpl implements EventService {
     public void delete(Long id) {
 
         checkIfExist(id);
-        eventCache.delete(id);
+        eventCache.cacheRefresh(id, EventCacheMethod.EVENT);
         eventRepository.deleteById(id);
     }
 
@@ -158,7 +158,7 @@ public class EventServiceImpl implements EventService {
         event.setCreationDate(eventFromBase != null ? eventFromBase.getCreationDate() : null);
         event.setAccessType(eventFromBase != null ? eventFromBase.getAccessType() : null);
         event.setId(id);
-
+        eventCache.cacheRefresh(id, EventCacheMethod.EVENT);
         return event;
     }
 
