@@ -1,14 +1,12 @@
 package com.softserve.actent.model.dto.converter;
 
 import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.constant.StringConstants;
 import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.dto.TagDto;
 import com.softserve.actent.model.dto.equipment.EquipmentDto;
 import com.softserve.actent.model.dto.event.*;
 import com.softserve.actent.model.dto.eventUser.EventUserForEventDto;
-import com.softserve.actent.model.dto.review.ReviewDto;
 import com.softserve.actent.model.entity.*;
 
 import org.modelmapper.ModelMapper;
@@ -50,11 +48,14 @@ public class EventConverter {
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         return modelMapper.map(event, MinimalEventDto.class);
     }
-    private EventOstapDto getOstapDto(Event event) {
+    private EventOstapDto getForListDto(Event event) {
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         EventOstapDto eventOstapDto = modelMapper.map(event, EventOstapDto.class);
         eventOstapDto.setLocationForEventDto(getLocation(event.getAddress()));
         eventOstapDto.setCategoryForEventDto(getCategory(event.getCategory()));
+        if (eventOstapDto.getImage() == null) {
+            eventOstapDto.setImage(new Image());
+        }
         return eventOstapDto;
     }
     private ShowEventDto getShowEventDto(Event event) {
@@ -169,7 +170,7 @@ public class EventConverter {
                 case MINIMAL:
                     return this::getMinimalEventDto;
                 case FOR_LIST:
-                    return this::getOstapDto;
+                    return this::getForListDto;
                 case DETAIL:
                     return this::getShowEventDto;
                 case FULL:

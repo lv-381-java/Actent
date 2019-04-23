@@ -4,6 +4,7 @@ import com.softserve.actent.constant.NumberConstants;
 import com.softserve.actent.model.entity.Event;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -14,11 +15,11 @@ public class EventCache {
     private static final SimpleLRUCache<Long, Event> eventStore =
             new SimpleLRUCache<>(NumberConstants.EVENT_CACHE_CAPACITY);
 
-    public void save(Event event) {
+    public synchronized void save(Event event) {
         eventStore.put(event.getId(), event);
     }
 
-    public void saveAll(List<Event> eventList) {
+    public synchronized void saveAll(List<Event> eventList) {
         eventList.forEach(this::save);
     }
 
@@ -30,33 +31,41 @@ public class EventCache {
         return eventStore.containsKey(id);
     }
 
-    public void delete(Long id) {
-        eventStore.remove(id);
-    }
-
     public void cacheRefresh(Long id, EventCacheMethod method) {
         refresh(id, getFunction(method));
     }
 
     private void refresh(Long id, BiFunction<Long, Long, Boolean> function) {
-
-        deleteAll(eventStore
-                .keySet()
-                .stream()
-                .filter(e -> function.apply(e, id))
-                .collect(Collectors.toList()));
+        List<Long> collect =
+                new ArrayList<>(eventStore.keySet())
+                        .stream()
+                        .filter(k -> function.apply(k, id))
+                        .collect(Collectors.toList());
+        deleteAll(collect);
     }
 
     private BiFunction<Long, Long, Boolean> getFunction(EventCacheMethod method) {
         switch (method) {
+            case EVENT: return this::getEvent;
             case CREATOR: return this::getCreator;
             case CATEGORY: return this::getCategory;
+            case LOCATION: return this::getLocation;
+            case IMAGE: return this::getImage;
+            case CHAT: return this::getChat;
+            case REVIEW: return this::getReview;
+            case TAG: return this::getTag;
+            case EVENT_USER: return this::getEventUser;
+            case EQUIPMENT: return this::getEquipment;
             default: return null;
         }
     }
 
-    private void deleteAll(List<Long> keys) {
+    private synchronized void deleteAll(List<Long> keys) {
         keys.forEach(eventStore::remove);
+    }
+
+    private boolean getEvent(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getId().equals(changedId);
     }
 
     private boolean getCreator(Long storedId, Long changedId) {
@@ -65,6 +74,46 @@ public class EventCache {
 
     private boolean getCategory(Long storedId, Long changedId) {
         return eventStore.get(storedId).getCategory().getId().equals(changedId);
+    }
+
+    private boolean getLocation(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getAddress().getId().equals(changedId);
+    }
+
+    private boolean getImage(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getImage().getId().equals(changedId);
+    }
+
+    private boolean getChat(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getChat().getId().equals(changedId);
+    }
+
+    private boolean getReview(Long storedId, Long changedId) {
+        return eventStore.get(storedId)
+                .getFeedback()
+                .stream()
+                .anyMatch(r -> r.getId().equals(changedId));
+    }
+
+    private boolean getTag(Long storedId, Long changedId) {
+        return eventStore.get(storedId)
+                .getTags()
+                .stream()
+                .anyMatch(t -> t.getId().equals(changedId));
+    }
+
+    private boolean getEventUser(Long storedId, Long changedId) {
+        return eventStore.get(storedId)
+                .getEventUserList()
+                .stream()
+                .anyMatch(e -> e.getId().equals(changedId));
+    }
+
+    private boolean getEquipment(Long storedId, Long changedId) {
+        return eventStore.get(storedId)
+                .getEquipments()
+                .stream()
+                .anyMatch(e -> e.getId().equals(changedId));
     }
 
 }

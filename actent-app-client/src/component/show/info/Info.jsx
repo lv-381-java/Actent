@@ -4,13 +4,19 @@ class Info extends React.Component {
 
     render() {
 
+        var duration = ((this.props.duration / 1000) / 60);
+        var min = duration.toFixed(2);
+        var date = this.props.startDate;
+        if (date) {
+            var d = date.replace("T", ", ").slice(0, date.length - 3);
+        }
         return (
 
             <div>
                 <h1>{this.props.info}</h1>
             
-                <h4>Start date: {this.props.startDate}</h4>
-                <h4>Duration: {this.props.duration}</h4>
+                <h4>Start date: {d}</h4>
+                <h4>Duration: {min} minutes</h4>
                 <h4>Capacity: {this.props.capacity}</h4>
                 <h4>Category: {this.props.category}</h4>
                 <h4>Creator:</h4>

@@ -96,7 +96,7 @@ public class MessageServiceImpl implements MessageService {
         newMessage.setSender(message.getSender());
         newMessage.setMessageContent(message.getMessageContent());
         Optional<Message> optionalMessage = messageRepository.findById(id);
-        if (optionalMessage.isPresent() && checkCredential(optionalMessage, newMessage)) {
+        if (checkCredential(optionalMessage, newMessage)) {
 
             newMessage.setId(id);
             newMessage.setMessageType(MessageType.TEXT);
