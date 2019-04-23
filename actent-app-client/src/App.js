@@ -28,7 +28,9 @@ export default class App extends React.Component {
     setCurrentUser = _ => {
         getCurrentUser()
             .then(res => {
+                console.log(res.data);
                 this.setState({
+                    currentUserFirstName: res.data.firstName,
                     currentUser: res.data,
                     currentUserId: res.data.id,
                     isAuthenticated: true,
@@ -40,7 +42,7 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
-                <Menu userId={this.state.currentUserId} />
+                <Menu userId={this.state.currentUserId} firstName={this.state.currentUserFirstName}/>
                 <Switch>
                     <Route path='/home' component={RenderEventFilterPage} />
                     <Route path='/auth' component={SignInUp} />
