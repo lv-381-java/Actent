@@ -1,6 +1,7 @@
 package com.softserve.actent.security.controller;
 
 import com.softserve.actent.model.dto.IdDto;
+import com.softserve.actent.model.entity.AuthProvider;
 import com.softserve.actent.model.entity.Role;
 import com.softserve.actent.model.entity.Status;
 import com.softserve.actent.model.entity.User;
@@ -85,6 +86,7 @@ public class AuthController {
         user.setStatus(Status.NON_VERIFIED);
         user.setUuid(verification.createUuidWithSalt());
         user = userService.add(user);
+        user.setAuthProvider(AuthProvider.local);
 //        sendEmail.sendSimpleEmail(user.getEmail(), user);
 
         String confirmUrl = "http://localhost:3000/confirm?login=" + user.getLogin() + "&uuid=" + user.getUuid();
