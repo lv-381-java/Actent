@@ -5,5 +5,7 @@ public enum EventCacheMethod {
     CREATOR,
     CATEGORY,
     LOCATION,
+    IMAGE,
+
 
 }

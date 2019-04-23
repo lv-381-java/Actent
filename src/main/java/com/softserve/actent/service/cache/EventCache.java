@@ -53,6 +53,7 @@ public class EventCache {
             case CREATOR: return this::getCreator;
             case CATEGORY: return this::getCategory;
             case LOCATION: return this::getLocation;
+            case IMAGE: return this::getImage;
             default: return null;
         }
     }
@@ -71,6 +72,10 @@ public class EventCache {
 
     private boolean getLocation(Long storedId, Long changedId) {
         return eventStore.get(storedId).getAddress().getId().equals(changedId);
+    }
+
+    private boolean getImage(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getImage().getId().equals(changedId);
     }
 
 }
