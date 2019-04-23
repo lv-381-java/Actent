@@ -61,8 +61,8 @@ export default class Menu extends Component {
                     <MDBNavbarNav right>
 
                         {this.props.firstName != undefined ?
-                            <MDBNavItem>
-                                <div style={{ color: '#ffffff', textDecoration: 'none', marginRight: '10px', display: 'flex', maxWidth: '5vw'}}>
+                            <MDBNavItem style={{alignSelf: 'center'}}>
+                                <div style={{color: '#ffffff', marginRight: '10px'}}>
                                     Welcome, {this.props.firstName}
                                 </div>
                             </MDBNavItem>
