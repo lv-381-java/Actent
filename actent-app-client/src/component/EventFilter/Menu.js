@@ -20,6 +20,7 @@ import { removeAuthorizationToken } from '../../util/apiUtils';
 import { Link } from '@material-ui/core';
 
 export default class Menu extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -58,6 +59,15 @@ export default class Menu extends Component {
                         </MDBNavItem>
                     </MDBNavbarNav>
                     <MDBNavbarNav right>
+
+                        {this.props.firstName != undefined ?
+                            <MDBNavItem>
+                                <div style={{ color: '#ffffff', textDecoration: 'none', marginRight: '10px', display: 'flex', maxWidth: '5vw'}}>
+                                    Welcome, {this.props.firstName}
+                                </div>
+                            </MDBNavItem>
+                                : null}
+
                         <MDBNavItem>
                             <MDBDropdown>
                                 <MDBDropdownToggle nav caret>
