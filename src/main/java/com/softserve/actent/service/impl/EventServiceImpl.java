@@ -15,8 +15,10 @@ import com.softserve.actent.repository.EventRepository;
 import com.softserve.actent.repository.ImageRepository;
 import com.softserve.actent.repository.LocationRepository;
 import com.softserve.actent.repository.UserRepository;
+import com.softserve.actent.service.cache.EventCache;
 import com.softserve.actent.service.EventService;
 import com.softserve.actent.service.SubscribeService;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,7 @@ import java.util.Optional;
 @Service
 public class EventServiceImpl implements EventService {
 
+    private final EventCache eventCache;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
@@ -39,14 +42,15 @@ public class EventServiceImpl implements EventService {
     private final SubscribeService subscribeService;
 
     @Autowired
-    public EventServiceImpl(EventRepository eventRepository,
+    public EventServiceImpl(EventCache eventCache,
+                            EventRepository eventRepository,
                             UserRepository userRepository,
                             LocationRepository locationRepository,
                             CategoryRepository categoryRepository,
                             ImageRepository imageRepository,
                             ChatRepository chatRepository,
                             SubscribeService subscribeService) {
-
+        this.eventCache = eventCache;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
@@ -58,7 +62,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event add(Event event) {
-
         checkEvent(event);
         return getSavedEvent(event);
     }
@@ -66,15 +69,18 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event get(Long id) {
 
-        return eventRepository.findById(id).orElseThrow(() ->
-                new DataNotFoundException(
-                        ExceptionMessages.EVENT_BY_THIS_ID_IS_NOT_FOUND,
-                        ExceptionCode.NOT_FOUND));
+        if (eventCache.contains(id)) {
+            return eventCache.get(id);
+        }
+
+        checkIfExist(id);
+        Event event = eventRepository.getOne(id);
+        eventCache.save(event);
+        return event;
     }
 
     @Override
     public List<Event> getAll() {
-
         return eventRepository.findAll();
     }
 
@@ -95,7 +101,6 @@ public class EventServiceImpl implements EventService {
 
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         nullHunter(id, ExceptionMessages.ID_CAN_NOT_BE_NULL);
-
         Event preparedEvent = getPreparedEventFromDataBase(event, id);
         return getUpdatedEvent(preparedEvent);
     }
@@ -105,6 +110,7 @@ public class EventServiceImpl implements EventService {
     public void delete(Long id) {
 
         checkIfExist(id);
+        eventCache.cacheRefresh(id, EventCacheMethod.EVENT);
         eventRepository.deleteById(id);
     }
 
@@ -152,7 +158,7 @@ public class EventServiceImpl implements EventService {
         event.setCreationDate(eventFromBase != null ? eventFromBase.getCreationDate() : null);
         event.setAccessType(eventFromBase != null ? eventFromBase.getAccessType() : null);
         event.setId(id);
-
+        eventCache.cacheRefresh(id, EventCacheMethod.EVENT);
         return event;
     }
 
@@ -336,4 +342,5 @@ public class EventServiceImpl implements EventService {
             throw new DataNotFoundException(ExceptionMessages.IMAGE_NOT_FOUND_WITH_ID, ExceptionCode.NOT_FOUND);
         }
     }
+
 }

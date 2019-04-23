@@ -14,8 +14,20 @@ export default class UserEventsPage extends React.Component {
         filterUserType: undefined,
         filterCategory: undefined,
         events: [],
+        pageOfItems: [],
         selectTab: 0,
+        activePage: 1,
+        totalItems: 0,
+        totalItemsPast: 0,
+        totalItemsFuture: 0,
     };
+
+    componentDidMount() {
+        this.getEvents();
+        this.getTotalItems();
+        this.getTotalItemsPast();
+        this.getTotalItemsFuture();
+    }
 
     setSelectTab = tabId => {
         this.setState({selectTab: tabId}, () => this.getEvents());
@@ -26,7 +38,6 @@ export default class UserEventsPage extends React.Component {
     };
 
     setUserType = userType => {
-        console.log(userType);
         this.setState({filterUserType: userType}, () => this.getEvents());
     };
 
@@ -34,18 +45,25 @@ export default class UserEventsPage extends React.Component {
         this.setState({filterCategory: categoryName}, () => this.getEvents());
     };
 
+    handlePageChange = pageNumber => {
+        this.setState({activePage: pageNumber}, () => this.getEvents());
+    };
+
     getEvents() {
         let userId = this.props.match.params.userId;
+
+        let page = this.state.activePage - 1;
+
         if (userId === undefined) {
             return
         }
         let url = '/eventsUsers/';
         if (this.state.selectTab === 0) {
-            url += `allEvents/${userId}`;
+            url += `allEvents/${userId}/${page}/4`;
         } else if (this.state.selectTab === 1) {
-            url += `futureEvents/${userId}`;
+            url += `futureEvents/${userId}/${page}/4`;
         } else if (this.state.selectTab === 2) {
-            url += `pastEvents/${userId}`;
+            url += `pastEvents/${userId}/${page}/4`;
         }
         if (this.state.filterCategory || this.state.filterAddress || this.state.filterUserType) {
             url += '?';
@@ -60,7 +78,6 @@ export default class UserEventsPage extends React.Component {
             }
         }
 
-        console.log(url);
         axios
             .get(url)
             .then(response => {
@@ -68,13 +85,49 @@ export default class UserEventsPage extends React.Component {
                 this.setState({events: events});
             })
             .catch(function (error) {
-                console.log(error);
+                console.error(error);
             });
     }
 
-    componentDidMount() {
-        this.getEvents();
-    }
+    getTotalItems = () => {
+        let userId = this.props.match.params.userId;
+        let url = `/eventsUsers/total/${userId}`;
+        axios
+            .get(url)
+            .then(response => {
+                let totalItems = response.data;
+                this.setState({totalItems});
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
+    getTotalItemsPast = () => {
+        let userId = this.props.match.params.userId;
+        let url = `/eventsUsers/totalPastEvents/${userId}`;
+        axios
+            .get(url)
+            .then(response => {
+                let totalItemsPast = response.data;
+                this.setState({totalItemsPast});
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
+    getTotalItemsFuture = () => {
+        let userId = this.props.match.params.userId;
+        let url = `/eventsUsers/totalFutureEvents/${userId}`;
+        axios
+            .get(url)
+            .then(response => {
+                let totalItemsFuture = response.data;
+                this.setState({totalItemsFuture});
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    };
 
     render() {
         return (
@@ -84,7 +137,10 @@ export default class UserEventsPage extends React.Component {
                     <MainFilter setLocation={this.setLocation} setUserType={this.setUserType}
                                 setCategory={this.setCategory}/>
                     <TabContainer setSelectTab={this.setSelectTab} selectTab={this.state.selectTab}
-                                  events={this.state.events}/>
+                                  events={this.state.events} handlePageChange={this.handlePageChange}
+                                  activePage={this.state.activePage} pageCount={this.state.totalItems}
+                                  pageCountFuture={this.state.totalItemsFuture}
+                                  pageCountPast={this.state.totalItemsPast}/>
                 </div>
             </div>
         );

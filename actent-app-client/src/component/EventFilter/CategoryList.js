@@ -6,10 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 export default class CategoryList extends React.Component {
     state = {
         categories: this.props.categories,
-    };
-
-    handleCheck = () => {
-        this.setState({ checked: !this.state.checked });
+        checked: undefined,
     };
 
     toggleChange = event => {
@@ -21,6 +18,8 @@ export default class CategoryList extends React.Component {
     };
 
     render() {
+        console.log(this.props.checked);
+        let checked = this.props.checked;
         return (
             <div className='row'>
                 {this.props.categories.map(category => {
@@ -30,6 +29,7 @@ export default class CategoryList extends React.Component {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
+                                            checked={checked}
                                             id={category.id.toString()}
                                             color='primary'
                                             onChange={this.toggleChange}

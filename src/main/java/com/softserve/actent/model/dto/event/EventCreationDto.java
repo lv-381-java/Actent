@@ -21,7 +21,9 @@ import java.time.LocalDateTime;
 public class EventCreationDto {
 
     @NotBlank(message = StringConstants.TITLE_SHOULD_NOT_BE_BLANK)
-    @Length(max = NumberConstants.TITLE_MAX_LENGTH, message = StringConstants.TITLE_LENGTH_IS_TO_LONG)
+    @Length(min = NumberConstants.TITLE_MIN_LENGTH,
+            max = NumberConstants.TITLE_MAX_LENGTH,
+            message = StringConstants.TITLE_LENGTH_IS_TO_LONG)
     private String title;
 
     @NotBlank(message = StringConstants.DESCRIPTION_SHOULD_NOT_BE_BLANK)

@@ -54,6 +54,7 @@ export default class FilterBody extends Component {
                                             addFilterCategorieId={this.props.addFilterCategorieId}
                                             deleteFilterCategorieId={this.props.deleteFilterCategorieId}
                                             setButtonColor={this.props.setCategoryButtonColor}
+                                            checked={this.props.checked}
                                         />
                                     </div>
                                 </MDBCollapse>
