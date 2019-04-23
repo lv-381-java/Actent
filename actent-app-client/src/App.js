@@ -20,6 +20,7 @@ export default class App extends React.Component {
         super(props);
         configureAxios();
         this.state = {
+            isAuthenticatedSocial: false,
             isAuthenticated: false,
         };
         this.setCurrentUser();
@@ -37,6 +38,9 @@ export default class App extends React.Component {
                 });
             })
             .catch(e => console.error(e));
+    };
+    setSocial = e => {
+        this.setState({ isAuthenticatedSocial: e });
     };
 
     render() {

@@ -1,26 +1,24 @@
 import React, { Component } from 'react';
-import { ACCESS_TOKEN } from '../../constants/apiConstants';
-import { Redirect } from 'react-router-dom';
-import { saveAuthorizationToken, setAuthorizationHeader} from '../../util/apiUtils';
+import { saveAuthorizationToken, setAuthorizationHeader } from '../../util/apiUtils';
+
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 export default class OAuth2RedirectHandler extends Component {
     getUrlParameter(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        console.log(name);
         let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        console.log(regex);
         let results = regex.exec(this.props.location.search);
-        console.log(results);
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 
     render() {
         const token = this.getUrlParameter('token');
+
         if (token) {
-    
             saveAuthorizationToken(token);
             setAuthorizationHeader();
             window.location.href = '/';
+            this.NotificationManager.error('Invalid E-mail or Password!', 'Error!', 5000);
         } else {
             window.location.href = '/';
         }
