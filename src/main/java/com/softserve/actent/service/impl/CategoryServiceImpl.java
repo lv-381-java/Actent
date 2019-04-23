@@ -6,6 +6,8 @@ import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Category;
 import com.softserve.actent.repository.CategoryRepository;
 import com.softserve.actent.service.CategoryService;
+import com.softserve.actent.service.cache.EventCache;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +18,14 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    private final EventCache eventCache;
     private final CategoryRepository categoryRepository;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository,
+                               EventCache eventCache) {
         this.categoryRepository = categoryRepository;
+        this.eventCache = eventCache;
     }
 
     @Override
@@ -34,6 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category update(Category category, Long id) {
         if (categoryRepository.findById(id).isPresent()) {
             category.setId(id);
+            eventCache.cacheRefresh(id, EventCacheMethod.CATEGORY);
             return categoryRepository.save(category);
         } else {
             throw new DataNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
@@ -62,6 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void delete(Long id) {
         Optional<Category> optionalCategory = categoryRepository.findById(id);
         if (optionalCategory.isPresent()) {
+            eventCache.cacheRefresh(id, EventCacheMethod.CATEGORY);
             categoryRepository.deleteById(id);
         } else {
             throw new DataNotFoundException(ExceptionMessages.CATEGORY_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);

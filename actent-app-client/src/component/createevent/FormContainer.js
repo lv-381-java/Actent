@@ -39,12 +39,13 @@ class FormContainer extends Component {
             errorLocation: undefined,
             errorAccessType: undefined,
             errorStartDate: "",
-            errorDuration:"",
+            errorDuration: "",
             formQueryStatus: undefined,
             imageName: "",
             imageData: {},
             filePath: undefined,
-            address: ""
+            address: "",
+            locations: [],
         };
     }
 
@@ -96,8 +97,8 @@ class FormContainer extends Component {
             this.setState({errorTitle});
             return false;
         }
-        if (title.length < 3) {
-            errorTitle = "Title must be at least 3 characters";
+        if (title.length < 3 || title.length > 100) {
+            errorTitle = "Title must be at least 3 and not more 100 characters";
             this.setState({errorTitle});
             return false;
         }
@@ -128,8 +129,8 @@ class FormContainer extends Component {
             this.setState({errorCapacity});
             return false;
         }
-        if (capacity > 100) {
-            errorCapacity = "Capacity must be from 1 to 100";
+        if (capacity < 1) {
+            errorCapacity = "Capacity must be greater than 0";
             this.setState({errorCapacity});
             return false;
         }
@@ -147,6 +148,7 @@ class FormContainer extends Component {
         this.setState({errorCategory});
         return true;
     };
+
     isLocationValid = (location) => {
         let errorLocation = "";
         if (!location) {
@@ -178,8 +180,8 @@ class FormContainer extends Component {
             return false;
         }
 
-        if (description.length < 3 || description.length > 350) {
-            errorDescription = "Description must be at least 3 and not more 350 characters";
+        if (description.length < 3 || description.length > 850) {
+            errorDescription = "Description must be at least 3 and not more 850 characters";
             this.setState({errorDescription});
             return false;
         }
@@ -206,18 +208,43 @@ class FormContainer extends Component {
             && this.isStartDateValid(this.state.startDate)
             && this.isAccessTypeValid(this.state.accessType)
             && this.isDescriptionValid(this.state.description)
-            && this.isLocationValid(this.state.locationId)
             ;
     };
 
-    handleFormSubmit = (e) => {
-        e.preventDefault();
-
-        let eventData = this.state;
-
+    formSubmit = () => {
         this.setState({
             formQueryStatus: 0
         });
+
+        if (this.state.address && this.state.address.length > 0) {
+            let url = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address}`;
+            axios.get(url)
+                .then(response => {
+                    const data = response.data;
+                    this.setState({
+                        locationId: data.id,
+                        formQueryStatus: 0
+                    }, this.handleFormSubmit);
+
+                    return data.id;
+                })
+                .then(locationId => {
+                    this.isLocationValid(locationId);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        } else {
+            this.isLocationValid();
+            this.setState({
+                formQueryStatus: 2
+            });
+        }
+    };
+
+    handleFormSubmit = () => {
+
+        let eventData = this.state;
 
         if (!this.isFormValid()) {
             this.setState({
@@ -274,7 +301,6 @@ class FormContainer extends Component {
         const uploadUrl = apiUrl + '/storage/uploadFile/';
         const addImageUrl = apiUrl + '/images/';
         const requestTimeout = 30000;
-
         axios
             .post(uploadUrl, this.state.imageData, {
                 timeout: requestTimeout,
@@ -416,7 +442,7 @@ class FormContainer extends Component {
                 {this.state.formQueryStatus === 1 && (<div>Status: Event created successfully</div>)}
                 {this.state.formQueryStatus === 2 && (<div>Status: Something went wrong.....</div>)}
                 <Button
-                    action={this.handleFormSubmit}
+                    action={this.formSubmit}
                     type={"primary"}
                     title={"Submit"}
                     style={buttonStyle}

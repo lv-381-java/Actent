@@ -36,7 +36,7 @@ class SimpleTabs extends React.Component {
     render() {
         const {classes} = this.props;
         return (
-            <div className={classes.root} >
+            <div className={classes.root}>
                 <AppBar position='static' color='default'>
                     <Tabs
                         indicatorColor={'primary'}
@@ -50,17 +50,23 @@ class SimpleTabs extends React.Component {
                 </AppBar>
                 {this.props.selectTab === 0 && (
                     <TabContainer>
-                        <AllEventsList events={this.props.events}/>
+                        <AllEventsList events={this.props.events} pageCount={this.props.pageCount}
+                                       handlePageChange={this.props.handlePageChange}
+                                       activePage={this.props.activePage}/>
                     </TabContainer>
                 )}
                 {this.props.selectTab === 1 && (
                     <TabContainer>
-                        <PresentEventsList events={this.props.events}/>
+                        <PresentEventsList events={this.props.events} pageCountFuture={this.props.pageCountFuture}
+                                           handlePageChange={this.props.handlePageChange}
+                                           activePage={this.props.activePage}/>
                     </TabContainer>
                 )}
                 {this.props.selectTab === 2 && (
                     <TabContainer>
-                        <PastEventsList events={this.props.events}/>
+                        <PastEventsList events={this.props.events} pageCountPast={this.props.pageCountPast}
+                                        handlePageChange={this.props.handlePageChange}
+                                        activePage={this.props.activePage}/>
                     </TabContainer>
                 )}
             </div>

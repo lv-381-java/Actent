@@ -11,6 +11,8 @@ import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.LocationService;
 import com.softserve.actent.service.ImageService;
 import com.softserve.actent.service.UserService;
+import com.softserve.actent.service.cache.EventCache;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final EventCache eventCache;
     private final UserRepository userRepository;
     private final LocationService locationService;
     private final ImageService imageService;
@@ -30,11 +33,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            LocationService locationService,
-                           ImageService imageService) {
+                           ImageService imageService,
+                           EventCache eventCache) {
 
         this.userRepository = userRepository;
         this.locationService = locationService;
         this.imageService = imageService;
+        this.eventCache = eventCache;
     }
 
     @Transactional
@@ -77,6 +82,7 @@ public class UserServiceImpl implements UserService {
             if (user.getAvatar() != null){
                 existingUser.setAvatar(imageService.get(user.getAvatar().getId()));
             }
+            eventCache.cacheRefresh(id, EventCacheMethod.CREATOR);
             return userRepository.save(existingUser);
 
         } else {
@@ -89,6 +95,7 @@ public class UserServiceImpl implements UserService {
     public User registrationUpdate(User user, Long id) {
         if (userRepository.existsById(id)) {
             user.setId(id);
+            eventCache.cacheRefresh(id, EventCacheMethod.CREATOR);
             return userRepository.save(user);
         } else {
             throw new AccessDeniedException(ExceptionMessages.USER_NOT_REGISTRED, ExceptionCode.NOT_FOUND);
@@ -118,6 +125,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
+            eventCache.cacheRefresh(id, EventCacheMethod.CREATOR);
             userRepository.deleteById(id);
         } else {
             throw new DataNotFoundException(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);
