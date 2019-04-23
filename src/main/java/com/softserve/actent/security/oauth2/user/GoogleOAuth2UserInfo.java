@@ -14,8 +14,8 @@ public class GoogleOAuth2UserInfo  extends OAuth2UserInfo{
     }
 
     @Override
-    public String getName() {
-        return (String) attributes.get("name");
+    public String getFirstName() {
+        return (String) attributes.get("given_name");
     }
 
     @Override
@@ -23,5 +23,17 @@ public class GoogleOAuth2UserInfo  extends OAuth2UserInfo{
         return (String) attributes.get("email");
     }
 
+    @Override
+    public String getLogin() {
+        return (String) attributes.get("email");
+    }
 
+    @Override
+    public String getLastName() {
+        return (String) attributes.get("family_name");
+    }
+
+//     newUser.setFirstName((String) map.get("given_name"));
+//                    newUser.setLogin((String) map.get("given_name"));
+//                    newUser.setLastName((String) map.get("family_name"));
 }

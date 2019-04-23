@@ -56,7 +56,9 @@ public class  CustomOAuth2UserService extends DefaultOAuth2UserService {
                 return userRepository.findByProviderId(oAuth2UserInfo.getId()).orElseGet(() -> {
                     User newUser = new User();
                     newUser.setProviderId(oAuth2UserInfo.getId());
-                    newUser.setFirstName(oAuth2UserInfo.getName());
+                    newUser.setFirstName(oAuth2UserInfo.getFirstName());
+                    newUser.setLastName(oAuth2UserInfo.getLastName());
+                    newUser.setLogin(oAuth2UserInfo.getLogin());
                     newUser.setEmail(oAuth2UserInfo.getEmail());
                     newUser.setStatus(Status.ACTIVE);
                     Role userRole = Role.ROLE_USER;
