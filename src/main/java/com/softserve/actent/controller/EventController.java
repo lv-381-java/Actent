@@ -1,6 +1,5 @@
 package com.softserve.actent.controller;
 
-import com.softserve.actent.constant.ExceptionMessages;
 import com.softserve.actent.constant.StringConstants;
 import com.softserve.actent.constant.UrlConstants;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
