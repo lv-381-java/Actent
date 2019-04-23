@@ -1,6 +1,7 @@
 import React from 'react';
 import Description from './Description.jsx';
 import './Event.css';
+import { getImageUrl } from '../../../profile/ProfileView.js';
 
 class Event extends React.Component {
 
@@ -9,7 +10,12 @@ class Event extends React.Component {
         let image = undefined;
 
         if  (this.props.image) {
-            image = this.props.image;
+            image =(
+                <div >
+                    <img src={getImageUrl(this.props.image.filePath)} className='imageEvent'></img>
+                </div>
+            );
+            console.log(this.props.image.filePath);
         } else {
             image = (
                 <div >
@@ -26,7 +32,7 @@ class Event extends React.Component {
                     {image}
                 </div>
 
-                <div className='box-2 box'>
+                <div className='box-2 box tet'>
                     <Description description={this.props.description}/>
                 </div>
 

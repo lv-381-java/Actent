@@ -11,6 +11,8 @@ import com.softserve.actent.repository.EventRepository;
 import com.softserve.actent.repository.EventUserRepository;
 import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.EventUserService;
+import com.softserve.actent.service.cache.EventCache;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,7 @@ import java.util.function.Predicate;
 @Service
 public class EventUserServiceImpl implements EventUserService {
 
+    private final EventCache eventCache;
     private final EventUserRepository eventUserRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
@@ -30,11 +33,12 @@ public class EventUserServiceImpl implements EventUserService {
     @Autowired
     public EventUserServiceImpl(EventUserRepository eventUserRepository,
                                 EventRepository eventRepository,
-                                UserRepository userRepository) {
-
+                                UserRepository userRepository,
+                                EventCache eventCache) {
         this.eventUserRepository = eventUserRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.eventCache = eventCache;
     }
 
     @Override
@@ -49,6 +53,7 @@ public class EventUserServiceImpl implements EventUserService {
         isEventUserExist(id);
         checkForCorrectAddedData(entity);
         entity.setId(id);
+        eventCache.cacheRefresh(id, EventCacheMethod.EVENT_USER);
         return softSave(entity);
     }
 
@@ -73,6 +78,7 @@ public class EventUserServiceImpl implements EventUserService {
     @Transactional
     public void delete(Long id) {
         isEventUserExist(id);
+        eventCache.cacheRefresh(id, EventCacheMethod.EVENT_USER);
         eventUserRepository.deleteById(id);
     }
 

@@ -19,7 +19,7 @@ public class EventCache {
         eventStore.put(event.getId(), event);
     }
 
-    public void saveAll(List<Event> eventList) {
+    public synchronized void saveAll(List<Event> eventList) {
         eventList.forEach(this::save);
     }
 
@@ -54,6 +54,8 @@ public class EventCache {
             case CHAT: return this::getChat;
             case REVIEW: return this::getReview;
             case TAG: return this::getTag;
+            case EVENT_USER: return this::getEventUser;
+            case EQUIPMENT: return this::getEquipment;
             default: return null;
         }
     }
@@ -99,4 +101,19 @@ public class EventCache {
                 .stream()
                 .anyMatch(t -> t.getId().equals(changedId));
     }
+
+    private boolean getEventUser(Long storedId, Long changedId) {
+        return eventStore.get(storedId)
+                .getEventUserList()
+                .stream()
+                .anyMatch(e -> e.getId().equals(changedId));
+    }
+
+    private boolean getEquipment(Long storedId, Long changedId) {
+        return eventStore.get(storedId)
+                .getEquipments()
+                .stream()
+                .anyMatch(e -> e.getId().equals(changedId));
+    }
+
 }

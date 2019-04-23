@@ -80,7 +80,7 @@ class Show extends React.Component {
             <div className='container-fluid'>
                 <div className='row'>
                     <div className='col-md-9'>
-                        <div className='card-title'>
+                        <div className='card-title tet'>
                             <Title title={this.props.title} />
                         </div>
 
