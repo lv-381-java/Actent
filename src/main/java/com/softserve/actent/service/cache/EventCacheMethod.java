@@ -6,6 +6,6 @@ public enum EventCacheMethod {
     CATEGORY,
     LOCATION,
     IMAGE,
-
+    CHAT,
 
 }

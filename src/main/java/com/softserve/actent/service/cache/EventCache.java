@@ -54,6 +54,7 @@ public class EventCache {
             case CATEGORY: return this::getCategory;
             case LOCATION: return this::getLocation;
             case IMAGE: return this::getImage;
+            case CHAT: return this::getChat;
             default: return null;
         }
     }
@@ -76,6 +77,10 @@ public class EventCache {
 
     private boolean getImage(Long storedId, Long changedId) {
         return eventStore.get(storedId).getImage().getId().equals(changedId);
+    }
+
+    private boolean getChat(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getChat().getId().equals(changedId);
     }
 
 }
