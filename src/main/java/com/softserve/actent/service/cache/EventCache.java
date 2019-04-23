@@ -4,7 +4,10 @@ import com.softserve.actent.constant.NumberConstants;
 import com.softserve.actent.model.entity.Event;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -40,12 +43,12 @@ public class EventCache {
     }
 
     private void refresh(Long id, BiFunction<Long, Long, Boolean> function) {
-
-        deleteAll(eventStore
-                .keySet()
-                .stream()
-                .filter(e -> function.apply(e, id))
-                .collect(Collectors.toList()));
+        List<Long> collect =
+                new ArrayList<>(eventStore.keySet())
+                        .stream()
+                        .filter(k -> function.apply(k, id))
+                        .collect(Collectors.toList());
+        deleteAll(collect);
     }
 
     private BiFunction<Long, Long, Boolean> getFunction(EventCacheMethod method) {

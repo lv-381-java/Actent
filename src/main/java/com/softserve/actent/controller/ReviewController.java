@@ -92,17 +92,17 @@ public class ReviewController {
     }
 
     @DeleteMapping(value = "/reviews/{id}")
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUserById(@ApiIgnore @CurrentUser UserPrincipal currentUser,
                                @PathVariable
                                @NotNull(message = ExceptionMessages.REVIEW_NO_ID)
                                @Positive(message = ExceptionMessages.REVIEW_INAPPROPRIATE_ID) Long id) {
 
-        if(currentUser.getId().equals(reviewService.get(id).getAuthor().getId())) {
+  //      if(currentUser.getId().equals(reviewService.get(id).getAuthor().getId())) {
             reviewService.delete(id);
-        } else {
+ //       } else {
             // TODO: throw forbidden exception
-        }
+ //       }
     }
 }
