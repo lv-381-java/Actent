@@ -34,6 +34,7 @@ public class EventConverter {
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         return getMethod(type).apply(event);
     }
+
     public Event convertToEntity(EventCreationDto eventCreationDto) {
         nullHunter(eventCreationDto, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         return extractEvent(eventCreationDto);
@@ -48,16 +49,15 @@ public class EventConverter {
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         return modelMapper.map(event, MinimalEventDto.class);
     }
+
     private EventOstapDto getForListDto(Event event) {
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         EventOstapDto eventOstapDto = modelMapper.map(event, EventOstapDto.class);
         eventOstapDto.setLocationForEventDto(getLocation(event.getAddress()));
         eventOstapDto.setCategoryForEventDto(getCategory(event.getCategory()));
-        if (eventOstapDto.getImage() == null) {
-            eventOstapDto.setImage(new Image());
-        }
         return eventOstapDto;
     }
+
     private ShowEventDto getShowEventDto(Event event) {
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         ShowEventDto showEventDto = modelMapper.map(event, ShowEventDto.class);
@@ -67,6 +67,7 @@ public class EventConverter {
         showEventDto.setUserForEventDto(getCreator(event.getCreator()));
         return showEventDto;
     }
+
     private EventFullDto getFullEventDto(Event event) {
         nullHunter(event, ExceptionMessages.EVENT_CAN_NOT_BE_NULL);
         EventFullDto eventFullDto = modelMapper.map(event, EventFullDto.class);
@@ -85,15 +86,19 @@ public class EventConverter {
     private LocationForEventDto getLocation(Location location) {
         return modelMapper.map(location, LocationForEventDto.class);
     }
+
     private CategoryForEventDto getCategory(Category category) {
         return modelMapper.map(category, CategoryForEventDto.class);
     }
+
     private ChatForEventDto getChat(Chat chat) {
         return modelMapper.map(chat, ChatForEventDto.class);
     }
+
     private UserForEventDto getCreator(User user) {
         return modelMapper.map(user, UserForEventDto.class);
     }
+
     private List<EquipmentDto> getEquipments(Event event) {
         if (event.getEquipments() == null) {
             return null;
@@ -102,6 +107,7 @@ public class EventConverter {
                 .map(equipment -> modelMapper.map(equipment, EquipmentDto.class))
                 .collect(Collectors.toList());
     }
+
     private List<EventUserForEventDto> getEventsUsers(Event event) {
 
         List<EventUser> eventUserList = event.getEventUserList();
@@ -116,6 +122,7 @@ public class EventConverter {
 
         return eventUserForEvenDtoList;
     }
+
     private List<TagDto> getTags(Event event) {
         List<TagDto> tags = null;
         if (event.getTags() != null) {
@@ -123,6 +130,7 @@ public class EventConverter {
         }
         return tags;
     }
+
     private List<ReviewForEventDto> getReviews(Event event) {
         List<ReviewForEventDto> reviews = null;
         if (event.getFeedback() != null) {
@@ -130,6 +138,7 @@ public class EventConverter {
         }
         return reviews;
     }
+
     private ReviewForEventDto getReviewDto(Review review) {
         ReviewForEventDto reviewForEventDto = modelMapper.map(review, ReviewForEventDto.class);
         reviewForEventDto.setAuthor(getCreator(review.getAuthor()));
@@ -143,6 +152,7 @@ public class EventConverter {
         eventUserForEvenDto.setEventUserType(eventUser.getType());
         return eventUserForEvenDto;
     }
+
     private Event extractEvent(EventCreationDto eventCreationDto) {
         Event event = modelMapper.map(eventCreationDto, Event.class);
         event.setAccessType(AccessType.valueOf(eventCreationDto.getAccessType().toUpperCase()));
@@ -151,11 +161,13 @@ public class EventConverter {
         event.setAddress(location);
         return event;
     }
+
     private void nullHunter(Object object, String message) {
         if (Objects.isNull(object)) {
             throw new DataNotFoundException(message, ExceptionCode.NOT_FOUND);
         }
     }
+
     private List<UltraEventDto> getEventDtoList(List<Event> events, Function<Event, UltraEventDto> function) {
         List<UltraEventDto> ultraEventDtoList = new ArrayList<>();
         for (Event event : events) {
@@ -163,6 +175,7 @@ public class EventConverter {
         }
         return ultraEventDtoList;
     }
+
     private Function<Event, UltraEventDto> getMethod(EventDtoType type) {
 
         if (type != null) {
