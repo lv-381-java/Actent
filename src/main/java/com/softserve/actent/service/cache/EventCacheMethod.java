@@ -11,5 +11,6 @@ public enum EventCacheMethod {
     REVIEW,
     TAG,
     EVENT_USER,
+    EQUIPMENT,
 
 }

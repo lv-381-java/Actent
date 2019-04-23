@@ -55,6 +55,7 @@ public class EventCache {
             case REVIEW: return this::getReview;
             case TAG: return this::getTag;
             case EVENT_USER: return this::getEventUser;
+            case EQUIPMENT: return this::getEquipment;
             default: return null;
         }
     }
@@ -104,6 +105,13 @@ public class EventCache {
     private boolean getEventUser(Long storedId, Long changedId) {
         return eventStore.get(storedId)
                 .getEventUserList()
+                .stream()
+                .anyMatch(e -> e.getId().equals(changedId));
+    }
+
+    private boolean getEquipment(Long storedId, Long changedId) {
+        return eventStore.get(storedId)
+                .getEquipments()
                 .stream()
                 .anyMatch(e -> e.getId().equals(changedId));
     }
