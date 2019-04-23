@@ -1,4 +1,5 @@
 import React from 'react';
+import './Info.css';
 
 class Info extends React.Component {
 
@@ -7,15 +8,17 @@ class Info extends React.Component {
         var duration = ((this.props.duration / 1000) / 60);
         var min = duration.toFixed(2);
         var date = this.props.startDate;
+
         if (date) {
-            var d = date.replace("T", ", ").slice(0, date.length - 3);
+            var d = date.replace("T", ", ");
         }
+
         return (
 
-            <div>
+            <div className='tet'>
                 <h1>{this.props.info}</h1>
             
-                <h4>Start date: {d}</h4>
+                <h4 >Start date: {d}</h4>
                 <h4>Duration: {min} minutes</h4>
                 <h4>Capacity: {this.props.capacity}</h4>
                 <h4>Category: {this.props.category}</h4>
