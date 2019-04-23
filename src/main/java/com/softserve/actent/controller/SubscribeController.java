@@ -75,5 +75,4 @@ public class SubscribeController {
                                   @Positive(message = StringConstants.MESSAGE_ID_SHOULD_BE_POSITIVE) Long id) {
         subscribeService.delete(id);
     }
-
 }

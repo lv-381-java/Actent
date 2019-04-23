@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 import static com.softserve.actent.exceptions.codes.ExceptionCode.MESSAGE_NOT_FOUND;
 
@@ -57,23 +58,18 @@ public class SubscribeServiceImpl implements SubscribeService {
 
     @Override
     public void checkSubscribers(Event event) {
-
         String category = event.getCategory().getName();
         String city = event.getAddress().getAddress();
-        System.out.println(category + city);
         List<Subscribe> subscribes = subscribeRepository.findAllByCategoryAndCity(category, city);
-
         if (!subscribes.isEmpty()) {
-            StringBuilder address = new StringBuilder();
+            StringJoiner address = new StringJoiner(",");
             for (Subscribe subscribe : subscribes) {
-                address.append(subscribe.getSubscriber().getEmail()).append(",");
+                address.add(subscribe.getSubscriber().getEmail());
             }
-            address.deleteCharAt(address.lastIndexOf(","));
             sendNotificationToSubscribert(address.toString(), event);
         }
 
     }
-
 
     @Override
     public void checkSubscribers() {

@@ -88,6 +88,7 @@ public class MessageController {
     @ResponseStatus(HttpStatus.OK)
     public List<ViewMessageDto> getCurrentMessagesByChatId(@PathVariable @NotNull(message = StringConstants.CHAT_ID_SHOULD_NOT_BE_NULL)
                                                            @Positive(message = StringConstants.CHAT_ID_SHOULD_BE_POSITIVE) Long id,
+
                                                            @PathVariable(value = "page") @Min(value = 0) int page,
                                                            @PathVariable(value = "size") @Positive @NonNull int size) {
 
