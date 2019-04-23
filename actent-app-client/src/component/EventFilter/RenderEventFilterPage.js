@@ -196,6 +196,7 @@ export default class RenderEventFilterPage extends React.Component {
             .get(`/events/all/${page}/9`)
             .then(res => {
                 let events = res.data;
+                console.log(events);
                 this.setState({ events: events });
             })
             .catch(function(error) {
@@ -236,6 +237,11 @@ export default class RenderEventFilterPage extends React.Component {
                     />
                     <div className='row'>
                         {events.map(event => {
+                            console.log(event);
+                            let image = undefined;
+                            if(event.image){
+                                image = event.image.filePath;
+                            }
                             return (
                                 <div
                                     key={event.id}
@@ -247,6 +253,8 @@ export default class RenderEventFilterPage extends React.Component {
                                         description={event.description}
                                         city={event.Location.address}
                                         category={event.Category.name}
+                                        image={image}
+
                                     />
                                 </div>
                             );
