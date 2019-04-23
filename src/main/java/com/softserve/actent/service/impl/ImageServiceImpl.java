@@ -7,6 +7,8 @@ import com.softserve.actent.exceptions.validation.IncorrectStringException;
 import com.softserve.actent.model.entity.Image;
 import com.softserve.actent.repository.ImageRepository;
 import com.softserve.actent.service.ImageService;
+import com.softserve.actent.service.cache.EventCache;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,14 @@ import java.util.Optional;
 @Service
 public class ImageServiceImpl implements ImageService {
 
+    private final EventCache eventCache;
     private final ImageRepository imageRepository;
 
     @Autowired
-    public ImageServiceImpl(ImageRepository imageRepository) {
+    public ImageServiceImpl(ImageRepository imageRepository,
+                            EventCache eventCache) {
         this.imageRepository = imageRepository;
+        this.eventCache = eventCache;
     }
 
     @Override
@@ -69,6 +74,7 @@ public class ImageServiceImpl implements ImageService {
 
         if (optionalImage.isPresent()) {
             image.setId(imageId);
+            eventCache.cacheRefresh(imageId, EventCacheMethod.IMAGE);
             return imageRepository.save(image);
         } else {
             log.error(ExceptionMessages.IMAGE_NOT_FOUND_WITH_ID + " Id: " + imageId);
@@ -83,6 +89,7 @@ public class ImageServiceImpl implements ImageService {
         Optional<Image> optionalImage = imageRepository.findById(imageId);
 
         if (optionalImage.isPresent()) {
+            eventCache.cacheRefresh(imageId, EventCacheMethod.IMAGE);
             imageRepository.deleteById(imageId);
         } else {
             log.error(ExceptionMessages.IMAGE_NOT_FOUND_WITH_ID + " Id: " + imageId);
