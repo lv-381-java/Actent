@@ -109,4 +109,6 @@ public class User {
 
     private String providerId;
 
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
 }

@@ -121,35 +121,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .userService(customOAuth2UserService)
                         .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler);
-//                .failureHandler(oAuth2AuthenticationFailureHandler);
+
 
         security.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
 
-//    @Bean
-//    public PrincipalExtractor principalExtractor(UserRepository userRepository) {
-//        return map -> {
-//            String id = ((String) map.get("sub"));
-//            String email = (String) map.get("email");
-//            if(!userRepository.existsByEmailAndProviderIdNull(email)) {
-//                return userRepository.findByProviderId(id).orElseGet(() -> {
-//                    User newUser = new User();
-//                    newUser.setProviderId(id);
-//                    newUser.setFirstName((String) map.get("given_name"));
-//                    newUser.setLogin((String) map.get("given_name"));
-//                    newUser.setLastName((String) map.get("family_name"));
-//                    newUser.setEmail(email);
-//                    newUser.setStatus(Status.ACTIVE);
-//                    Role userRole = Role.ROLE_USER;
-//                    newUser.setRoleset(Collections.singleton(userRole));
-//
-//                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//                    String token = ((OAuth2AuthenticationDetails) authentication.getDetails()).getTokenValue();
-//                    System.out.println("token "+token);
-//                    return userRepository.save(newUser);
-//                });
-//            }else throw new ValidationException(ExceptionMessages.USER_BY_THIS_EMAIL_IS_EXIST, ExceptionCode.DUPLICATE_VALUE);
-//        };
-//    }
+
 }
