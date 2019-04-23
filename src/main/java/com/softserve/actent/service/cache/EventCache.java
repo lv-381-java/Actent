@@ -5,6 +5,8 @@ import com.softserve.actent.model.entity.Event;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 @Service
 public class EventCache {
@@ -31,4 +33,38 @@ public class EventCache {
     public void delete(Long id) {
         eventStore.remove(id);
     }
+
+    public void cacheRefresh(Long id, EventCacheMethod method) {
+        refresh(id, getFunction(method));
+    }
+
+    private void refresh(Long id, BiFunction<Long, Long, Boolean> function) {
+
+        deleteAll(eventStore
+                .keySet()
+                .stream()
+                .filter(e -> function.apply(e, id))
+                .collect(Collectors.toList()));
+    }
+
+    private BiFunction<Long, Long, Boolean> getFunction(EventCacheMethod method) {
+        switch (method) {
+            case CREATOR: return this::getCreator;
+            case CATEGORY: return this::getCategory;
+            default: return null;
+        }
+    }
+
+    private void deleteAll(List<Long> keys) {
+        keys.forEach(eventStore::remove);
+    }
+
+    private boolean getCreator(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getCreator().getId().equals(changedId);
+    }
+
+    private boolean getCategory(Long storedId, Long changedId) {
+        return eventStore.get(storedId).getCategory().getId().equals(changedId);
+    }
+
 }
