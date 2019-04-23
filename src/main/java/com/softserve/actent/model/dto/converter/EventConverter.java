@@ -53,6 +53,9 @@ public class EventConverter {
         EventOstapDto eventOstapDto = modelMapper.map(event, EventOstapDto.class);
         eventOstapDto.setLocationForEventDto(getLocation(event.getAddress()));
         eventOstapDto.setCategoryForEventDto(getCategory(event.getCategory()));
+        if (eventOstapDto.getImage() == null) {
+            eventOstapDto.setImage(new Image());
+        }
         return eventOstapDto;
     }
     private ShowEventDto getShowEventDto(Event event) {
