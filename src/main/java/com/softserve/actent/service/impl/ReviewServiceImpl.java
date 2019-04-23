@@ -6,6 +6,8 @@ import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.model.entity.Review;
 import com.softserve.actent.repository.ReviewRepository;
 import com.softserve.actent.service.ReviewService;
+import com.softserve.actent.service.cache.EventCache;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,14 @@ import java.util.Optional;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
+    private final EventCache eventCache;
     private final ReviewRepository reviewRepository;
 
     @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository,
+                             EventCache eventCache) {
         this.reviewRepository = reviewRepository;
+        this.eventCache = eventCache;
     }
 
     @Override
@@ -57,6 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         if (optionalReview.isPresent()) {
             review.setId(reviewId);
+            eventCache.cacheRefresh(reviewId, EventCacheMethod.REVIEW);
             return reviewRepository.save(review);
         } else {
             log.error(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID + " Id: " + reviewId);
@@ -71,6 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
         Optional<Review> optionalReview = reviewRepository.findById(reviewId);
 
         if (optionalReview.isPresent()) {
+            eventCache.cacheRefresh(reviewId, EventCacheMethod.REVIEW);
             reviewRepository.deleteById(reviewId);
         } else {
             log.error(ExceptionMessages.REVIEW_NOT_FOUND_WITH_ID + " Id: " + reviewId);
