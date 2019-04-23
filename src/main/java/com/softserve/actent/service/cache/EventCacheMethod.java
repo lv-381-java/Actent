@@ -10,5 +10,7 @@ public enum EventCacheMethod {
     CHAT,
     REVIEW,
     TAG,
+    EVENT_USER,
+    EQUIPMENT,
 
 }
