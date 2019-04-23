@@ -5,9 +5,7 @@ import com.softserve.actent.model.entity.Event;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
