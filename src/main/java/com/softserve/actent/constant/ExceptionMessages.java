@@ -67,4 +67,5 @@ public class ExceptionMessages {
     public static final String LOGIN_IS_TOO_SHORT = "Login must be at least five symbols long.";
     public static final String PASSWORD_IS_TOO_SHORT = "Password must be at least six symbols long.";
 
+    public static final String USER_BY_THIS_EMAIL_IS_EXIST = "User by this email is exist please, login again in login form";
 }

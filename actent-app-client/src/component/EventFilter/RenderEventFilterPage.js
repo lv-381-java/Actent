@@ -214,13 +214,6 @@ export default class RenderEventFilterPage extends React.Component {
                     <Header setTitle={this.setFilterTitle} showTitleName={this.state.showTitleName} />
                 </BrowserRouter>
                 <div className='container'>
-                    <a href={GOOGLE_AUTH_URL}>
-                        <GoogleButton
-                            onClick={() => {
-                                console.log('Google button clicked');
-                            }}
-                        />
-                    </a>
                     <FilterBody
                         isEmptyFilters={this.isEmptyFilters}
                         cleanFilter={this.cleanFilter}

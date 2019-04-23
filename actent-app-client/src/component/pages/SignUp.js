@@ -6,8 +6,6 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css';
 import { registerUser } from '../../util/apiUtils';
 
-import GoogleLogin from 'react-google-login';
-
 export default class SignUp extends React.Component {
     state = {
         name: undefined,
@@ -16,7 +14,7 @@ export default class SignUp extends React.Component {
         password: undefined,
         repeatpassword: undefined,
         email: undefined,
-        errors: []
+        errors: [],
     };
 
     handleName = event => {
@@ -75,23 +73,23 @@ export default class SignUp extends React.Component {
             password: this.state.password,
         };
 
-        if (this.state.password !== this.state.repeatpassword){
+        if (this.state.password !== this.state.repeatpassword) {
             let error = 'Passwords must match';
             console.log(error);
             suberrors.push(error);
-        }else{
-            if(this.state.password.length < 6){
+        } else {
+            if (this.state.password.length < 6) {
                 let error = 'Password must be at least six symbols long.';
                 console.log(error);
                 suberrors.push(error);
             }
         }
-        if(this.state.username.length < 5){
+        if (this.state.username.length < 5) {
             let error = 'Login must be at least five symbols long';
             console.log(error);
             suberrors.push(error);
         }
-        if(suberrors.length > 0){
+        if (suberrors.length > 0) {
             console.log(suberrors);
             suberrors.forEach(error => {
                 NotificationManager.error(error, 'Error', 5000);
@@ -104,7 +102,7 @@ export default class SignUp extends React.Component {
                 NotificationManager.success('Verification message has been sent to your e-mail', 'Check your e-mail');
             })
             .catch(error => {
-                this.setState({errors: error.response.data.error.debugMessage});
+                this.setState({ errors: error.response.data.error.debugMessage });
                 NotificationManager.error(this.state.errors, 'Error', 5000);
             });
     };
@@ -154,7 +152,7 @@ export default class SignUp extends React.Component {
                             autoComplete='username'
                             margin='normal'
                             variant='outlined'
-                            helperText="Login must be at least 5 characters long."
+                            helperText='Login must be at least 5 characters long.'
                             onChange={this.handleUsername}
                         />
                     </div>
@@ -167,7 +165,7 @@ export default class SignUp extends React.Component {
                             autoComplete='current-password'
                             margin='normal'
                             variant='outlined'
-                            helperText="Passwords must be at least 6 characters long.(A-Z, a-z, 0-9)"
+                            helperText='Passwords must be at least 6 characters long.(A-Z, a-z, 0-9)'
                             onChange={this.handlePassword}
                         />
                     </div>
@@ -180,7 +178,7 @@ export default class SignUp extends React.Component {
                             autoComplete='current-password'
                             margin='normal'
                             variant='outlined'
-                            helperText="Passwords must be at least 6 characters long.(A-Z, a-z, 0-9)"
+                            helperText='Passwords must be at least 6 characters long.(A-Z, a-z, 0-9)'
                             onChange={this.handlePasswordRepeat}
                         />
                     </div>
@@ -211,12 +209,6 @@ export default class SignUp extends React.Component {
                             I'm already member
                         </Link>
                     </div>
-                    <GoogleLogin
-                        clientId='469535828427-l1e7su82oc0bvirtdgmh26krf5p9kj5s.apps.googleusercontent.com' //CLIENTID NOT CREATED YET
-                        buttonText='LOGIN WITH GOOGLE'
-                        onSuccess={this.responseGoogleSuccess}
-                        onFailure={responseGoogle}
-                    />
                 </form>
                 <NotificationContainer />
             </div>
