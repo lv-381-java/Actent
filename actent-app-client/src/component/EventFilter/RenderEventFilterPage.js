@@ -198,6 +198,7 @@ export default class RenderEventFilterPage extends React.Component {
             .get(`/events/all/${page}/9`)
             .then(res => {
                 let events = res.data;
+                console.log(events);
                 this.setState({ events: events });
             })
             .catch(function(error) {
@@ -240,6 +241,7 @@ export default class RenderEventFilterPage extends React.Component {
                     />
                     <div className='row'>
                         {events.map(event => {
+
                             const image1 = undefined;
                             if(event.image){
                                  image1 = event.image.filePath;
