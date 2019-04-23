@@ -15,7 +15,7 @@ class Info extends React.Component {
 
         return (
 
-            <div className='tet'>
+            <div className='tet1'>
                 <h1>{this.props.info}</h1>
             
                 <h4 >Start date: {d}</h4>

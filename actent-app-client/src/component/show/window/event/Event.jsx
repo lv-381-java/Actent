@@ -32,7 +32,7 @@ class Event extends React.Component {
                     {image}
                 </div>
 
-                <div className='box-2 box'>
+                <div className='box-2 box tet'>
                     <Description description={this.props.description}/>
                 </div>
 
