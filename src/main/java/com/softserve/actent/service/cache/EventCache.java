@@ -19,7 +19,7 @@ public class EventCache {
         eventStore.put(event.getId(), event);
     }
 
-    public void saveAll(List<Event> eventList) {
+    public synchronized void saveAll(List<Event> eventList) {
         eventList.forEach(this::save);
     }
 
