@@ -242,7 +242,7 @@ export default class RenderEventFilterPage extends React.Component {
                     <div className='row'>
                         {events.map(event => {
 
-                            const image1 = undefined;
+                            var image1 = undefined;
                             if(event.image){
                                  image1 = event.image.filePath;
                             }
