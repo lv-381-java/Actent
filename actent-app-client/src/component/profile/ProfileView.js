@@ -1,8 +1,8 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.css';
-import {MDBTable, MDBTableBody, MDBTableHead, MDBCol, MDBCollapse} from 'mdbreact';
-import {NavLink} from "react-router-dom";
+import { MDBTable, MDBTableBody, MDBTableHead, MDBCol, MDBCollapse } from 'mdbreact';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import SubscriptionsItem from './subscriptionsItem';
 
@@ -33,14 +33,14 @@ export default class ProfileView extends React.Component {
             .get(`/getSubscriptions`)
             .then(res => {
                 let subscriptions = res.data;
-                this.setState({subscriptions: subscriptions});
+                this.setState({ subscriptions: subscriptions });
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 console.error(error);
             });
     };
     deleteSubscription = id => {
-        axios.get(`/subscribers/${id}`).catch(function (error) {
+        axios.get(`/subscribers/${id}`).catch(function(error) {
             console.error(error);
         });
     };
@@ -48,7 +48,7 @@ export default class ProfileView extends React.Component {
     toggleCollapse = collapseID => () => {
         let colapse = this.state.colapse;
 
-        colapse === collapseID ? this.setState({colapse: ''}) : this.setState({colapse: collapseID});
+        colapse === collapseID ? this.setState({ colapse: '' }) : this.setState({ colapse: collapseID });
     };
     deleteSubcription = event => {
         let id = Object.assign({}, event.target);
@@ -61,7 +61,7 @@ export default class ProfileView extends React.Component {
         let subscriptions = this.state.subscriptions;
         const editBtn = this.props.isMyProfile ? (
             <Button
-                style={{marginLeft: '20px'}}
+                style={{ marginLeft: '20px' }}
                 label='Edit'
                 color='primary'
                 variant='contained'
@@ -81,7 +81,7 @@ export default class ProfileView extends React.Component {
         );
         const img =
             this.props.profileData.avatar !== null ? (
-                <img src={getImageUrl(this.props.profileData.avatar.filePath)} alt='' className='imageStyle'/>
+                <img src={getImageUrl(this.props.profileData.avatar.filePath)} alt='' className='imageStyle' />
             ) : (
                 <img
                     src={'https://s3.ap-south-1.amazonaws.com/actent-res/1554136129708-default-user.png'}
@@ -91,7 +91,6 @@ export default class ProfileView extends React.Component {
             );
 
         return (
-
             <div className='styleMain'>
                 <div className='styleLowerMain1'>
                     <div className='styleContainer'>{img}</div>
@@ -118,16 +117,18 @@ export default class ProfileView extends React.Component {
                             {this.props.profileData.phone}
                         </p>
 
-                        { this.props.profileData.address != null && this.props.profileData.address != undefined ?
+                        {this.props.profileData.address != null && this.props.profileData.address != undefined ? (
                             <p className='styleInput'>
                                 <span className='styleSpan'>Address:</span>
                                 {this.props.profileData.address.address}
                             </p>
-                            :    console.log("address is null") }
+                        ) : (
+                            console.log('address is null')
+                        )}
 
                         {/*<p className='styleInput'>*/}
-                            {/*<span className='styleSpan'>Address:</span>*/}
-                            {/*{this.props.profileData.address.address}*/}
+                        {/*<span className='styleSpan'>Address:</span>*/}
+                        {/*{this.props.profileData.address.address}*/}
                         {/*</p>*/}
                         <p className='styleInput'>
                             <span className='styleSpan'>Birth Date:</span>
@@ -150,17 +151,13 @@ export default class ProfileView extends React.Component {
                         My Subscriptions
                     </Button>
                     <NavLink to={`/userEvents/${this.props.userId}`}>
-                        <Button
-                            label='Events'
-                            color='primary'
-                            variant='contained'
-                        >
-                            {this.props.isMyProfile ? 'My events' : "Events"}
+                        <Button label='Events' color='primary' variant='contained'>
+                            {this.props.isMyProfile ? 'My events' : 'Events'}
                         </Button>
                     </NavLink>
                 </div>
                 <div className='styleLowerMain2'>
-                    <MDBCol style={{maxWidth: '100%'}}>
+                    <MDBCol style={{ maxWidth: '100%' }}>
                         <MDBCollapse id='subscriptions' isOpen={this.state.colapse}>
                             <MDBTable hover btn>
                                 <MDBTableHead>
