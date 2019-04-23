@@ -14,7 +14,6 @@ export default class UserEventsPage extends React.Component {
         filterUserType: undefined,
         filterCategory: undefined,
         events: [],
-        pageOfItems: [],
         selectTab: 0,
         activePage: 1,
         totalItems: 0,
