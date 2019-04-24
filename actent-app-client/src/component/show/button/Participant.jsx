@@ -107,7 +107,7 @@ class Participant extends React.Component {
             if (this.props.assigne) {
 
                 assigneButton = (
-                    <div>
+                    <phatom>
                         <Button className='btn btn-primary' variant="outlined" color="primary"
                                 onClick={this.handleClickOpen}>
                             Unassigne as participiant
@@ -129,12 +129,12 @@ class Participant extends React.Component {
                                 </Button>
                             </DialogActions>
                         </Dialog>
-                    </div>
+                    </phatom>
                 );
             } else {
 
                 assigneButton = (
-                    <div>
+                    <phatom>
                         <Button className='btn btn-primary' variant="outlined" color="primary"
                                 onClick={this.handleClickOpen}>
                             Assigne as participiant
@@ -168,12 +168,12 @@ class Participant extends React.Component {
                                 </Button>
                             </DialogActions>
                         </Dialog>
-                    </div>
+                    </phatom>
                 );
             }
         } else {
             assigneButton = (
-                <div>
+                <phatom>
                     <Button className='btn btn-primary' variant="outlined" color="primary"
                             onClick={this.handleClickOpen}>
                         Discard assigne
@@ -196,15 +196,15 @@ class Participant extends React.Component {
                             </Button>
                         </DialogActions>
                     </Dialog>
-                </div>
+                    </phatom>
             )
         }
         return (
-            <div>
-                <div>
-                    {assigneButton}
-                </div>
-            </div>
+            <phatom>
+                {assigneButton}
+            </phatom>
+                    
+
         );
     }
 }

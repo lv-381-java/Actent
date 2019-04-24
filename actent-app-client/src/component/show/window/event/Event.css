@@ -8,11 +8,11 @@
 .box {
     box-shadow: 0 2px 5px;
     border-radius: 1pc;
+    align-items: center;
+    flex-basis: auto
 }
 
-.box-1 {
-    height: 60%;
-}
+
 
 .box-2 {
     height: 40%;
@@ -23,6 +23,7 @@
     height: 100%;
 }
 .imageEvent {
-    max-width: 60vw;
-    max-height: 50vh;
+    max-width: 98%;
+    max-height: 98%;
+    border-radius: 1pc;
 }
