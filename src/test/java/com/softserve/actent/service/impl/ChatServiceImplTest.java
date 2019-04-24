@@ -145,11 +145,11 @@ public class ChatServiceImplTest {
         assertThat(found).isNull();
     }
 
-    @Test
-    public void whenAddChat_thenChatShouldBeReturned(){
-        Chat chat = chatService.addChat("event");
-        assertThat(chat).isEqualTo(chat);
-    }
+//    @Test
+//    public void whenAddChat_thenChatShouldBeReturned(){
+//        Chat chat = chatService.addChat("event");
+//        assertThat(chat).isEqualTo(chat);
+//    }
 
     @Test(expected = IncorrectChatTypeException.class)
     public void whenAddNonExistingChat_thenChatShouldNotBeFound(){
