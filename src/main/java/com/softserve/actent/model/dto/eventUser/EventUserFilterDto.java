@@ -1,8 +1,10 @@
 package com.softserve.actent.model.dto.eventUser;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.softserve.actent.constant.NumberConstants;
 import com.softserve.actent.constant.StringConstants;
 import com.softserve.actent.model.entity.EventUserType;
+import com.softserve.actent.model.entity.Image;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -34,4 +36,7 @@ public class EventUserFilterDto {
     private Long userId;
 
     private EventUserType eventUserType;
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private String eventImageFilePath;
 }
