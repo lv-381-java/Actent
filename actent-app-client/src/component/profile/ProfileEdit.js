@@ -5,9 +5,7 @@ import { getImageUrl } from './ProfileView';
 import FileUpload from './FileUpload';
 import styles from './style.css';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
-// import { DatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DatePicker from 'material-ui/DatePicker';
-// import DateFnsUtils from '@date-io/date-fns';
 
 export default class ProfileEdit extends React.Component {
     constructor(props) {
@@ -202,7 +200,7 @@ export default class ProfileEdit extends React.Component {
                 <img
                     src={'https://s3.ap-south-1.amazonaws.com/actent-res/1554136129708-default-user.png'}
                     alt=''
-                    className='imageStyle'
+                    className='imageStyleEdit'
                 />
             );
 
@@ -215,7 +213,7 @@ export default class ProfileEdit extends React.Component {
 
                     <div className='styleContainerEdit'>{img}</div>
 
-                    <FileUpload fetchData={this.fetchData} handleSavePhoto={this.saveUserPhoto} />
+                    <FileUpload fetchData={this.fetchData} handleSavePhoto={this.handleSavePhoto} />
                     <div className='styleName'>
                         <TextField
                             id='tv_first_name'

@@ -1,10 +1,14 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 import Dropzone from 'react-dropzone';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import { imageValidator } from './FileUploadValidator';
 import { s3Root } from './ProfileView';
+import styles from './style.css';
 
 export default class FileUpload extends React.Component {
     constructor(props) {
@@ -59,12 +63,6 @@ export default class FileUpload extends React.Component {
     };
 
     render() {
-        const actions = [
-            <Button label='Cancel' color='primary' variant='contained' onClick={this.dialogClose}>
-                Cancel
-            </Button>,
-        ];
-
         const maxSize = 5242880;
 
         return (
@@ -72,27 +70,42 @@ export default class FileUpload extends React.Component {
                 <Button label='Upload image' color='primary' variant='contained' onClick={this.dialogOpen}>
                     Upload Image
                 </Button>
-                <Dialog
-                    title='File Upload'
-                    actions={actions}
-                    modal={false}
-                    open={this.state.open}
-                    className='dialogStyle'
-                    onRequestClose={this.dialogClose}>
-                    <Dropzone className='dropzoneStyle' onDrop={this.onImageDrop} minSize={0} maxSize={maxSize}>
-                        {({ getRootProps, getInputProps, isDragActive, isDragReject, rejectedFiles }) => {
-                            const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize;
-                            return (
-                                <div {...getRootProps()}>
-                                    <input {...getInputProps()} />
-                                    {!isDragActive && 'Click here or drop a file to upload!'}
-                                    {isDragActive && !isDragReject && "Drop it like it's hot!"}
-                                    {isDragReject && 'File type not accepted, sorry!'}
-                                    {isFileTooLarge && <div className='text-danger mt-2'>File is too large.</div>}
-                                </div>
-                            );
-                        }}
-                    </Dropzone>
+                <Dialog title='File Upload' open={this.state.open} className='dialogStyle'>
+                    <DialogTitle className='styleTitle' id='customized-dialog-title' onClose={this.handleClose}>
+                        File Upload
+                    </DialogTitle>
+                    <DialogContent>
+                        <Dropzone
+                            className='dropzone'
+                            onDrop={this.onImageDrop}
+                            minSize={0}
+                            maxSize={maxSize}
+                            style='dropzone'>
+                            {({ getRootProps, getInputProps, isDragActive, isDragReject, rejectedFiles }) => {
+                                const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize;
+                                return (
+                                    <div {...getRootProps()}>
+                                        <input {...getInputProps()} />
+                                        {!isDragActive && 'Click here or drop a file to upload!'}
+                                        {isDragActive && !isDragReject && "Drop it like it's hot!"}
+                                        {isDragReject && 'File type not accepted, sorry!'}
+                                        {isFileTooLarge && <div className='text-danger mt-2'>File is too large.</div>}
+                                    </div>
+                                );
+                            }}
+                        </Dropzone>
+                    </DialogContent>
+
+                    <DialogActions>
+                        <Button
+                            className='buttonCancelUpload'
+                            label='Cancel'
+                            color='primary'
+                            variant='outlined'
+                            onClick={this.dialogClose}>
+                            Cancel
+                        </Button>
+                    </DialogActions>
                 </Dialog>
                 <Snackbar
                     style={{ textAlign: 'center' }}
