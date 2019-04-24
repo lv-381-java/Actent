@@ -90,7 +90,7 @@ public class MessageController {
                                                            @Positive(message = StringConstants.CHAT_ID_SHOULD_BE_POSITIVE) Long id,
 
                                                            @PathVariable(value = "page") @Min(value = 0) int page,
-                                                           @PathVariable(value = "size") @Positive @NonNull int size) {
+                                                           @PathVariable(value = "size") @Positive int size) {
 
         return viewMessageConverter.convertToDto(messageService.getCurrentMessagesByChatId(id, PageRequest.of(page, size)));
 
