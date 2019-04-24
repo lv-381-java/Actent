@@ -6,9 +6,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 import {imageValidator} from './FileUploadValidator';
 import {s3Root} from './ProfileView'
 
-export default class FileUpload extends React.Component{
+export default class FileUpload extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             imageName: '',
@@ -99,13 +99,14 @@ export default class FileUpload extends React.Component{
                                 <div {...getRootProps()}>
                                     <input {...getInputProps()} />
                                     {!isDragActive && 'Click here or drop a file to upload!'}
-                                                                </div>
-                            )}
+                                </div>
+                            )
+                        }
                         }
                     </Dropzone>
                 </Dialog>
                 <Snackbar
-                    style={{textAlign:'center'}}
+                    style={{textAlign: 'center'}}
                     open={this.state.snackbarOpen}
                     message={this.state.snackbarMessage}
                     autoHideDuration={5000}
