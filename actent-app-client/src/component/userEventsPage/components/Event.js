@@ -8,8 +8,7 @@ export default class Event extends React.Component {
                  src={`https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(123).jpg`}
             />
         ) : (
-            <img className='rounded float-left img-thumbnail'
-                 class="img-fluid"
+            <img className='rounded float-left img-thumbnail img-fluid'
                  src={`https://s3.ap-south-1.amazonaws.com/actent-res/${this.props.image}`}
             />);
         return (
