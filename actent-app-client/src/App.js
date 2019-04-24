@@ -79,13 +79,7 @@ export default class App extends React.Component {
                         }
                     />
                     <Route path='/userEvents/:userId' render={props => <UserEventsPage {...props} />}/>
-                    <Route path='/createEvent' render={
-                        !this.state.currentUserId ?
-                            () => {
-                                return <Redirect to='/home'/>;
-                            }
-                            :
-                            () => <FormContainer/>}/>
+                    <Route path='/createEvent' component={FormContainer}/>
                     <Route path='/confirm' component={Confirm}/>
                     <Route path='/addReview/:targetId' render={props => <ReviewForm {...props} />}/>
                     <Route path='/reviews/:userId' render={props => <ReviewList {...props} />}/>
