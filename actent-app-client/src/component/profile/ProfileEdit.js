@@ -5,8 +5,8 @@ import { getImageUrl } from './ProfileView';
 import FileUpload from './FileUpload';
 import styles from './style.css';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
-// import { DatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DatePicker from 'material-ui/DatePicker';
+
 import Location from "../createevent/Location";
 // import DateFnsUtils from '@date-io/date-fns';
 
@@ -82,8 +82,6 @@ export default class ProfileEdit extends React.Component {
 
     handleBirthday = (event, date) => {
         this.setState({ birthday: date });
-        console.log(date);
-        console.log(event);
     };
 
     handleBio = event => {
@@ -117,7 +115,7 @@ export default class ProfileEdit extends React.Component {
             return (
                 this.state.birthday.getFullYear() +
                 '-' +
-                this.handleDigitsInMonth(this.state.birthday.getMonth() + 1) +
+                this.handleDigitsInMonth(this.state.birthday.getMonth()) +
                 '-' +
                 this.handleDigitsInDate(this.state.birthday.getDate())
             );
@@ -237,7 +235,7 @@ export default class ProfileEdit extends React.Component {
                 <img
                     src={'https://s3.ap-south-1.amazonaws.com/actent-res/1554136129708-default-user.png'}
                     alt=''
-                    className='imageStyle'
+                    className='imageStyleEdit'
                 />
             );
 
@@ -273,6 +271,15 @@ export default class ProfileEdit extends React.Component {
                             fullWidth={true}
                             rowsMax={3}
                             defaultValue={this.state.login}
+                        />
+                        <TextField
+                            id='tv_address'
+                            label='Address'
+                            onChange={this.handleAddress}
+                            fullWidth={true}
+                            multiline
+                            rowsMax={3}
+                            value={this.state.address !== null ? this.state.address.name : ''}
                         />
                         <TextField
                             id='tv_phone'

@@ -3,7 +3,6 @@ package com.softserve.actent.service.impl;
 import com.softserve.actent.constant.ExceptionMessages;
 import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.codes.ExceptionCode;
-import com.softserve.actent.exceptions.validation.IncorrectStringException;
 import com.softserve.actent.model.entity.Image;
 import com.softserve.actent.repository.ImageRepository;
 import com.softserve.actent.service.ImageService;

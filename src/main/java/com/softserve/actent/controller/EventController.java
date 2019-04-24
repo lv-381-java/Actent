@@ -99,7 +99,6 @@ public class EventController {
 
     @PostMapping(value = url + "/filter")
     public List<UltraEventDto> getEventsWithFilter(@RequestBody EventFilterDto eventFilterDto) {
-        System.out.println(eventFilterDto);
         List<Event> result = eventFilterRepository.findAll(EventSpecification.getTitle(eventFilterDto.getTitle())
                 .and(EventSpecification.getCategory(eventFilterDto.getCategoriesId()))
                 .and(EventSpecification.getLocation(eventFilterDto.getLocationAddress()))

@@ -1,10 +1,14 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 import Dropzone from 'react-dropzone';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-import {imageValidator} from './FileUploadValidator';
-import {s3Root} from './ProfileView'
+import { imageValidator } from './FileUploadValidator';
+import { s3Root } from './ProfileView';
+import styles from './style.css';
 
 export default class FileUpload extends React.Component {
 

@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Objects;
 
 @Service
 public class AmazonBucketService {
@@ -61,15 +60,15 @@ public class AmazonBucketService {
         return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
     }
 
-    private File convertMultiPartToFile(MultipartFile file) throws IOException{
+    private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convertFile = new File(file.getOriginalFilename());
-        FileOutputStream fileOutputStream = new FileOutputStream(convertFile);
-        fileOutputStream.write(file.getBytes());
-        fileOutputStream.close();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(convertFile)) {
+            fileOutputStream.write(file.getBytes());
+        }
         return convertFile;
     }
 
-    private void uploadFileToS3Bucket(String fileName, File file){
+    private void uploadFileToS3Bucket(String fileName, File file) {
         amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
     }
