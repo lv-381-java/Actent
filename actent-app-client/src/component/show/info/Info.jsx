@@ -18,8 +18,9 @@ class Info extends React.Component {
             <div className='tet1'>
                 <h1>{this.props.info}</h1>
             
-                <h4 >Start date: {d}</h4>
-                <h4>Duration: {min} minutes</h4>
+                <h4 >Start date:</h4>
+                <h4>{d}</h4>
+                <h4>Duration: {min}</h4>
                 <h4>Capacity: {this.props.capacity}</h4>
                 <h4>Category: {this.props.category}</h4>
                 <h4>Creator:</h4>

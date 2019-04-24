@@ -199,11 +199,10 @@ class Spectator extends React.Component {
                 </div>
             )
         }
+
         return (
             <div>
-                <div>
-                    {assigneButton}
-                </div>
+                {assigneButton}
             </div>
         );
     }
