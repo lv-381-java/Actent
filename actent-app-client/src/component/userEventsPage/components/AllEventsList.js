@@ -13,7 +13,7 @@ export default class AllEventsList extends React.Component {
                            description={event.eventDescription}
                            image={event.eventImageFilePath}/>
                 ))}
-                <div className='row' style={{margin: 'auto', marginTop: '50px'}}>
+                <div className='row ' style={{margin: 'auto', marginTop: '50px', justifyContent :'center'}}>
                     <nav aria-label='Page navigation example'>
                         <Pagination
                             activePage={this.props.activePage}
