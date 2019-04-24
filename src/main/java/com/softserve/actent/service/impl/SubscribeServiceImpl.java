@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
-import static com.softserve.actent.exceptions.codes.ExceptionCode.MESSAGE_NOT_FOUND;
+import static com.softserve.actent.exceptions.codes.ExceptionCode.NOT_FOUND;
 
 @Service
 public class SubscribeServiceImpl implements SubscribeService {
@@ -45,8 +45,7 @@ public class SubscribeServiceImpl implements SubscribeService {
         if (optionalSubscribe.isPresent()) {
             subscribeRepository.deleteById(id);
         } else {
-            //todo change return exception message
-            throw new DataNotFoundException(ExceptionMessages.MESSAGE_NOT_FOUND, MESSAGE_NOT_FOUND);
+            throw new DataNotFoundException(ExceptionMessages.SUBSCRIPTION_NOT_FOUND, NOT_FOUND);
         }
     }
 
@@ -66,37 +65,13 @@ public class SubscribeServiceImpl implements SubscribeService {
             for (Subscribe subscribe : subscribes) {
                 address.add(subscribe.getSubscriber().getEmail());
             }
-            sendNotificationToSubscribert(address.toString(), event);
+            sendNotificationToSubscriber(address.toString(), event);
         }
 
     }
 
-    @Override
-    public void checkSubscribers() {
 
-        List<Subscribe> subscribes = subscribeRepository.findAllByCategoryAndCity("sport", "Lviv");
-        if (!subscribes.isEmpty()) {
-            StringBuilder address = new StringBuilder();
-            for (Subscribe subscribe : subscribes) {
-                address.append(subscribe.getSubscriber().getEmail()).append(",");
-            }
-            address.deleteCharAt(address.lastIndexOf(","));
-            sendNotificationToSubscribert(address.toString());
-        }
-
-
-    }
-
-    private void sendNotificationToSubscribert(String address) {
-        String subject = "Actent event: " + "title" + "was created";
-        String content = "Created new event for more details please go over the link: "
-                + UrlConstants.EVENT_LINK + 1;
-
-        emailNotification.sendEmail(address, subject, content);
-    }
-
-
-    private void sendNotificationToSubscribert(String address, Event event) {
+    private void sendNotificationToSubscriber(String address, Event event) {
         String subject = "Actent event: " + event.getTitle() + "was created";
         String content = "Created new event for more details please go over the link: "
                 + UrlConstants.EVENT_LINK + event.getId();

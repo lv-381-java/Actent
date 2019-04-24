@@ -51,12 +51,6 @@ public class SubscribeController {
         return new IdDto(subscribe.getId());
     }
 
-    @GetMapping(value = "/subscribers/check")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void checkSubscribers() {
-        subscribeService.checkSubscribers();
-
-    }
 
     @GetMapping(value = "/getSubscriptions")
     @PreAuthorize("hasRole('USER')")
@@ -66,7 +60,6 @@ public class SubscribeController {
         return subscribeList.stream().map(subscribe ->
                 modelMapper.map(subscribe, SubscribeDto.class)).collect(Collectors.toList());
     }
-
 
     @DeleteMapping(value = "/subscribers/{id}")
     @PreAuthorize("hasRole('USER')")
