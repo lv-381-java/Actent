@@ -7,17 +7,22 @@ import styles from './style.css';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
 import DatePicker from 'material-ui/DatePicker';
 
+import Location from "../createevent/Location";
+// import DateFnsUtils from '@date-io/date-fns';
+
 export default class ProfileEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            errorLocation: undefined,
+            locationId: undefined,
             userId: this.props.profileData.userId,
             firstName: this.props.profileData.firstName,
             lastName: this.props.profileData.lastName,
             email: this.props.profileData.email,
             phone: this.props.profileData.phone,
             login: this.props.profileData.login,
-            address: this.props.profileData.address,
+            address: '',
             birthday: new Date(this.props.profileData.birthday),
             bio: this.props.profileData.bio,
             interests: this.props.profileData.interests,
@@ -54,12 +59,13 @@ export default class ProfileEdit extends React.Component {
     };
 
     handlePhone = event => {
-        const regex = /^$|[0-9]{10,12}/;
-        if (regex.test(event.target.value === true)) {
-            this.setState({ phone: event.target.value, errorPhone: '' });
-        } else {
-            this.setState({ errorPhone: 'Phone number not valid' });
-        }
+        this.setState({ phone: event.target.value, errorPhone: '' });
+        // const regex = /^$|[0-9]{10,12}/;
+        // if (regex.test(event.target.value === true)) {
+        //     this.setState({ phone: event.target.value, errorPhone: '' });
+        // } else {
+        //     this.setState({ errorPhone: 'Phone number not valid' });
+        // }
     };
 
     handleLogin = event => {
@@ -100,6 +106,11 @@ export default class ProfileEdit extends React.Component {
     };
 
     getBirthday = () => {
+        console.log(this.state.birthday.getFullYear() +
+            '-' +
+            this.handleDigitsInMonth(this.state.birthday.getMonth() + 1) +
+            '-' +
+            this.handleDigitsInDate(this.state.birthday.getDate()));
         if (this.state.birthday !== null) {
             return (
                 this.state.birthday.getFullYear() +
@@ -118,17 +129,16 @@ export default class ProfileEdit extends React.Component {
     };
 
     handleDigitsInMonth = i => {
-        return i < 10 ? `0${i + 1}` : i;
+        return i < 10 ? `0${i}` : i;
     };
 
-    saveUserSettings = () => {
-        const url = apiUrl + /users/ + this.state.userId;
-
+    updateUser = () => {
+        const urlUpdateUser = apiUrl + /users/ + this.state.userId;
         const data = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             login: this.state.login,
-            address: this.state.address,
+            locationId: this.state.locationId,
             birthDate: this.getBirthday(),
             bio: this.state.bio,
             interests: this.state.interests,
@@ -136,10 +146,28 @@ export default class ProfileEdit extends React.Component {
             phone: this.state.phone,
             avatarId: this.state.imageId,
         };
-
-        axios.put(url, data).then(() => {
+        axios.put(urlUpdateUser, data).then(() => {
             this.props.onCloseClick();
         });
+    };
+
+    saveUserSettings = () => {
+
+        if(this.state.address && this.state.address.length > 0){
+            let urlLocation = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address}`;
+            axios.get(urlLocation)
+                .then(response => {
+                    console.log(response.data.id);
+                    this.setState({
+                        locationId: response.data.id,
+                        formQueryStatus: 0
+                    }, () => {
+                        this.updateUser();
+                    });
+                })
+        }else {
+            this.updateUser();
+        }
     };
 
     saveUserPhoto = () => {
@@ -192,6 +220,13 @@ export default class ProfileEdit extends React.Component {
         );
     };
 
+    setLocationId = (locationId) => {
+        this.setState({locationId: locationId});
+    };
+    setAddress = (address) => {
+        this.setState({address: address});
+    };
+
     render() {
         const img =
             this.state.imageName !== null ? (
@@ -219,14 +254,14 @@ export default class ProfileEdit extends React.Component {
                             id='tv_first_name'
                             onChange={this.handleFirstName}
                             label='First Name:'
-                            value={this.state.firstName}
+                            defaultValue={this.state.firstName}
                             fullWidth={true}
                         />
                         <TextField
                             id='tv_last_name'
                             onChange={this.handleLastName}
                             label='Last Name'
-                            value={this.state.lastName}
+                            defaultValue={this.state.lastName}
                             fullWidth={true}
                         />
                         <TextField
@@ -235,7 +270,7 @@ export default class ProfileEdit extends React.Component {
                             onChange={this.handleLogin}
                             fullWidth={true}
                             rowsMax={3}
-                            value={this.state.login}
+                            defaultValue={this.state.login}
                         />
                         <TextField
                             id='tv_address'
@@ -249,11 +284,11 @@ export default class ProfileEdit extends React.Component {
                         <TextField
                             id='tv_phone'
                             label='Phone'
-                            // onChange={this.handlePhone}
+                            onChange={this.handlePhone}
                             fullWidth={true}
                             error={!!this.state.errorPhone}
                             helperText={this.state.errorPhone}
-                            value={this.state.phone !== null ? this.state.phone : ''}
+                            defaultValue={this.state.phone != null ? this.state.phone : ''}
                         />
                         <TextField
                             id='tv_email'
@@ -273,7 +308,7 @@ export default class ProfileEdit extends React.Component {
                             fullWidth={true}
                             format={'yyyy-MM-dd'}
                             onChange={this.handleBirthday}
-                            value={this.state.birthday}
+                            defaultValue={this.state.birthday}
                         />
 
                         <TextField
@@ -283,9 +318,17 @@ export default class ProfileEdit extends React.Component {
                             fullWidth={true}
                             multiline
                             rowsMax={3}
-                            value={this.state.bio !== null ? this.state.bio : ''}
+                            defaultValue={this.state.bio !== null ? this.state.bio : ''}
                             error={!!this.state.errorEmail}
                             helperText={this.state.errorEmail}
+                        />
+                        <Location
+                            className='editUserLocation'
+                            value={this.state.locationId}
+                            setLocationId={this.setLocationId}
+                            address={this.state.address}
+                            setAddress={this.setAddress}
+                            errorMessage={this.state.errorLocation}
                         />
                     </div>
                     <div className='styleButtons'>

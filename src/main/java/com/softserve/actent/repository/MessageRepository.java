@@ -14,4 +14,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     Page<Message> findAllByChatId(Long chatId, Pageable pageable);
 
     List<Message> findAllByChatId(Long chatId);
+
+    Long countByChatId(Long chatId);
 }

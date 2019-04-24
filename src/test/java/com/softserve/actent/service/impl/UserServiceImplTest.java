@@ -3,7 +3,7 @@ package com.softserve.actent.service.impl;
 import com.softserve.actent.exceptions.DataNotFoundException;
 import com.softserve.actent.exceptions.security.AccessDeniedException;
 import com.softserve.actent.model.entity.*;
-import com.softserve.actent.repository.CityRepository;
+import com.softserve.actent.repository.LocationRepository;
 import com.softserve.actent.repository.ImageRepository;
 import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.service.UserService;
@@ -29,8 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class UserServiceImplTest {
 
-    private final String cityName = "Lviv";
-    private final Long cityId = 1L;
+    private final String address = "Lviv";
+    private final Long locationId = 1L;
 
     private final Long firstUserId = 1L;
     private final String firstUserEmail = "vasiliyutkin@gmail.com";
@@ -42,7 +42,7 @@ public class UserServiceImplTest {
     private final Image firstUserAvatar = new Image();
     private final String firstUserBio = "About first user";
     private final Sex firstUserSex = Sex.MALE;
-    private final City firstUserLocation = new City();
+    private final Location firstUserLocation = new Location();
     private final Role firstUserRole = Role.ROLE_USER;
     private final String firstUserImagePath = "D:IMG-7033";
     private final Long firstUserImageId = 1L;
@@ -59,7 +59,7 @@ public class UserServiceImplTest {
     private final Image secondUserAvatar = new Image();
     private final String secondUserBio = "About kozak Mamay";
     private final Sex secondUserSex = Sex.MALE;
-    private final City secondUserLocation = new City();
+    private final Location secondUserLocation = new Location();
     private final Role secondUserRole = Role.ROLE_USER;
     private final String secondUserImagePath = "D:IMG-7035";
     private final Long secondUserImageId = 2L;
@@ -70,7 +70,7 @@ public class UserServiceImplTest {
     private final Long nonExistUserId = 999L;
     private final Integer usersCount = 2;
 
-    private Region region = new Region();
+    private Location location = new Location();
     private User firstUser = new User();
     private User secondUser = new User();
     private List<User> users = new ArrayList<>();
@@ -83,7 +83,7 @@ public class UserServiceImplTest {
     UserRepository userRepository;
 
     @MockBean
-    CityRepository cityRepository;
+    LocationRepository locationRepository;
 
     @MockBean
     ImageRepository imageRepository;
@@ -91,9 +91,9 @@ public class UserServiceImplTest {
     @Before
     public void setUp() {
 
-        region.setId(cityId);
+        location.setId(locationId);
 
-        region.setName(cityName);
+        location.setAddress(address);
 
         firstUserAvatar.setFilePath(firstUserImagePath);
         firstUserAvatar.setId(firstUserImageId);
@@ -102,12 +102,10 @@ public class UserServiceImplTest {
         secondUserAvatar.setId(secondUserImageId);
 
         firstUserLocation.setId(firstUserLocationId);
-        firstUserLocation.setName(firstUserLocationAddress);
-        firstUserLocation.setRegion(region);
+        firstUserLocation.setAddress(firstUserLocationAddress);
 
         secondUserLocation.setId(secondUserLocationId);
-        secondUserLocation.setName(secondUserLocationAddress);
-        secondUserLocation.setRegion(region);
+        secondUserLocation.setAddress(secondUserLocationAddress);
 
         firstUser.setId(firstUserId);
         firstUser.setEmail(firstUserEmail);
@@ -161,8 +159,8 @@ public class UserServiceImplTest {
         Mockito.doNothing().when(userRepository).deleteById(firstUserId);
         Mockito.doNothing().when(userRepository).deleteById(secondUserId);
 
-        Mockito.when(cityRepository.findById(secondUserLocationId)).thenReturn(Optional.of(secondUserLocation));
-        Mockito.when(cityRepository.findById(firstUserLocationId)).thenReturn(Optional.of(firstUserLocation));
+        Mockito.when(locationRepository.findById(secondUserLocationId)).thenReturn(Optional.of(secondUserLocation));
+        Mockito.when(locationRepository.findById(firstUserLocationId)).thenReturn(Optional.of(firstUserLocation));
 
         Mockito.when(imageRepository.findById(firstUserImageId)).thenReturn(Optional.of(firstUserAvatar));
         Mockito.when(imageRepository.findById(secondUserImageId)).thenReturn(Optional.of(secondUserAvatar));

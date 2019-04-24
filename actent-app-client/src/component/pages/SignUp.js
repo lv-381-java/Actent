@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { registerUser } from '../../util/apiUtils';
@@ -15,6 +14,7 @@ export default class SignUp extends React.Component {
         password: undefined,
         repeatpassword: undefined,
         email: undefined,
+        errors: [],
     };
 
     handleName = event => {
@@ -45,18 +45,25 @@ export default class SignUp extends React.Component {
             this.state.repeatpassword &&
             this.state.email
         ) {
-            if (this.state.password == this.state.repeatpassword) {
-                return true;
-            } else {
-                return false;
-            }
+            return true;
         } else {
             return false;
         }
     };
+    responseGoogleSuccess = response => {
+        let userName = response.w3.ofa;
+        let userSurname = response.w3.wea;
+        let userEmail = response.w3.U3;
+        this.setState({
+            surname: userSurname,
+            username: userName,
+            email: userEmail,
+        });
+    };
 
     sendData = event => {
         event.preventDefault();
+        let suberrors = [];
 
         const user = {
             email: this.state.email,
@@ -66,16 +73,44 @@ export default class SignUp extends React.Component {
             password: this.state.password,
         };
 
+        if (this.state.password !== this.state.repeatpassword) {
+            let error = 'Passwords must match';
+            console.log(error);
+            suberrors.push(error);
+        } else {
+            if (this.state.password.length < 6) {
+                let error = 'Password must be at least six symbols long.';
+                console.log(error);
+                suberrors.push(error);
+            }
+        }
+        if (this.state.username.length < 5) {
+            let error = 'Login must be at least five symbols long';
+            console.log(error);
+            suberrors.push(error);
+        }
+        if (suberrors.length > 0) {
+            console.log(suberrors);
+            suberrors.forEach(error => {
+                NotificationManager.error(error, 'Error', 5000);
+            });
+            return;
+        }
+
         registerUser(user)
             .then(res => {
                 NotificationManager.success('Verification message has been sent to your e-mail', 'Check your e-mail');
             })
             .catch(error => {
-                NotificationManager.error('Invalid input!', 'Error', 5000);
+                this.setState({ errors: error.response.data.error.debugMessage });
+                NotificationManager.error(this.state.errors, 'Error', 5000);
             });
     };
 
     render() {
+        const responseGoogle = response => {
+            console.log(response);
+        };
         return (
             <div className='FormCenter'>
                 <form className='FormFields'>
@@ -98,6 +133,7 @@ export default class SignUp extends React.Component {
                             label='Surname'
                             className='FormField__Input'
                             type='text'
+                            value={this.state.surname}
                             name='surname'
                             autoComplete='surname'
                             margin='normal'
@@ -112,9 +148,11 @@ export default class SignUp extends React.Component {
                             className='FormField__Input'
                             type='text'
                             name='username'
+                            value={this.state.username}
                             autoComplete='username'
                             margin='normal'
                             variant='outlined'
+                            helperText='Login must be at least 5 characters long.'
                             onChange={this.handleUsername}
                         />
                     </div>
@@ -127,6 +165,7 @@ export default class SignUp extends React.Component {
                             autoComplete='current-password'
                             margin='normal'
                             variant='outlined'
+                            helperText='Passwords must be at least 6 characters long.(A-Z, a-z, 0-9)'
                             onChange={this.handlePassword}
                         />
                     </div>
@@ -139,6 +178,7 @@ export default class SignUp extends React.Component {
                             autoComplete='current-password'
                             margin='normal'
                             variant='outlined'
+                            helperText='Passwords must be at least 6 characters long.(A-Z, a-z, 0-9)'
                             onChange={this.handlePasswordRepeat}
                         />
                     </div>
@@ -149,6 +189,7 @@ export default class SignUp extends React.Component {
                             className='FormField__Input'
                             type='email'
                             name='email'
+                            value={this.state.email}
                             autoComplete='email'
                             margin='normal'
                             variant='outlined'
@@ -161,11 +202,10 @@ export default class SignUp extends React.Component {
                             variant='contained'
                             color='primary'
                             disabled={!this.isValid()}
-                            onClick={this.sendData}
-                        >
+                            onClick={this.sendData}>
                             Sign up
                         </Button>
-                        <Link to='/auth/sign-in' className='FormField__Link'>
+                        <Link to='/auth/signIn' className='FormField__Link'>
                             I'm already member
                         </Link>
                     </div>

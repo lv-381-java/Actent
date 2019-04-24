@@ -4,8 +4,14 @@ import com.softserve.actent.model.entity.Location;
 
 import java.util.List;
 
-public interface LocationService extends BaseCrudService<Location> {
+public interface LocationService {
 
-    List<Location> getAllByCityId(Long cityId);
+    Location get(Long id);
+
+    Location getByAddress(String address);
+
+    Location getByCoordinates(String address);
+
+    List<Location> getAllAutocomplete(String address);
 }
 

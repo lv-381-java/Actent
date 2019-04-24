@@ -1,7 +1,10 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import './style.css';
-import { Redirect } from 'react-router-dom';
+import { MDBTable, MDBTableBody, MDBTableHead, MDBCol, MDBCollapse } from 'mdbreact';
+import { NavLink } from 'react-router-dom';
+import axios from 'axios';
+import SubscriptionsItem from './subscriptionsItem';
 
 export const s3Root = 'https://s3.ap-south-1.amazonaws.com/';
 
@@ -16,7 +19,46 @@ export default class ProfileView extends React.Component {
         super(props);
     }
 
+    state = {
+        colapse: '',
+        subscriptions: [],
+    };
+
+    componentDidMount() {
+        this.getAllSubscription();
+    }
+
+    getAllSubscription = () => {
+        axios
+            .get(`/getSubscriptions`)
+            .then(res => {
+                let subscriptions = res.data;
+                this.setState({ subscriptions: subscriptions });
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+    };
+    deleteSubscription = id => {
+        axios.get(`/subscribers/${id}`).catch(function(error) {
+            console.error(error);
+        });
+    };
+
+    toggleCollapse = collapseID => () => {
+        let colapse = this.state.colapse;
+
+        colapse === collapseID ? this.setState({ colapse: '' }) : this.setState({ colapse: collapseID });
+    };
+    deleteSubcription = event => {
+        let id = Object.assign({}, event.target);
+        console.log(id);
+        this.deleteSubcription(id);
+        console.log(id);
+    };
+
     render() {
+        let subscriptions = this.state.subscriptions;
         const editBtn = this.props.isMyProfile ? (
             <Button
                 style={{ marginLeft: '20px' }}
@@ -37,13 +79,6 @@ export default class ProfileView extends React.Component {
                 Add review
             </Button>
         );
-
-        const userEvents = this.props.isMyProfile ? (
-            <Button label='My events' color='primary' variant='contained' disabled={this.props.profileData.id === ''}>
-                My Events
-            </Button>
-        ) : null;
-
         const img =
             this.props.profileData.avatar !== null ? (
                 <img src={getImageUrl(this.props.profileData.avatar.filePath)} alt='' className='imageStyle' />
@@ -81,14 +116,20 @@ export default class ProfileView extends React.Component {
                             <span className='styleSpan'>Phone:</span>
                             {this.props.profileData.phone}
                         </p>
-                        <p className='styleInput'>
-                            <span className='styleSpan'>Address:</span>
-                            {this.props.address !== null && this.props.address !== undefined
-                                ? `${this.props.profileData.address.name} , ${
-                                      this.props.profileData.address.regionCountryName
-                                  }`
-                                : null}
-                        </p>
+
+                        {this.props.profileData.address != null && this.props.profileData.address != undefined ? (
+                            <p className='styleInput'>
+                                <span className='styleSpan'>Address:</span>
+                                {this.props.profileData.address.address}
+                            </p>
+                        ) : (
+                            console.log('address is null')
+                        )}
+
+                        {/*<p className='styleInput'>*/}
+                        {/*<span className='styleSpan'>Address:</span>*/}
+                        {/*{this.props.profileData.address.address}*/}
+                        {/*</p>*/}
                         <p className='styleInput'>
                             <span className='styleSpan'>Birth Date:</span>
                             {this.props.profileData.birthday}
@@ -101,7 +142,47 @@ export default class ProfileView extends React.Component {
                 </div>
 
                 <div className='styleLowerMain2'>
-                    {userEvents} {editBtn}
+                    {editBtn}
+                    <Button
+                        label='My events'
+                        color='primary'
+                        variant='contained'
+                        onClick={this.toggleCollapse('subscriptions')}>
+                        My Subscriptions
+                    </Button>
+                    <NavLink to={`/userEvents/${this.props.userId}`}>
+                        <Button label='Events' color='primary' variant='contained'>
+                            {this.props.isMyProfile ? 'My events' : 'Events'}
+                        </Button>
+                    </NavLink>
+                </div>
+                <div className='styleLowerMain2'>
+                    <MDBCol style={{ maxWidth: '100%' }}>
+                        <MDBCollapse id='subscriptions' isOpen={this.state.colapse}>
+                            <MDBTable hover btn>
+                                <MDBTableHead>
+                                    <tr>
+                                        <th>category</th>
+                                        <th>location</th>
+                                        <th>delete</th>
+                                    </tr>
+                                </MDBTableHead>
+                                <MDBTableBody>
+                                    {subscriptions.map(subscription => {
+                                        return (
+                                            <SubscriptionsItem
+                                                getAllSubscription={this.getAllSubscription}
+                                                key={`${subscription.id}`}
+                                                category={subscription.category}
+                                                city={subscription.city}
+                                                id={subscription.id}
+                                            />
+                                        );
+                                    })}
+                                </MDBTableBody>
+                            </MDBTable>
+                        </MDBCollapse>
+                    </MDBCol>
                 </div>
             </div>
         );

@@ -26,7 +26,7 @@
 
 .styleContainer {
     width: 250px;
-    height: 250px;
+    height: 310px;
     font-size: 10px;
     margin: 3% 5% 5% 5%;
     display: flex;
@@ -94,8 +94,17 @@
     align-items: center;
     align-content: center;
     justify-content: space-around;
+<<<<<<< HEAD
     margin: 7% 30% 5% 30%;
+=======
+    margin: 100px 20px 40px 350px;
+>>>>>>> event
     width: 40%;
+}
+
+.form-group {
+    margin-top: 25px;
+    width: 500px;
 }
 
 .styleContainerEdit {

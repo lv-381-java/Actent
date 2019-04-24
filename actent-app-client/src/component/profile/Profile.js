@@ -2,7 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
-import { Redirect } from 'react-router-dom';
+
+import {Redirect} from 'react-router-dom';
 
 export const apiUrl = 'http://localhost:8080/api/v1';
 
@@ -53,7 +54,7 @@ export default class Profile extends React.Component {
                     phone: response.data['phone'],
                 });
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     };
@@ -72,7 +73,7 @@ export default class Profile extends React.Component {
         this.setState({
             redirect: true,
         });
-        return <Redirect to={`/users/${this.state.currentUserId}/addReview`} />;
+        return <Redirect to={`/users/${this.state.currentUserId}/addReview`}/>;
     };
 
     handleClose = () => {
@@ -85,6 +86,7 @@ export default class Profile extends React.Component {
     handleUserEvents = () => {
         this.setState({
             isUserEventsOpen: true,
+            userId: this.state.userId
         });
     };
 
@@ -104,12 +106,14 @@ export default class Profile extends React.Component {
         };
 
         const view = this.state.isEdit ? (
-            <ProfileEdit profileData={profileData} onCloseClick={this.handleClose} />
+            <ProfileEdit profileData={profileData} onCloseClick={this.handleClose}/>
         ) : (
             <ProfileView
+                userId={this.state.userId}
                 profileData={profileData}
                 isMyProfile={this.state.isMyProfile}
                 onEditClick={this.handleEditClick}
+                onUserEventsClick={this.handleUserEvents}
                 onAddReviewClick={this.handleAddReview}
                 link={`/addReview/${this.state.userId}`}
             />

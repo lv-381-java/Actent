@@ -20,6 +20,7 @@ import { removeAuthorizationToken } from '../../util/apiUtils';
 import { Link } from '@material-ui/core';
 
 export default class Menu extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -35,8 +36,9 @@ export default class Menu extends Component {
         });
     }
 
-    handleLogOut = _ => {
+    handleLogOut = () => {
         removeAuthorizationToken();
+        window.location.href = "/"
     };
 
     render() {
@@ -50,31 +52,44 @@ export default class Menu extends Component {
                 <MDBNavbarToggler onClick={this.toggleCollapse} />
                 <MDBCollapse id='navbarCollapse3' isOpen={this.state.isOpen} navbar>
                     <MDBNavbarNav left>
-                        <MDBNavItem>
-                            <Link href='/createEvent' style={{ color: '#ffffff', textDecoration: 'none' }}>
-                                Create Event
-                            </Link>
-                        </MDBNavItem>
-                        <MDBNavItem>
-                            <Link href='/chat' style={{ color: '#ffffff', textDecoration: 'none', marginLeft: '25%' }}>
-                                Chat
-                            </Link>
-                        </MDBNavItem>
+                        {this.props.firstName != undefined ?
+                            <MDBNavItem>
+                                <Link href='/createEvent' style={{ color: '#ffffff', textDecoration: 'none' }}>
+                                    Create Event
+                                </Link>
+                            </MDBNavItem>
+                            : null}
                     </MDBNavbarNav>
                     <MDBNavbarNav right>
+
+                        {this.props.firstName != undefined ?
+                            <MDBNavItem style={{alignSelf: 'center'}}>
+                                <div style={{color: '#ffffff', marginRight: '10px'}}>
+                                    Welcome, {this.props.firstName}
+                                </div>
+                            </MDBNavItem>
+                            : null}
+
                         <MDBNavItem>
                             <MDBDropdown>
                                 <MDBDropdownToggle nav caret>
                                     <MDBIcon icon='user' />
                                 </MDBDropdownToggle>
-                                <MDBDropdownMenu className='dropdown-default' right>
-                                    <MDBDropdownItem href='/auth/signIn'>Sign In</MDBDropdownItem>
-                                    <MDBDropdownItem href='/auth/signUp'>Sign Up</MDBDropdownItem>
-                                    <MDBDropdownItem href='/profile'>Profile</MDBDropdownItem>
-                                    <MDBDropdownItem href='/' onClick={this.handleLogOut}>
-                                        Log Out
-                                    </MDBDropdownItem>
-                                </MDBDropdownMenu>
+
+                                {
+                                    this.props.userId !== undefined ?
+                                        <MDBDropdownMenu className='dropdown-default' right>
+                                            <MDBDropdownItem href='/profile'>Profile</MDBDropdownItem>
+                                            <MDBDropdownItem href='' onClick={this.handleLogOut}>
+                                                Log Out
+                                            </MDBDropdownItem>
+                                        </MDBDropdownMenu>
+                                        :
+                                        <MDBDropdownMenu className='dropdown-default' right>
+                                            <MDBDropdownItem href='/auth/signIn'>Sign In</MDBDropdownItem>
+                                            <MDBDropdownItem href='/auth/signUp'>Sign Up</MDBDropdownItem>
+                                        </MDBDropdownMenu>
+                                }
                             </MDBDropdown>
                         </MDBNavItem>
                     </MDBNavbarNav>

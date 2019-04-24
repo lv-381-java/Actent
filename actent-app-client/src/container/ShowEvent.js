@@ -1,21 +1,67 @@
 import React from 'react';
 import Show from '../component/show/Show.jsx';
 import Axios from 'axios';
+import {getCurrentUser} from '../util/apiUtils';
 
 class ShowEvent extends React.Component {
+    
     state = {
         eventId: Number(this.props.match.params.id),
-        reviews: ['first review', 'second review', 'third review', 'fff review', 'fourth review', 'fifth review', 'sixth review', 'seventh review', 'eight review', 'ten review', 'eleven review', 'twelve review', 'thirteen review', 'fourteen review', '15 review', '16 review', '17 review', '18 review', '19 review', '20 review', '21 review', '22 review', '23 review', '24 review', '25 review', '26 review', '27 review', '28 review', '29 review'],
+        reviews: [],
         creatorId: undefined,
         participants: undefined,
         spectators: undefined,
         eventUserList: [],
+        userId: undefined,
+        isParticipant: false,
+        isSpectator: false,
+        assID: undefined,
     };
 
     componentDidMount() {
         this.getEvent();
         this.getParticipants();
+        this.setButtonsState();
     }
+
+    setButtonsState() {
+        if (this.state.userId) {
+            this.state.eventUserList.map(e => {
+                if (e.userId == this.state.userId) {
+                    if (e.eventUserType === 'PARTICIPANT') {
+                        this.setState({
+                            isParticipant: true,
+                            isSpectator: false,
+                            assID:e.id
+                        });
+                    } else {
+                        this.setState({
+                            isParticipant: false,
+                            isSpectator: true,
+                            assID: e.id,
+                        })
+                    }
+                }
+            });
+        }
+    }
+
+    setCurrentUserId = () => {
+        getCurrentUser().then(
+            res => {
+                this.setState({userId: res.data.id}, ()=>this.setButtonsState())
+            }).catch(e => {
+            console.log(e)
+        });
+    };
+
+    addSubscribe = () => {
+        const data = { category: this.state.category, city: this.state.location };
+        Axios.post(`/subscribers`, data)
+            .catch(function(error) {
+                console.error(error);
+            });
+    };
 
     getEvent = () => {
         Axios.get(`http://localhost:8080/api/v1/events/${this.state.eventId}`)
@@ -23,13 +69,9 @@ class ShowEvent extends React.Component {
                 this.setState({
                     title: eve.data['title'],
                     description: eve.data['description'],
-
                     image: eve.data['image'],
                     chat: eve.data.Chat.id,
-
                     equipments: eve.data['equipments'],
-                    //reviews: eve.data.feedback,
-
                     creationDate: eve.data.creationDate,
                     startDate: eve.data['startDate'],
                     duration: eve.data['duration'],
@@ -38,6 +80,7 @@ class ShowEvent extends React.Component {
                     creatorId: eve.data.Creator.id,
                     creatorFirstName: eve.data.Creator.firstName,
                     creatorLastName: eve.data.Creator.lastName,
+                    location: eve.data.Location.address,
                 });
             })
             .catch(function(error) {
@@ -46,22 +89,23 @@ class ShowEvent extends React.Component {
     };
 
     getParticipants = () => {
-        Axios.get(`http://localhost:8080/api/v1/eventsUsers/events/${this.state.eventId}`).then(part => {
-            let participantsCount = 0;
-            let spectatorsCount = 0;
-
-            part.data.forEach(e => {
-                e.eventUserType === 'PARTICIPANT' ? participantsCount++ : spectatorsCount++;
-            });
-
-            this.setState({
-                ...this.state,
-                participants: participantsCount,
-                spectators: spectatorsCount,
-                eventUserList: part.data,
-            });
+        Axios.get(`http://localhost:8080/api/v1/eventsUsers/events/${this.state.eventId}`).then(res => {
+          let eventUserList = res.data;
+          this.setState({ eventUserList }, () => this.setCurrentUserId());
         });
     };
+
+    setParticipantFromButton = param => {
+        this.setState({ isParticipant: param })
+    }
+
+    setSpectatorFromButton = param => {
+        this.setState({ isSpectator: param })
+    }
+
+    setAssigneIdInButton = id => {
+        this.setState({ assID: id })
+    }
 
     render() {
         return (
@@ -86,6 +130,14 @@ class ShowEvent extends React.Component {
                     spectators={this.state.spectators}
                     eventId={this.state.eventId}
                     eventUserList={this.state.eventUserList}
+                    currentUserId={this.state.userId}
+                    addSubscribe={this.addSubscribe}
+                    isParticipant={this.state.isParticipant}
+                    isSpectator={this.state.isSpectator}
+                    assID={this.state.assID}
+                    setParticipantFromButton={this.setParticipantFromButton}
+                    setSpectatorFromButton={this.setSpectatorFromButton}
+                    setAssigneIdInButton={this.setAssigneIdInButton}
                 />
             </div>
         );

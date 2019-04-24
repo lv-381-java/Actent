@@ -2,6 +2,9 @@ package com.softserve.actent.security.config;
 
 import com.softserve.actent.security.JwtAuthenticationEntryPoint;
 import com.softserve.actent.security.JwtAuthenticationFilter;
+import com.softserve.actent.security.oauth2.CustomOAuth2UserService;
+import com.softserve.actent.security.oauth2.OAuth2AuthenticationFailureHandler;
+import com.softserve.actent.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.softserve.actent.security.service.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,12 +31,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
+
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
     @Autowired
-    public SecurityConfiguration(UserDetailsServiceImpl userDetailsService, JwtAuthenticationEntryPoint unauthorizedHandler) {
+    public SecurityConfiguration(UserDetailsServiceImpl userDetailsService, JwtAuthenticationEntryPoint unauthorizedHandler, CustomOAuth2UserService customOAuth2UserService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
+        this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
     }
 
     @Bean
@@ -64,37 +77,50 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         security
                 .cors()
-                    .and()
+                .and()
                 .csrf()
-                    .disable()
+                .disable()
                 .exceptionHandling()
-                    .authenticationEntryPoint(unauthorizedHandler)
-                    .and()
+                .authenticationEntryPoint(unauthorizedHandler)
+                .and()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
-                    .antMatchers(
-                            "/",
-                            "/api/v1/auth/*",
-                            "/**/*.html",
-                            "/**/*.css",
-                            "/**/*.js"
-                    )
-                        .permitAll()
-                    .antMatchers(
-                            "/v2/api-docs",
-                            "/configuration/**",
-                            "/swagger*/**",
-                            "/webjars/**"
-                    )
-
-                        .permitAll()
+                .antMatchers(
+                        "/",
+                        "/api/v1/auth/*",
+                        "/login**",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
+                )
+                .permitAll()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/configuration/**",
+                        "/swagger*/**",
+                        "/webjars/**"
+                )
+                .permitAll()
                 .antMatchers("/confirm",
                         "/ws/**",
                         "/chat/message/**",
                         "/topic/**")
-                    .permitAll();
+                .permitAll()
+                .and()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/oauth2/callback/*")
+                .and()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
 
         security.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

@@ -12,8 +12,10 @@ import com.softserve.actent.security.model.UserPrincipal;
 import com.softserve.actent.service.ChatService;
 import com.softserve.actent.service.MessageService;
 import com.softserve.actent.service.UserService;
+import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -80,14 +83,17 @@ public class MessageController {
         return viewMessageConverter.convertToDto(messageService.addImageMessage(message));
     }
 
-    @GetMapping(value = "/currentMessages/{id}")
+    @GetMapping(value = "/currentMessages/{id}/{page}/{size}")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.OK)
     public List<ViewMessageDto> getCurrentMessagesByChatId(@PathVariable @NotNull(message = StringConstants.CHAT_ID_SHOULD_NOT_BE_NULL)
                                                            @Positive(message = StringConstants.CHAT_ID_SHOULD_BE_POSITIVE) Long id,
-                                                           Pageable pageable) {
 
-        return viewMessageConverter.convertToDto(messageService.getCurrentMessagesByChatId(id, pageable));
+                                                           @PathVariable(value = "page") @Min(value = 0) int page,
+                                                           @PathVariable(value = "size") @Positive int size) {
+
+        return viewMessageConverter.convertToDto(messageService.getCurrentMessagesByChatId(id, PageRequest.of(page, size)));
+
     }
 
     @GetMapping(value = "/messages/{id}")
@@ -109,7 +115,6 @@ public class MessageController {
         Message message = modelMapper.map(createMessageDto, Message.class);
         message.setSender(userService.get(currentUser.getId()));
         Message message1 = messageService.update(message, id);
-
         message.setChat(chatService.getChatById(createMessageDto.getChatId()));
         return viewMessageConverter.convertToDto(message1);
     }

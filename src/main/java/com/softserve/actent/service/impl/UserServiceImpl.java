@@ -8,11 +8,11 @@ import com.softserve.actent.exceptions.security.AccessDeniedException;
 import com.softserve.actent.exceptions.validation.IncorrectEmailException;
 import com.softserve.actent.model.entity.User;
 import com.softserve.actent.repository.UserRepository;
-import com.softserve.actent.service.CityService;
-import com.softserve.actent.service.ImageService;
 import com.softserve.actent.service.LocationService;
+import com.softserve.actent.service.ImageService;
 import com.softserve.actent.service.UserService;
-import org.hibernate.SessionFactory;
+import com.softserve.actent.service.cache.EventCache;
+import com.softserve.actent.service.cache.EventCacheMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,18 +25,21 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final EventCache eventCache;
     private final UserRepository userRepository;
-    private final CityService cityService;
+    private final LocationService locationService;
     private final ImageService imageService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           CityService cityService,
-                           ImageService imageService) {
+                           LocationService locationService,
+                           ImageService imageService,
+                           EventCache eventCache) {
 
         this.userRepository = userRepository;
-        this.cityService = cityService;
+        this.locationService = locationService;
         this.imageService = imageService;
+        this.eventCache = eventCache;
     }
 
     @Transactional
@@ -70,15 +73,16 @@ public class UserServiceImpl implements UserService {
             existingUser.setLogin(user.getLogin());
             existingUser.setPhone(user.getPhone());
             existingUser.setEmail(user.getEmail());
-            existingUser.setBirthDate(user.getBirthDate());
+            existingUser.setBirthDate(user.getBirthDate().plusDays(1L));
             existingUser.setBio(user.getBio());
 
             if (user.getLocation() != null){
-                existingUser.setLocation(cityService.get(user.getLocation().getId()));
+                existingUser.setLocation(locationService.get(user.getLocation().getId()));
             }
             if (user.getAvatar() != null){
                 existingUser.setAvatar(imageService.get(user.getAvatar().getId()));
             }
+            eventCache.cacheRefresh(id, EventCacheMethod.CREATOR);
             return userRepository.save(existingUser);
 
         } else {
@@ -91,6 +95,7 @@ public class UserServiceImpl implements UserService {
     public User registrationUpdate(User user, Long id) {
         if (userRepository.existsById(id)) {
             user.setId(id);
+            eventCache.cacheRefresh(id, EventCacheMethod.CREATOR);
             return userRepository.save(user);
         } else {
             throw new AccessDeniedException(ExceptionMessages.USER_NOT_REGISTRED, ExceptionCode.NOT_FOUND);
@@ -120,6 +125,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
+            eventCache.cacheRefresh(id, EventCacheMethod.CREATOR);
             userRepository.deleteById(id);
         } else {
             throw new DataNotFoundException(ExceptionMessages.USER_BY_THIS_ID_IS_NOT_FOUND, ExceptionCode.NOT_FOUND);

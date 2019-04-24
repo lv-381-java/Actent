@@ -1,8 +1,7 @@
-const maxImageSize = 5*1024*1024;
-const possibleImageTypes = ['gif', 'png', 'jpg', 'jpeg', 'bmp'];
+const maxImageSize = 1048576;
 
-const imageValidator = (imageType, imageSize) => {
-    if (possibleImageTypes.includes(imageType) && imageSize<maxImageSize) {
+const imageValidator = (imageSize) => {
+    if (imageSize < maxImageSize) {
         return true;
     } else {
         return false;

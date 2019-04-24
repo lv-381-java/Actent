@@ -6,16 +6,15 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails, OAuth2User {
 
     private Long id;
 
@@ -33,7 +32,7 @@ public class UserPrincipal implements UserDetails {
 
     private Image avatar;
 
-    private City location;
+    private Location location;
 
     private String bio;
 
@@ -49,13 +48,41 @@ public class UserPrincipal implements UserDetails {
 
     private Set<Role> roleset;
 
+    private Map<String, Object> attributes;
+
     Collection<? extends GrantedAuthority> authorities;
+
+    public UserPrincipal(Long id, String firstName, String lastName, String login, String email,
+                         String password, LocalDate birthDate, Image avatar, Location location,
+                         String bio, List<Category> interests, Sex sex, List<EventUser> eventUsers,
+                         List<Review> reviews, List<Chat> bannedChats, Set<Role> roleset,
+                         Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.birthDate = birthDate;
+        this.avatar = avatar;
+        this.location = location;
+        this.bio = bio;
+        this.interests = interests;
+        this.sex = sex;
+        this.eventUsers = eventUsers;
+        this.reviews = reviews;
+        this.bannedChats = bannedChats;
+        this.roleset = roleset;
+        this.authorities = authorities;
+    }
 
     public static UserPrincipal create(User user) {
 
-        List<GrantedAuthority> authorities = user.getRoleset().stream().map(role ->
-                new SimpleGrantedAuthority(role.name())
-        ).collect(Collectors.toList());
+//        List<GrantedAuthority> authorities = user.getRoleset().stream().map(role ->
+//                new SimpleGrantedAuthority(role.name())
+//        ).collect(Collectors.toList());
+        List<GrantedAuthority> authorities = Collections.
+                singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new UserPrincipal(
                 user.getId(),
@@ -76,6 +103,11 @@ public class UserPrincipal implements UserDetails {
                 user.getRoleset(),
                 authorities
         );
+    }
+    public static UserPrincipal create(User user, Map<String, Object> attributes) {
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+        userPrincipal.setAttributes(attributes);
+        return userPrincipal;
     }
 
     @Override
@@ -111,5 +143,19 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, Object> attributes) {
+        this.attributes = attributes;
+    }
+
+    @Override
+    public String getName() {
+        return String.valueOf(id);
     }
 }

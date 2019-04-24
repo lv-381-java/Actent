@@ -4,5 +4,10 @@
       "name": "spring.datasource.max-active",
       "type": "java.lang.String",
       "description": "Description for spring.datasource.max-active."
-  }
-] }
+    },
+    {
+      "name": "security.oauth2.client.registration.google.clientId",
+      "type": "java.lang.String",
+      "description": "Description for security.oauth2.client.registration.google.clientId."
+    }
+  ] }

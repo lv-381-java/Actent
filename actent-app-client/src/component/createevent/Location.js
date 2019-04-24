@@ -1,212 +1,95 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import Select from 'react-select';
 import axios from 'axios';
-import Button from './Button';
-import Input from './Input';
+import {MDBIcon} from "mdbreact";
+import Link from '@material-ui/core/Link';
 
-class Location extends React.Component {
-
+export default class Location
+    extends React.Component {
     state = {
-        country: undefined,
-        countries: [],
-        region: undefined,
-        regions: [],
-        city: undefined,
-        cities: [],
-        address: undefined,
-        cityId: undefined,
-
+        locations: [],
+        address: "",
         locationQueryStatus: undefined
     };
 
-    handleAddress = (event) => {
-        this.setState({address: event.target.value});
-    };
-
-    handleChangeCountries = (event) => {
-        if (event.target.value === "None") {
-            this.setState({
-                country: undefined,
-            });
-        } else {
-            this.setState({country: event.target.value}, () => (this.getRegions())
-            );
-        }
-    }
-
-    handleChangeRegions = (event) => {
-        if (event.target.value === "None") {
-            this.setState({region: undefined});
-            // this.props.setCategoryId(undefined)
-        } else {
-            this.setState({region: event.target.value}, () => (this.getCities())
-            );
-        }
-    }
-
-    handleChangeCities = (event) => {
-        if (event.target.value === "None") {
-            this.setState({city: undefined});
-            this.setCityId(undefined)
-        } else {
-            this.setState({city: event.target.value});
-            this.setCityId(event.target.value)
-        }
-    }
-
     componentDidMount() {
-        this.getCountries()
-    };
-
-    getCountries = () => {
-        axios.get(`http://localhost:8080/api/v1/countries`)
-            .then(res => {
-                const count = res.data;
-                this.setState({
-                    countries: count,
-                });
-            })
-    };
-
-    getRegions = () => {
-        console.log(`getRegions: ${this.state.region}`);
-        axios.get(`http://localhost:8080/api/v1/regions?countryId=${this.state.country}`)
-            .then(res => {
-                console.log(res.data);
-                const reg = res.data;
-                this.setState({
-                    regions: reg,
-                });
-            })
-    };
-
-    setCityId = (cityId) => {
-        this.setState({cityId: cityId});
+        this.getLocations();
     }
 
-    handleAddLocation = (e) => {
-        let eventData = {
-            address: this.state.address,
-            cityId: this.state.cityId
-        };
+    getLocations = () => {
+        if (this.props.address && this.props.address.length > 0) {
+            let url = `http://localhost:8080/api/v1/locations/autocomplete/${this.props.address}`;
 
-        this.setState({locationQueryStatus: 0});
-        fetch("http://localhost:8080/api/v1/locations", {
-            method: "POST",
-            body: JSON.stringify(eventData),
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            }
-        })
-            .then((response) => {
-                let status = +response.status;
-                if (status >= 200 && status < 300) {
-                    this.setState({locationQueryStatus: 1});
-                } else {
-                    this.setState({locationQueryStatus: 2});
-                }
-                return response;
-            }, (err) => {
-                console.log('error', err);
-                this.setState({locationQueryStatus: 2});
-                return JSON.stringify({});
-            })
-            .then(response => {
-                response.json()
-                    .then(data => {
-                        console.log("Successful" + data);
-                        this.props.setLocationId(data.id);
-                    });
-            })
-
+            axios.get(url)
+                .then(response => {
+                    const locations = response.data;
+                    console.log(locations);
+                    this.setState({locations: locations});
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
         ;
-    }
-
-    getCities = () => {
-        console.log(`getR: ${this.state.city}`);
-        axios.get(`http://localhost:8080/api/v1/cities?regionId=${this.state.region}`)
-            .then(res => {
-                console.log(res.data);
-                const cit = res.data;
-                this.setState({
-                    cities: cit,
-                });
-            })
     };
+
+    handleChange = name => value => {
+        this.setState({
+            address: value.value,
+            isSet: true
+        });
+        this.props.setAddress(value.value)
+
+    };
+
+    handleAddress = value => {
+        if (value && value.length > 0) {
+            this.props.setAddress(value)
+        }
+
+        this.setState({address: value}, () => {
+            this.getLocations()
+        });
+    };
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.address != this.props.address) {
+            this.getLocations();
+        }
+        return true;
+    }
 
     render() {
+        console.log(this.props.address);
         return (
             <div className="form-group">
-                <label>Country</label>
-                <div className="selectStyle">
-                    <div>
-                        <select className="browser-default custom-select" onChange={this.handleChangeCountries}
-                                value={this.state.country}>
-                            <option key="None" value="None"></option>
-                            {this.state.countries.map(a => {
-                                    return (
-                                        <option key={a.id} value={a.id}>{a.name}</option>
-                                    )
-                                }
-                            )
-                            }
-                        </select>
-                    </div>
-
-                    {this.state.country && (<div>
-                            <label>Region</label>
-                            <select className="browser-default custom-select" onChange={this.handleChangeRegions}
-                                    value={this.state.region}>
-                                <option key="None" value="None"></option>
-                                {this.state.regions.map(a => {
-                                        return (
-                                            <option key={a.id} value={a.id}>{a.name}</option>
-                                        )
-                                    }
-                                )
-                                }
-                            </select>
-
-                        </div>
-                    )}
-                    {this.state.region && (<div>
-                            <label>City</label>
-                            <select className="browser-default custom-select" onChange={this.handleChangeCities}
-                                    value={this.state.city}>
-                                <option key="None" value="None"></option>
-                                {this.state.cities.map(a => {
-                                        return (
-                                            <option key={a.id} value={a.id}>{a.name}</option>
-                                        )
-                                    }
-                                )
-                                }
-                            </select>
-                        </div>
-                    )}
+                <label>Location</label>
+                <div className="selectStyle address">
+                    {
+                        this.props.address !== ""
+                        && (<Link rel="noopener"
+                                  target="_blank"
+                                  href={`https://www.google.com/maps/place/${this.props.address}`}>
+                            <MDBIcon icon="map" size="2x"/>
+                        </Link>)
+                    }
+                    <Select className="find_addres_fild"
+                            options={this.state.locations.map(location => ({
+                                value: location.address,
+                                label: location.address
+                            }))}
+                            value={this.state.address}
+                            onChange={this.handleChange("address")}
+                            placeholder={this.props.address ? this.props.address : "To continue please enter address and press Save Location"}
+                            onInputChange={this.handleAddress}
+                    />
                 </div>
-                {this.state.city && (<div>
-                        <Input title="To continue please enter address and press Save Location button" type="text"
-                               placeholder="Please enter address of event" handleChange={this.handleAddress}/>
-                        {this.state.locationQueryStatus === 0 && (<div>Sending request...</div>)}
-                        {this.state.locationQueryStatus === 1 && (<div>Location created successfully</div>)}
-                        {this.state.locationQueryStatus === 2 && (<div>Something went wrong.....</div>)}
-                        <Button
-                            action={this.handleAddLocation}
-                            type={"primary"}
-                            title={"Save Location"}
-                            style={buttonStyle}
-                        />{" "}
-                    </div>
-                )}
+                <span>{this.props.errorMessage}</span>
+                {this.state.locationQueryStatus === 0 && (<div>Sending request...</div>)}
+                {this.state.locationQueryStatus === 1 && (<div>Location created successfully</div>)}
+                {this.state.locationQueryStatus === 2 && (<div>Something went wrong.....</div>)}
             </div>
         );
     }
 }
 
-const buttonStyle = {
-    margin: "10px 10px 10px 10px"
-};
-
-export default Location;

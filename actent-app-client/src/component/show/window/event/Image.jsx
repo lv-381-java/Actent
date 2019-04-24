@@ -14,7 +14,7 @@ class Image extends React.Component {
         } else {
             return (
                 <div>
-                    {/* <img src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuMDBpYUKMxK9VxkfZSNgZdHvP4xueFcGoBHKx5h-4ykw_cm2"} ></img> */}
+                    {<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkuMDBpYUKMxK9VxkfZSNgZdHvP4xueFcGoBHKx5h-4ykw_cm2" class="img-responsive"></img>}
                 </div>
             )
         }
