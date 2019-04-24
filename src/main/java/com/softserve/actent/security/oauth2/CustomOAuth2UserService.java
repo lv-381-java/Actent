@@ -1,21 +1,15 @@
 package com.softserve.actent.security.oauth2;
 
-import com.softserve.actent.constant.ExceptionMessages;
-import com.softserve.actent.exceptions.codes.ExceptionCode;
 import com.softserve.actent.exceptions.security.OAuth2AuthenticationProcessingException;
-import com.softserve.actent.exceptions.validation.ValidationException;
 import com.softserve.actent.model.entity.AuthProvider;
 import com.softserve.actent.model.entity.Role;
 import com.softserve.actent.model.entity.Status;
 import com.softserve.actent.model.entity.User;
 import com.softserve.actent.repository.UserRepository;
 import com.softserve.actent.security.model.UserPrincipal;
-import com.softserve.actent.security.oauth2.user.GoogleOAuth2UserInfo;
 import com.softserve.actent.security.oauth2.user.OAuth2UserInfo;
 import com.softserve.actent.security.oauth2.user.OAuth2UserInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -64,23 +58,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
-        if (!userRepository.existsByEmailAndProviderIdNull(oAuth2UserInfo.getEmail())) {
-            return userRepository.findByProviderId(oAuth2UserInfo.getId()).orElseGet(() -> {
-                User newUser = new User();
-                newUser.setProviderId(oAuth2UserInfo.getId());
-                newUser.setFirstName(oAuth2UserInfo.getFirstName());
-                newUser.setLastName(oAuth2UserInfo.getLastName());
-                newUser.setLogin(oAuth2UserInfo.getLogin());
-                newUser.setEmail(oAuth2UserInfo.getEmail());
-                newUser.setStatus(Status.ACTIVE);
-                Role userRole = Role.ROLE_USER;
-                newUser.setRoleset(Collections.singleton(userRole));
-                newUser.setAuthProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
-                return userRepository.save(newUser);
-            });
-        } else
-            throw new ValidationException(ExceptionMessages.USER_BY_THIS_EMAIL_IS_EXIST, ExceptionCode.DUPLICATE_VALUE);
-
+        User newUser = new User();
+        newUser.setProviderId(oAuth2UserInfo.getId());
+        newUser.setFirstName(oAuth2UserInfo.getFirstName());
+        newUser.setLastName(oAuth2UserInfo.getLastName());
+        newUser.setLogin(oAuth2UserInfo.getLogin());
+        newUser.setEmail(oAuth2UserInfo.getEmail());
+        newUser.setStatus(Status.ACTIVE);
+        Role userRole = Role.ROLE_USER;
+        newUser.setRoleset(Collections.singleton(userRole));
+        newUser.setAuthProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
+        return userRepository.save(newUser);
     }
 
 }
