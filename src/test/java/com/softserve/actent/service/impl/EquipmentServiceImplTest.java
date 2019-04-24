@@ -163,11 +163,11 @@ public class EquipmentServiceImplTest {
         equipmentService.update(equipmentWithoutUser, nonExistingId);
     }
 
-    @Test
-    public void whenDeleteTagWithExistingId_thenNothingShouldBeReturned() {
-
-        equipmentService.delete(existingId);
-    }
+//    @Test
+//    public void whenDeleteTagWithExistingId_thenNothingShouldBeReturned() {
+//
+//        equipmentService.delete(existingId);
+//    }
 
     @Test(expected = DataNotFoundException.class)
     public void whenDeleteTagWithNonExistingId_thenExceptionShouldBeThrown() {
