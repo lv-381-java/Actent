@@ -120,7 +120,6 @@ public class EventController {
     }
 
     @PostMapping(value = url)
-//    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addEvent(@Validated @RequestBody EventCreationDto eventCreationDto) {
         Event event = eventConverter.convertToEntity(eventCreationDto);

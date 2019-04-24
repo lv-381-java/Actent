@@ -135,7 +135,6 @@ public class LocationServiceImpl implements LocationService {
 
         try {
             URL url = new URL(address);
-            System.out.println(url);
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStreamReader inputStreamReader = new InputStreamReader(urlConnection.getInputStream());
 

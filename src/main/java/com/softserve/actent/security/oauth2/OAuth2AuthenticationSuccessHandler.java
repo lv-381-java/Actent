@@ -16,8 +16,8 @@ import java.io.IOException;
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${app.oauth2.authorizedRedirectUri}")
-    private  String redirectURI;
+    @Value("${app.oauth2.authorizedRedirectUrl}")
+    private  String redirectURL;
 
     private final JwtTokenProvider tokenProvider;
 
@@ -38,7 +38,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String token = tokenProvider.generateToken(authentication);
 
-        return redirectURI+token;
+        return redirectURL+token;
     }
 
 }
