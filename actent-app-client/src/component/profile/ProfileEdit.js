@@ -7,7 +7,7 @@ import styles from './style.css';
 import { Button, Card, Typography, TextField } from '@material-ui/core';
 import DatePicker from 'material-ui/DatePicker';
 
-import Location from "../createevent/Location";
+import Location from '../createevent/Location';
 // import DateFnsUtils from '@date-io/date-fns';
 
 export default class ProfileEdit extends React.Component {
@@ -106,11 +106,13 @@ export default class ProfileEdit extends React.Component {
     };
 
     getBirthday = () => {
-        console.log(this.state.birthday.getFullYear() +
-            '-' +
-            this.handleDigitsInMonth(this.state.birthday.getMonth() + 1) +
-            '-' +
-            this.handleDigitsInDate(this.state.birthday.getDate()));
+        console.log(
+            this.state.birthday.getFullYear() +
+                '-' +
+                this.handleDigitsInMonth(this.state.birthday.getMonth() + 1) +
+                '-' +
+                this.handleDigitsInDate(this.state.birthday.getDate()),
+        );
         if (this.state.birthday !== null) {
             return (
                 this.state.birthday.getFullYear() +
@@ -152,20 +154,23 @@ export default class ProfileEdit extends React.Component {
     };
 
     saveUserSettings = () => {
-
-        if(this.state.address && this.state.address.length > 0){
-            let urlLocation = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address}`;
-            axios.get(urlLocation)
-                .then(response => {
-                    console.log(response.data.id);
-                    this.setState({
+        if (this.state.address && this.state.address.length > 0) {
+            let urlLocation = `http://ec2-13-234-28-65.ap-south-1.compute.amazonaws.com:8080/api/v1/locations/byAddress/${
+                this.state.address
+            }`;
+            axios.get(urlLocation).then(response => {
+                console.log(response.data.id);
+                this.setState(
+                    {
                         locationId: response.data.id,
-                        formQueryStatus: 0
-                    }, () => {
+                        formQueryStatus: 0,
+                    },
+                    () => {
                         this.updateUser();
-                    });
-                })
-        }else {
+                    },
+                );
+            });
+        } else {
             this.updateUser();
         }
     };
@@ -220,11 +225,11 @@ export default class ProfileEdit extends React.Component {
         );
     };
 
-    setLocationId = (locationId) => {
-        this.setState({locationId: locationId});
+    setLocationId = locationId => {
+        this.setState({ locationId: locationId });
     };
-    setAddress = (address) => {
-        this.setState({address: address});
+    setAddress = address => {
+        this.setState({ address: address });
     };
 
     render() {

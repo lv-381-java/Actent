@@ -10,9 +10,9 @@ export const API_SIGN_IN_URL = '/signin';
 export const API_SIGN_UP_URL = '/signup';
 export const API_MESSAGES_URL = '/messages';
 
-export const API_BASE_URL_OAUTH2 = 'http://localhost:8080';
+export const API_BASE_URL_OAUTH2 = 'http://ec2-13-234-28-65.ap-south-1.compute.amazonaws.com:8080';
 
-export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect';
+export const OAUTH2_REDIRECT_URI = 'http://http://actent-front.s3-website.ap-south-1.amazonaws.com/oauth2/redirect';
 
 export const GOOGLE_AUTH_URL = API_BASE_URL_OAUTH2 + '/oauth2/authorize/google?redirect_uri=' + OAUTH2_REDIRECT_URI;
 export const FACEBOOK_AUTH_URL = API_BASE_URL_OAUTH2 + '/oauth2/authorize/facebook?redirect_uri=' + OAUTH2_REDIRECT_URI;
