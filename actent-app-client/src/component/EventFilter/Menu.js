@@ -52,11 +52,13 @@ export default class Menu extends Component {
                 <MDBNavbarToggler onClick={this.toggleCollapse} />
                 <MDBCollapse id='navbarCollapse3' isOpen={this.state.isOpen} navbar>
                     <MDBNavbarNav left>
-                        <MDBNavItem>
-                            <Link href='/createEvent' style={{ color: '#ffffff', textDecoration: 'none' }}>
-                                Create Event
-                            </Link>
-                        </MDBNavItem>
+                        {this.props.firstName != undefined ?
+                            <MDBNavItem>
+                                <Link href='/createEvent' style={{ color: '#ffffff', textDecoration: 'none' }}>
+                                    Create Event
+                                </Link>
+                            </MDBNavItem>
+                            : null}
                     </MDBNavbarNav>
                     <MDBNavbarNav right>
 
@@ -66,7 +68,7 @@ export default class Menu extends Component {
                                     Welcome, {this.props.firstName}
                                 </div>
                             </MDBNavItem>
-                                : null}
+                            : null}
 
                         <MDBNavItem>
                             <MDBDropdown>
@@ -76,17 +78,17 @@ export default class Menu extends Component {
 
                                 {
                                     this.props.userId !== undefined ?
-                                    <MDBDropdownMenu className='dropdown-default' right>
-                                        <MDBDropdownItem href='/profile'>Profile</MDBDropdownItem>
-                                        <MDBDropdownItem href='' onClick={this.handleLogOut}>
-                                            Log Out
-                                        </MDBDropdownItem>
-                                    </MDBDropdownMenu>
-                                    :
-                                    <MDBDropdownMenu className='dropdown-default' right>
-                                        <MDBDropdownItem href='/auth/signIn'>Sign In</MDBDropdownItem>
-                                        <MDBDropdownItem href='/auth/signUp'>Sign Up</MDBDropdownItem>
-                                    </MDBDropdownMenu>
+                                        <MDBDropdownMenu className='dropdown-default' right>
+                                            <MDBDropdownItem href='/profile'>Profile</MDBDropdownItem>
+                                            <MDBDropdownItem href='' onClick={this.handleLogOut}>
+                                                Log Out
+                                            </MDBDropdownItem>
+                                        </MDBDropdownMenu>
+                                        :
+                                        <MDBDropdownMenu className='dropdown-default' right>
+                                            <MDBDropdownItem href='/auth/signIn'>Sign In</MDBDropdownItem>
+                                            <MDBDropdownItem href='/auth/signUp'>Sign Up</MDBDropdownItem>
+                                        </MDBDropdownMenu>
                                 }
                             </MDBDropdown>
                         </MDBNavItem>
