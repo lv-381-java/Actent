@@ -134,35 +134,41 @@ export default class ProfileEdit extends React.Component {
         return i < 10 ? `0${i}` : i;
     };
 
-    saveUserSettings = () => {
-        const url = apiUrl + /users/ + this.state.userId;
+    updateUser = () => {
+        const urlUpdateUser = apiUrl + /users/ + this.state.userId;
+        const data = {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            login: this.state.login,
+            locationId: this.state.locationId,
+            birthDate: this.getBirthday(),
+            bio: this.state.bio,
+            interests: this.state.interests,
+            email: this.state.email,
+            phone: this.state.phone,
+            avatarId: this.state.imageId,
+        };
+        axios.put(urlUpdateUser, data).then(() => {
+            this.props.onCloseClick();
+        });
+    };
 
-        if (this.state.address && this.state.address.length > 0) {
-            let url = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address}`;
-            axios.get(url)
+    saveUserSettings = () => {
+
+        if(this.state.address && this.state.address.length > 0){
+            let urlLocation = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address}`;
+            axios.get(urlLocation)
                 .then(response => {
+                    console.log(response.data.id);
                     this.setState({
                         locationId: response.data.id,
                         formQueryStatus: 0
                     }, () => {
-                        const data = {
-                            firstName: this.state.firstName,
-                            lastName: this.state.lastName,
-                            login: this.state.login,
-                            locationId: this.state.locationId,
-                            birthDate: this.getBirthday(),
-                            bio: this.state.bio,
-                            interests: this.state.interests,
-                            email: this.state.email,
-                            phone: this.state.phone,
-                            avatarId: this.state.imageId,
-                        };
-
-                        axios.put(url, data).then(() => {
-                            this.props.onCloseClick();
-                        });
+                        this.updateUser();
                     });
                 })
+        }else {
+            this.updateUser();
         }
     };
 
