@@ -32,6 +32,8 @@ class Show extends React.Component {
                         eventId={this.props.eventId}
                         assigne={this.props.isParticipant}
                         assID={this.props.assID}
+                        startDate={this.props.startDate}
+                        duration={this.props.duration}
                         setValue={this.props.setParticipantFromButton}
                         setAssigneIdInButton={this.props.setAssigneIdInButton}
                     />
@@ -41,6 +43,8 @@ class Show extends React.Component {
                         eventId={this.props.eventId}
                         assigne={this.props.isSpectator}
                         assID={this.props.assID}
+                        startDate={this.props.startDate}
+                        duration={this.props.duration}
                         setValue={this.props.setSpectatorFromButton}
                         setAssigneIdInButton={this.props.setAssigneIdInButton}
                     />

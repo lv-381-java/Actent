@@ -8,9 +8,10 @@ export default class PresentEventList extends React.Component {
         return (
             <div>
                 {this.props.events.map(event => (
-                    <Event key={event.eventId.toString()} eventId={event.eventId} title={event.eventTitle}
-                           userId={event.userId}
-                           description={event.eventDescription}/>
+                    <Event key={event.eventId.toString()} eventId={event.eventId} userId={event.userId}
+                           title={event.eventTitle}
+                           description={event.eventDescription}
+                           image={event.eventImageFilePath}/>
                 ))}
                 <div className='row ' style={{margin: 'auto', marginTop: '50px'}}>
                     <nav aria-label='Page navigation example'>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { saveAuthorizationToken, setAuthorizationHeader } from '../../util/apiUtils';
 
-import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 export default class OAuth2RedirectHandler extends Component {
     getUrlParameter(name) {

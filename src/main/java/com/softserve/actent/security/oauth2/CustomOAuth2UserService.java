@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Service
-public class  CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -35,27 +35,23 @@ public class  CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
-        try {
-            return processOAuth2User(oAuth2UserRequest, oAuth2User);
-        } catch (AuthenticationException ex) {
-            throw ex;
-        } catch (Exception ex) {
-            throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
-        }
+
+        return processOAuth2User(oAuth2UserRequest, oAuth2User);
+
     }
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.
                 getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
+        if (StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
-            User user;
+        User user;
         Optional<User> userOptional = userRepository.findUserByEmail(oAuth2UserInfo.getEmail());
 
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             user = userOptional.get();
-            if(!user.getAuthProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+            if (!user.getAuthProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
                 throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
                         user.getAuthProvider() + " account. Please use your " + user.getAuthProvider() +
                         " account to login.");
@@ -67,22 +63,23 @@ public class  CustomOAuth2UserService extends DefaultOAuth2UserService {
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
-    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest ,OAuth2UserInfo oAuth2UserInfo) {
-        if(!userRepository.existsByEmailAndProviderIdNull(oAuth2UserInfo.getEmail())) {
-                return userRepository.findByProviderId(oAuth2UserInfo.getId()).orElseGet(() -> {
-                    User newUser = new User();
-                    newUser.setProviderId(oAuth2UserInfo.getId());
-                    newUser.setFirstName(oAuth2UserInfo.getFirstName());
-                    newUser.setLastName(oAuth2UserInfo.getLastName());
-                    newUser.setLogin(oAuth2UserInfo.getLogin());
-                    newUser.setEmail(oAuth2UserInfo.getEmail());
-                    newUser.setStatus(Status.ACTIVE);
-                    Role userRole = Role.ROLE_USER;
-                    newUser.setRoleset(Collections.singleton(userRole));
-                    newUser.setAuthProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
-                    return userRepository.save(newUser);
-                });
-            }else throw new ValidationException(ExceptionMessages.USER_BY_THIS_EMAIL_IS_EXIST, ExceptionCode.DUPLICATE_VALUE);
+    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+        if (!userRepository.existsByEmailAndProviderIdNull(oAuth2UserInfo.getEmail())) {
+            return userRepository.findByProviderId(oAuth2UserInfo.getId()).orElseGet(() -> {
+                User newUser = new User();
+                newUser.setProviderId(oAuth2UserInfo.getId());
+                newUser.setFirstName(oAuth2UserInfo.getFirstName());
+                newUser.setLastName(oAuth2UserInfo.getLastName());
+                newUser.setLogin(oAuth2UserInfo.getLogin());
+                newUser.setEmail(oAuth2UserInfo.getEmail());
+                newUser.setStatus(Status.ACTIVE);
+                Role userRole = Role.ROLE_USER;
+                newUser.setRoleset(Collections.singleton(userRole));
+                newUser.setAuthProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
+                return userRepository.save(newUser);
+            });
+        } else
+            throw new ValidationException(ExceptionMessages.USER_BY_THIS_EMAIL_IS_EXIST, ExceptionCode.DUPLICATE_VALUE);
 
     }
 
