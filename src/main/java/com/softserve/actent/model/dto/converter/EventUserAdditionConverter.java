@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EventUserFilterConverter implements IModelMapperConverter<EventUser, EventUserFilterDto> {
+public class EventUserAdditionConverter implements IModelMapperConverter<EventUser, EventUserFilterDto> {
 
     private final ModelMapper modelMapper;
 
     @Autowired
-    public EventUserFilterConverter(ModelMapper modelMapper) {
+    public EventUserAdditionConverter(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 

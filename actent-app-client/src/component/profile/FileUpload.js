@@ -48,14 +48,14 @@ export default class FileUpload extends React.Component{
         this.setState({'snackbarMessage': ''});
         let image = files[0];
         let imageData = new FormData();
-        let imageType = image.type.slice(6);
         let imageSize = image.size;
-        if (imageValidator(imageType, imageSize)) {
+        if (imageValidator(imageSize)) {
             imageData.append('image', image);
             this.props.fetchData(imageData, image['name']);
             this.dialogClose();
+            this.hideSnackbar();
         } else {
-            this.setState({'snackbarMessage': 'Please choose another file'});
+            this.setState({'snackbarMessage': 'Please choose another file. Image size should be less than 1024 kb'});
             this.showSnackbar();
         }
     };
@@ -70,8 +70,6 @@ export default class FileUpload extends React.Component{
             >Cancel
             </Button>
         ];
-
-        const maxSize = 5242880;
 
         return (
             <div className="buttonStyle">
@@ -90,24 +88,18 @@ export default class FileUpload extends React.Component{
                     className="dialogStyle"
                     onRequestClose={this.dialogClose}>
                     <Dropzone
+                        accept='image/*'
                         className="dropzoneStyle"
                         onDrop={this.onImageDrop}
                         minSize={0}
-                        maxSize={maxSize}>
-                        {({getRootProps, getInputProps, isDragActive, isDragReject, rejectedFiles}) => {
-                            const isFileTooLarge = rejectedFiles.length > 0 && rejectedFiles[0].size > maxSize;
+                    >
+                        {({getRootProps, getInputProps, isDragActive}) => {
+
                             return (
                                 <div {...getRootProps()}>
                                     <input {...getInputProps()} />
                                     {!isDragActive && 'Click here or drop a file to upload!'}
-                                    {isDragActive && !isDragReject && "Drop it like it's hot!"}
-                                    {isDragReject && "File type not accepted, sorry!"}
-                                    {isFileTooLarge && (
-                                        <div className="text-danger mt-2">
-                                            File is too large.
-                                        </div>
-                                    )}
-                                </div>
+                                                                </div>
                             )}
                         }
                     </Dropzone>

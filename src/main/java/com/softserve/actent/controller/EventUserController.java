@@ -4,7 +4,7 @@ import com.softserve.actent.constant.StringConstants;
 import com.softserve.actent.constant.UrlConstants;
 import com.softserve.actent.model.dto.IdDto;
 import com.softserve.actent.model.dto.converter.EventUserConverter;
-import com.softserve.actent.model.dto.converter.EventUserFilterConverter;
+import com.softserve.actent.model.dto.converter.EventUserAdditionConverter;
 import com.softserve.actent.model.dto.eventUser.EventUserDto;
 import com.softserve.actent.model.dto.eventUser.EventUserFilterDto;
 import com.softserve.actent.model.dto.eventUser.EventUserShowDto;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.util.ArrayList;
 import java.util.List;
 
 @Validated
@@ -36,17 +35,17 @@ public class EventUserController {
     private final EventUserService eventUserService;
     private final EventUserConverter eventsUsersConverter;
     private final UserEventsFilterRepository filterRepository;
-    private final EventUserFilterConverter filterConverter;
+    private final EventUserAdditionConverter additionConverter;
 
     @Autowired
     public EventUserController(EventUserService eventUserService,
                                EventUserConverter eventUserConverter,
                                UserEventsFilterRepository filterRepository,
-                               EventUserFilterConverter filterConverter) {
+                               EventUserAdditionConverter additionConverter) {
         this.eventUserService = eventUserService;
         this.eventsUsersConverter = eventUserConverter;
         this.filterRepository = filterRepository;
-        this.filterConverter = filterConverter;
+        this.additionConverter = additionConverter;
     }
 
     @PostMapping(value = url)
@@ -80,9 +79,9 @@ public class EventUserController {
     @GetMapping(value = url + "/events/{id}")
     @ResponseStatus(HttpStatus.OK)
     public List<EventUserShowDto> getEventUserByEventId(@PathVariable
-                                                    @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
-                                                    @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
-                                                            Long id) {
+                                                        @NotNull(message = StringConstants.EVENT_ID_CAN_NOT_BE_NULL)
+                                                        @Positive(message = StringConstants.EVENT_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO)
+                                                                Long id) {
 
         List<EventUser> eventUserList = eventUserService.getByEventId(id);
         return eventsUsersConverter.convertToListShowDto(eventUserList);
@@ -112,17 +111,18 @@ public class EventUserController {
 
         eventUserService.delete(id);
     }
-    @GetMapping(value = url + "/assignedEvents/{userId}/{startDate}/{endDate}/")
+
+    @GetMapping(value = url + "/assignedEvents/{userId}/{startDate}/{endDate}")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventUserDto> getUserAllAssignedEvents(@PathVariable @NotNull(message = StringConstants.USER_ID_CAN_NOT_BE_NULL)
-                                                       @Positive(message = StringConstants.USER_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO) Long userId,
-                                                       @PathVariable
-                                                       @NotNull(message = StringConstants.START_DATE_SHOULD_NOT_BE_BLANK) String startDate,
-                                                       @PathVariable
-                                                       @NotNull(message = StringConstants.END_DATE_SHOULD_NOT_BE_BLANK) String endDate) {
+    public List<EventUserFilterDto> getUserAllAssignedEvents(@PathVariable @NotNull(message = StringConstants.USER_ID_CAN_NOT_BE_NULL)
+                                                             @Positive(message = StringConstants.USER_ID_MUST_BE_POSITIVE_AND_GREATER_THAN_ZERO) Long userId,
+                                                             @PathVariable
+                                                             @NotNull(message = StringConstants.START_DATE_SHOULD_NOT_BE_BLANK) String startDate,
+                                                             @PathVariable
+                                                             @NotNull(message = StringConstants.END_DATE_SHOULD_NOT_BE_BLANK) String endDate) {
 
         List<EventUser> eventUserList = eventUserService.getAllAssignedEventsForThisTime(userId, startDate, endDate);
-        return eventsUsersConverter.convertToDto(eventUserList);
+        return additionConverter.convertToDto(eventUserList);
     }
 
     @GetMapping(value = url + "/total/{userId}")
@@ -165,7 +165,7 @@ public class EventUserController {
                 .and(UserEventsSpecification.getUserType(userType))
                 .and(UserEventsSpecification.getCategory(category)), PageRequest.of(page, size));
 
-        return filterConverter.convertToDto(eventsUsersPages.getContent());
+        return additionConverter.convertToDto(eventsUsersPages.getContent());
     }
 
     @GetMapping(value = url + "/pastEvents/{userId}/{page}/{size}")
@@ -181,7 +181,7 @@ public class EventUserController {
                 .and(UserEventsSpecification.getUserType(userType))
                 .and(UserEventsSpecification.getCategory(category)), PageRequest.of(page, size));
 
-        return filterConverter.convertToDto(eventsUsersPages.getContent());
+        return additionConverter.convertToDto(eventsUsersPages.getContent());
     }
 
     @GetMapping(value = url + "/futureEvents/{userId}/{page}/{size}")
@@ -197,7 +197,7 @@ public class EventUserController {
                 .and(UserEventsSpecification.getUserType(userType))
                 .and(UserEventsSpecification.getCategory(category)), PageRequest.of(page, size));
 
-        return filterConverter.convertToDto(eventsUsersPages.getContent());
+        return additionConverter.convertToDto(eventsUsersPages.getContent());
     }
 
 }
