@@ -2,24 +2,18 @@ package com.softserve.actent.controller;
 
 import com.softserve.actent.constant.ExceptionMessages;
 import com.softserve.actent.constant.UrlConstants;
-import com.softserve.actent.exceptions.codes.ExceptionCode;
-import com.softserve.actent.exceptions.validation.IncorrectStringException;
-import com.softserve.actent.exceptions.validation.ValidationException;
 import com.softserve.actent.model.dto.IdDto;
 import com.softserve.actent.model.dto.AddImageDto;
 import com.softserve.actent.model.dto.ImageDto;
 import com.softserve.actent.model.entity.Image;
 import com.softserve.actent.service.ImageService;
-import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.ArrayList;
@@ -41,6 +35,7 @@ public class ImageController {
         this.modelMapper = modelMapper;
     }
 
+    @CrossOrigin
     @PostMapping(value = "/images")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
@@ -52,6 +47,7 @@ public class ImageController {
         return new IdDto(image.getId());
     }
 
+    @CrossOrigin
     @GetMapping(value = "/images/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ImageDto getImageById(@PathVariable @NotNull(message = ExceptionMessages.IMAGE_NO_ID)
@@ -61,6 +57,7 @@ public class ImageController {
         return modelMapper.map(image, ImageDto.class);
     }
 
+    @CrossOrigin
     @GetMapping(value = "/images")
     @ResponseStatus(HttpStatus.OK)
     public List<ImageDto> getImages(@RequestParam(value = "url", required = false) String url) {
@@ -83,6 +80,7 @@ public class ImageController {
         }
     }
 
+    @CrossOrigin
     @PutMapping(value = "/images/{id}")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
@@ -94,6 +92,7 @@ public class ImageController {
         return modelMapper.map(image, ImageDto.class);
     }
 
+    @CrossOrigin
     @DeleteMapping(value = "/images/{id}")
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)

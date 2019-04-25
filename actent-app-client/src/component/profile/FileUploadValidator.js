@@ -1,6 +1,6 @@
-const maxImageSize = 1048576;
+const maxImageSize = 5242880;
 
-const imageValidator = (imageSize) => {
+const imageValidator = imageSize => {
     if (imageSize < maxImageSize) {
         return true;
     } else {
@@ -8,4 +8,4 @@ const imageValidator = (imageSize) => {
     }
 };
 
-export {imageValidator};
+export { imageValidator };

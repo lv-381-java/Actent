@@ -144,6 +144,7 @@ export default class ProfileView extends React.Component {
                 <div className='styleLowerMain2'>
                     {editBtn}
                     <Button
+                        style={{ marginLeft: '20px', marginRight: '20px' }}
                         label='My events'
                         color='primary'
                         variant='contained'

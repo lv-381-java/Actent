@@ -11,7 +11,6 @@ import { s3Root } from './ProfileView';
 import styles from './style.css';
 
 export default class FileUpload extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -19,20 +18,19 @@ export default class FileUpload extends React.Component {
             imageUrl: s3Root + 'actent-res',
             open: false,
             snackbarOpen: false,
-            snackbarMessage: ''
+            snackbarMessage: '',
         };
     }
 
     dialogOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     dialogClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     showSnackbar = () => {
-
         this.setState({
             snackbarOpen: true,
         });
@@ -44,12 +42,12 @@ export default class FileUpload extends React.Component {
         });
     };
 
-    updateImageName = (imageName) => {
+    updateImageName = imageName => {
         // this.props.updateImageNameInDb(imageName);
     };
 
-    onImageDrop = (files) => {
-        this.setState({'snackbarMessage': ''});
+    onImageDrop = files => {
+        this.setState({ snackbarMessage: '' });
         let image = files[0];
         let imageData = new FormData();
         let imageSize = image.size;
@@ -59,58 +57,43 @@ export default class FileUpload extends React.Component {
             this.dialogClose();
             this.hideSnackbar();
         } else {
-            this.setState({'snackbarMessage': 'Please choose another file. Image size should be less than 1024 kb'});
+            this.setState({ snackbarMessage: 'Please choose another file. Image size should be less than 5 MB' });
             this.showSnackbar();
         }
     };
 
     render() {
         const actions = [
-            <Button
-                label='Cancel'
-                color="primary"
-                variant="contained"
-                onClick={this.dialogClose}
-            >Cancel
-            </Button>
+            <Button label='Cancel' color='primary' variant='contained' onClick={this.dialogClose}>
+                Cancel
+            </Button>,
         ];
 
         return (
-            <div className="buttonStyle">
-                <Button
-                    label="Upload image"
-                    color="primary"
-                    variant="contained"
-                    onClick={this.dialogOpen}
-                >Upload Image
+            <div className='buttonStyle'>
+                <Button label='Upload image' color='primary' variant='contained' onClick={this.dialogOpen}>
+                    Upload Image
                 </Button>
                 <Dialog
                     title='File Upload'
                     actions={actions}
                     modal={false}
                     open={this.state.open}
-                    className="dialogStyle"
+                    className='dialogStyle'
                     onRequestClose={this.dialogClose}>
-                    <Dropzone
-                        accept='image/*'
-                        className="dropzoneStyle"
-                        onDrop={this.onImageDrop}
-                        minSize={0}
-                    >
-                        {({getRootProps, getInputProps, isDragActive}) => {
-
+                    <Dropzone accept='image/*' className='dropzoneStyle' onDrop={this.onImageDrop} minSize={0}>
+                        {({ getRootProps, getInputProps, isDragActive }) => {
                             return (
                                 <div {...getRootProps()}>
                                     <input {...getInputProps()} />
                                     {!isDragActive && 'Click here or drop a file to upload!'}
                                 </div>
-                            )
-                        }
-                        }
+                            );
+                        }}
                     </Dropzone>
                 </Dialog>
                 <Snackbar
-                    style={{textAlign: 'center'}}
+                    style={{ textAlign: 'center' }}
                     open={this.state.snackbarOpen}
                     message={this.state.snackbarMessage}
                     autoHideDuration={5000}
