@@ -2,10 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
-
 import { Redirect } from 'react-router-dom';
 
-export const apiUrl = 'http://ec2-13-234-28-65.ap-south-1.compute.amazonaws.com:8080/api/v1';
+export const apiUrl = 'http://ec2-13-234-28-65.ap-south-1.compute.amazonaws.com:8080/actent/api/v1';
 
 export default class Profile extends React.Component {
     constructor(props) {

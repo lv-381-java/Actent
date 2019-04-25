@@ -2,7 +2,7 @@ export const ACCESS_TOKEN = 'accessToken';
 export const AUTHORIZATION_HEADER = 'Authorization';
 export const BEARER = 'Bearer';
 
-export const API_BASE_URL = 'http://ec2-13-234-28-65.ap-south-1.compute.amazonaws.com:8080/api/v1';
+export const API_BASE_URL = 'http://ec2-13-234-28-65.ap-south-1.compute.amazonaws.com:8080/actent/api/v1';
 export const API_USERS_URL = '/users';
 export const API_REVIEWS_URL = '/reviews';
 export const API_AUTH_URL = '/auth';

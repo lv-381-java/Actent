@@ -15,6 +15,6 @@ public class UrlConstants {
     public static final String OUT_JSON = "/json";
     public static final String API_KEY = "&key=AIzaSyCKjqC6ENzXDMbAOIkpbU24N1ULYFEhA9o";
 
-    public static final String EVENT_LINK = "http://localhost:3000/show/";
+    public static final String EVENT_LINK = "http://actent-front.s3-website.ap-south-1.amazonaws.com/show/";
 
 }
