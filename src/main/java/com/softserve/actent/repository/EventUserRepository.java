@@ -25,13 +25,13 @@ public interface EventUserRepository extends JpaRepository<EventUser, Long> {
             " JOIN events ON events.id = eu.event_id" +
             " WHERE eu.user_id = :userId" +
             "  and events.start_date < current_date", nativeQuery = true)
-    Page<EventUser> findAllByUser_IdAndPastEvents(Long userId, Pageable pageable);
+    Page<EventUser> findAllByUser_IdAndPastEvents(@Param("userId") Long userId, Pageable pageable);
 
     @Query(value = "SELECT * FROM events_users eu" +
             " JOIN events ON events.id = eu.event_id" +
             " WHERE eu.user_id = :userId" +
             "  and events.start_date > current_date", nativeQuery = true)
-    Page<EventUser> findAllByUser_IdAndFutureEvents(Long userId, Pageable pageable);
+    Page<EventUser> findAllByUser_IdAndFutureEvents(@Param("userId") Long userId, Pageable pageable);
 
     @Query(value = "SELECT * FROM events_users eu" +
             " JOIN events ON events.id = eu.event_id" +

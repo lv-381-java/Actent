@@ -26,7 +26,7 @@ export default class CardExample extends React.Component {
                     <NavLink to={`show/${this.props.eventId}`}>{img}</NavLink>
                     <MDBCardBody>
                         <MDBCardTitle>{this.props.title}</MDBCardTitle>
-                        <MDBCardText>Description: {this.props.description}</MDBCardText>
+                        <MDBCardText style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Description: {this.props.description}</MDBCardText>
                         <MDBCardText>Location: {this.props.city}</MDBCardText>
                         <MDBCardText>Category: {this.props.category}</MDBCardText>
                         <NavLink to={`show/${this.props.eventId}`}>
