@@ -1,8 +1,8 @@
 amazonProperties:
-  endpointUrl: https://s3.ap-south-1.amazonaws.com
-  accessKey: AKIAIOUN7QEVJPWFZYEA
-  secretKey: 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
-  bucketName: actent-res
+  endpointUrl: https://s3.us-east-2.amazonaws.com
+  accessKey: AKIA4CK3TPJX4IVTRYMF
+  secretKey: 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
+  bucketName: actent-images
 spring:
   security:
     oauth2:

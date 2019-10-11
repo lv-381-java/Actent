@@ -69,7 +69,7 @@ public class UserController {
 
     @PostMapping(value = "/users")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public IdDto addUser(@Validated @RequestBody UserRegistrationDto userRegistrationDto) {
         User user = userService.add(userRegistrationDtoToEntity(userRegistrationDto));
         return new IdDto(user.getId());

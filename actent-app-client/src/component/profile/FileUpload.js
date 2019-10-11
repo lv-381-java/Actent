@@ -12,7 +12,7 @@ export default class FileUpload extends React.Component {
         super(props);
         this.state = {
             imageName: '',
-            imageUrl: s3Root + 'actent-res',
+            imageUrl: s3Root,
             open: false,
             snackbarOpen: false,
             snackbarMessage: ''

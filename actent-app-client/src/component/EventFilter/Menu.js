@@ -79,15 +79,15 @@ export default class Menu extends Component {
                                 {
                                     this.props.userId !== undefined ?
                                         <MDBDropdownMenu className='dropdown-default' right>
-                                            <MDBDropdownItem href='/profile'>Profile</MDBDropdownItem>
+                                            <MDBDropdownItem><NavLink to='/profile'>Profile</NavLink></MDBDropdownItem>
                                             <MDBDropdownItem href='' onClick={this.handleLogOut}>
                                                 Log Out
                                             </MDBDropdownItem>
                                         </MDBDropdownMenu>
                                         :
                                         <MDBDropdownMenu className='dropdown-default' right>
-                                            <MDBDropdownItem href='/auth/signIn'>Sign In</MDBDropdownItem>
-                                            <MDBDropdownItem href='/auth/signUp'>Sign Up</MDBDropdownItem>
+                                            <MDBDropdownItem><NavLink to='/auth/signIn'>Sign In</NavLink></MDBDropdownItem>
+                                            <MDBDropdownItem><NavLink to='/auth/signUp'>Sign Up</NavLink></MDBDropdownItem>
                                         </MDBDropdownMenu>
                                 }
                             </MDBDropdown>

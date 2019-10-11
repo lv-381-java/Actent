@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.softserve.actent.constant.AmazonConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +39,11 @@ public class AmazonBucketService {
     @PostConstruct
     private void initializeAmazon() {
         BasicAWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
-        amazonS3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion("ap-south-1").build();
+        amazonS3 =  AmazonS3ClientBuilder.
+                    standard().
+                    withCredentials(new AWSStaticCredentialsProvider(credentials)).
+                    withRegion(AmazonConstants.AMAZON_REGION).
+                    build();
     }
 
     public String uploadFile(MultipartFile multipartFile) {

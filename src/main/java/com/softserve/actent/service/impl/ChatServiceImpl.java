@@ -43,14 +43,15 @@ public class ChatServiceImpl implements ChatService {
     public Chat addChat(String type) {
         Chat chat = new Chat();
 
+        if(!type.toLowerCase().equals("event") && !type.toLowerCase().equals("direct")){
+            throw new IncorrectChatTypeException(ExceptionMessages.ACTIVE_BY_THIS_TYPE_IS_NOT_FOUND,
+                    ExceptionCode.INCORRECT_ACTIVITY_TYPE);
+        }
         if (type.toLowerCase().equals("event")) {
             chat.setType(ChatType.EVENT);
         }
         if (type.toLowerCase().equals("direct")) {
             chat.setType(ChatType.DIRECT);
-        } else {
-            throw new IncorrectChatTypeException(ExceptionMessages.ACTIVE_BY_THIS_TYPE_IS_NOT_FOUND,
-                    ExceptionCode.INCORRECT_ACTIVITY_TYPE);
         }
         chatRepository.save(chat);
         return chat;

@@ -22,3 +22,5 @@ export const API_PAGE_MESSAGES = 'pageNumber';
 export const API_PAGE_SIZE_20 = '20';
 export const API_CHAT_URL = '/chats';
 export const API_CHAT_COUNT_URL = '/count';
+
+export const AMAZON_URL = 'https://actent-images.s3.us-east-2.amazonaws.com/';

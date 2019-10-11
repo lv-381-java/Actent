@@ -39,7 +39,7 @@ public class SubscribeController {
     }
 
     @PostMapping(value = "/subscribers")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public IdDto addSubscribe(@Validated @RequestBody SubscribeDto subscribeDto,
                               @ApiIgnore @CurrentUser UserPrincipal currentUser) {
@@ -53,7 +53,7 @@ public class SubscribeController {
 
 
     @GetMapping(value = "/getSubscriptions")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public List<SubscribeDto> getAll(@ApiIgnore @CurrentUser UserPrincipal currentUser) {
         List<Subscribe> subscribeList = subscribeService.getAllByUserId(currentUser.getId());
@@ -62,7 +62,7 @@ public class SubscribeController {
     }
 
     @DeleteMapping(value = "/subscribers/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMessageById(@PathVariable @NotNull
                                   @Positive(message = StringConstants.MESSAGE_ID_SHOULD_BE_POSITIVE) Long id) {

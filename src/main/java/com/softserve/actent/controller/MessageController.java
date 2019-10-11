@@ -59,7 +59,7 @@ public class MessageController {
 
 
     @PostMapping(value = "/textMessages")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public ViewMessageDto addMessage(@Validated @RequestBody CreateTextMessageDto createMessageDto,
                                      @ApiIgnore @CurrentUser UserPrincipal currentUser) {
@@ -72,7 +72,7 @@ public class MessageController {
     }
 
     @PostMapping(value = "/imageMessages")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public ViewMessageDto addImage(@Validated @RequestBody CreateImageMessageDto createImageMessageDto,
                                    @ApiIgnore @CurrentUser UserPrincipal currentUser) {
@@ -84,7 +84,7 @@ public class MessageController {
     }
 
     @GetMapping(value = "/currentMessages/{id}/{page}/{size}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public List<ViewMessageDto> getCurrentMessagesByChatId(@PathVariable @NotNull(message = StringConstants.CHAT_ID_SHOULD_NOT_BE_NULL)
                                                            @Positive(message = StringConstants.CHAT_ID_SHOULD_BE_POSITIVE) Long id,
@@ -97,7 +97,7 @@ public class MessageController {
     }
 
     @GetMapping(value = "/messages/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public List<ViewMessageDto> getMessagesByChatId(@PathVariable @NotNull(message = StringConstants.CHAT_ID_SHOULD_NOT_BE_NULL)
                                                     @Positive(message = StringConstants.CHAT_ID_SHOULD_BE_POSITIVE) Long id) {
@@ -106,7 +106,7 @@ public class MessageController {
     }
 
     @PutMapping(value = "/messages/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.OK)
     public ViewMessageDto updateMessage(@PathVariable @NotNull
                                         @Positive(message = StringConstants.MESSAGE_ID_SHOULD_BE_POSITIVE) Long id,
@@ -120,7 +120,7 @@ public class MessageController {
     }
 
     @DeleteMapping(value = "/textMessages/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMessageById(@PathVariable @NotNull
                                   @Positive(message = StringConstants.MESSAGE_ID_SHOULD_BE_POSITIVE) Long id) {

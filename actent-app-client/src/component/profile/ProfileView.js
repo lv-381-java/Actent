@@ -5,12 +5,13 @@ import { MDBTable, MDBTableBody, MDBTableHead, MDBCol, MDBCollapse } from 'mdbre
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import SubscriptionsItem from './subscriptionsItem';
+import {AMAZON_URL} from '../../constants/apiConstants'
 
-export const s3Root = 'https://s3.ap-south-1.amazonaws.com/';
+export const s3Root = AMAZON_URL;
 
 export function getImageUrl(imageName) {
     if (imageName) {
-        return s3Root + 'actent-res/' + imageName;
+        return s3Root + imageName;
     }
 }
 
