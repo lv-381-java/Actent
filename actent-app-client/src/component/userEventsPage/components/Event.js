@@ -1,5 +1,6 @@
 import React from 'react';
 import {MDBJumbotron, MDBBtn, NavLink} from 'mdbreact';
+import {AMAZON_S3_BUCKET_NAME, AMAZON_S3_URL} from "../../../constants/apiConstants";
 
 export default class Event extends React.Component {
     render() {
@@ -9,7 +10,7 @@ export default class Event extends React.Component {
             />
         ) : (
             <img className='rounded float-left img-thumbnail img-fluid'
-                 src={`https://s3.ap-south-1.amazonaws.com/actent-res/${this.props.image}`}
+                 src={AMAZON_S3_URL + AMAZON_S3_BUCKET_NAME + `${this.props.image}`}
             />);
         return (
             <MDBJumbotron>

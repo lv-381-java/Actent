@@ -5,13 +5,11 @@ import { MDBTable, MDBTableBody, MDBTableHead, MDBCol, MDBCollapse } from 'mdbre
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import SubscriptionsItem from './subscriptionsItem';
-import {AMAZON_URL} from '../../constants/apiConstants'
-
-export const s3Root = AMAZON_URL;
+import {AMAZON_S3_URL} from '../../constants/apiConstants'
 
 export function getImageUrl(imageName) {
     if (imageName) {
-        return s3Root + imageName;
+        return AMAZON_S3_URL + imageName;
     }
 }
 

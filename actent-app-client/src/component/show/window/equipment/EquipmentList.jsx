@@ -5,6 +5,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import CreateEquipment from './CreateEquipment.jsx'
+import {API_BASE_URL} from "../../../../constants/apiConstants";
 
 class EquipmentList extends React.Component {
 
@@ -18,7 +19,7 @@ class EquipmentList extends React.Component {
 
     getEquipments = () => {
 
-        axios.get(`http://localhost:8080/api/v1/equipments/event/${this.props.eventId}`)
+        axios.get(API_BASE_URL + `/equipments/event/${this.props.eventId}`)
                 .then(res => {
                     const equipments = res.data;
                     console.log(res.data);
@@ -38,7 +39,7 @@ class EquipmentList extends React.Component {
         console.log("In handleUpdateEquipment equipment = ");
         console.log(equipment);
 
-        axios.put(`http://localhost:8080/api/v1/equipments/${equipment_id}`, equipment)
+        axios.put(API_BASE_URL + `/equipments/${equipment_id}`, equipment)
                 .then(res => {
                     const updatedEquipment = res.data;
                     console.log(updatedEquipment);
@@ -54,7 +55,7 @@ class EquipmentList extends React.Component {
         console.log("In handleCreateEquipment equipment = ");
         console.log(equipment);
 
-        axios.post(`http://localhost:8080/api/v1/equipments/`, equipment)
+        axios.post(API_BASE_URL + `/equipments/`, equipment)
                 .then(res => {
                     const createdEquipment = res.data;
                     console.log(createdEquipment);
@@ -67,7 +68,7 @@ class EquipmentList extends React.Component {
 
     handleDeleteEquipment = (equipment_id) => {
 
-        axios.delete(`http://localhost:8080/api/v1/equipments/${equipment_id}`)
+        axios.delete(API_BASE_URL + `/equipments/${equipment_id}`)
                 .then(res => {
                     this.getEquipments();
                 })

@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import {imageValidator} from './FileUploadValidator';
-import {s3Root} from './ProfileView'
+import {AMAZON_S3_URL} from "../../constants/apiConstants";
 
 export default class FileUpload extends React.Component {
 
@@ -12,7 +12,7 @@ export default class FileUpload extends React.Component {
         super(props);
         this.state = {
             imageName: '',
-            imageUrl: s3Root,
+            imageUrl: AMAZON_S3_URL,
             open: false,
             snackbarOpen: false,
             snackbarMessage: ''

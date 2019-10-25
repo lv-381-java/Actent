@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText, MDBCol } from 'mdbreact';
 import { Route, Link, NavLink, BrowserRouter } from 'react-router-dom';
+import {AMAZON_S3_BUCKET_NAME, AMAZON_S3_URL} from "../../constants/apiConstants";
 
 export default class CardExample extends React.Component {
     render() {
@@ -9,7 +10,7 @@ export default class CardExample extends React.Component {
                 <MDBCardImage
                     style={{ cursor: 'pointer' }}
                     className='img-fluid'
-                    src={`https://s3.ap-south-1.amazonaws.com/actent-res/${this.props.image}`}
+                    src={AMAZON_S3_URL + AMAZON_S3_BUCKET_NAME + `${this.props.image}`}
                     waves
                 />
             ) : (

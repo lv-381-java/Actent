@@ -5,6 +5,7 @@ import {getImageUrl} from "../profile/ProfileView";
 import Confirm from '../chat/Confirm';
 import * as ReactDOM from "react-dom";
 import {configureAxios, getCurrentUser} from "../../util/apiUtils";
+import {API_WS_URL} from "../../constants/apiConstants";
 
 let stompClient = null;
 let count = 0;
@@ -224,7 +225,7 @@ export function showMessageOutput(messageOutput) {
 }
 
 export function connect(chatId) {
-    const socket = new SockJS('http://localhost:8080/ws');
+    const socket = new SockJS(API_WS_URL);
     stompClient = Stomp.over(socket);
     stompClient.connect({}, frame => {
         console.log('Connected ' + frame);

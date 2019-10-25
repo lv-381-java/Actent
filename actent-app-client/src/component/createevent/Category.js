@@ -1,6 +1,6 @@
 import React from "react";
 import axios from 'axios';
-
+import {API_BASE_URL} from "../../constants/apiConstants";
 
 class Category extends React.Component {
     state = {
@@ -38,7 +38,7 @@ class Category extends React.Component {
     };
 
     getParentCategories = () => {
-        axios.get(`http://localhost:8080/api/v1/categories/parentsubcategories`)
+        axios.get(API_BASE_URL + `/categories/parentsubcategories`)
             .then(res => {
                 const categories = res.data;
                 this.setState({
@@ -50,7 +50,7 @@ class Category extends React.Component {
 
     getChildCategories = () => {
         // console.log(`getChildCategories: ${this.state.parentCategory}`);
-        axios.get(`http://localhost:8080/api/v1/categories/subcategories/${this.state.parentCategory}`)
+        axios.get(API_BASE_URL + `/categories/subcategories/${this.state.parentCategory}`)
             .then(res => {
                 // console.log(res.data);
                 const categories = res.data;

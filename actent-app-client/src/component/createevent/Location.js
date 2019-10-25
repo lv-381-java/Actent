@@ -3,6 +3,7 @@ import Select from 'react-select';
 import axios from 'axios';
 import {MDBIcon} from "mdbreact";
 import Link from '@material-ui/core/Link';
+import {API_BASE_URL} from "../../constants/apiConstants";
 
 export default class Location
     extends React.Component {
@@ -18,7 +19,7 @@ export default class Location
 
     getLocations = () => {
         if (this.props.address && this.props.address.length > 0) {
-            let url = `http://localhost:8080/api/v1/locations/autocomplete/${this.props.address}`;
+            let url = API_BASE_URL + `/locations/autocomplete/${this.props.address}`;
 
             axios.get(url)
                 .then(response => {

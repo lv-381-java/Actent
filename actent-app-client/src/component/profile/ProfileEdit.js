@@ -8,6 +8,7 @@ import { Button, Card, Typography, TextField } from '@material-ui/core';
 // import { DatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DatePicker from 'material-ui/DatePicker';
 import Location from "../createevent/Location";
+import {API_BASE_URL} from "../../constants/apiConstants";
 // import DateFnsUtils from '@date-io/date-fns';
 
 export default class ProfileEdit extends React.Component {
@@ -135,7 +136,7 @@ export default class ProfileEdit extends React.Component {
     };
 
     updateUser = () => {
-        const urlUpdateUser = apiUrl + /users/ + this.state.userId;
+        const urlUpdateUser = API_BASE_URL + /users/ + this.state.userId;
         const data = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -156,7 +157,7 @@ export default class ProfileEdit extends React.Component {
     saveUserSettings = () => {
 
         if(this.state.address && this.state.address.length > 0){
-            let urlLocation = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address}`;
+            let urlLocation = API_BASE_URL + `/locations/byAddress/${this.state.address}`;
             axios.get(urlLocation)
                 .then(response => {
                     console.log(response.data.id);
@@ -173,8 +174,8 @@ export default class ProfileEdit extends React.Component {
     };
 
     saveUserPhoto = () => {
-        const uploadUrl = apiUrl + '/storage/uploadFile/';
-        const addImageUrl = apiUrl + '/images/';
+        const uploadUrl = API_BASE_URL + '/storage/uploadFile/';
+        const addImageUrl = API_BASE_URL + '/images/';
         const requestTimeout = 30000;
 
         axios

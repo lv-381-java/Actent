@@ -12,9 +12,9 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import './styles.css';
 import {getCurrentUser} from "../../util/apiUtils";
 import FileUpload from "../profile/FileUpload";
-import {apiUrl} from "../profile/Profile";
 import axios from "axios";
 import {getImageUrl} from "../profile/ProfileView";
+import {API_BASE_URL} from "../../constants/apiConstants";
 
 
 class FormContainer extends Component {
@@ -217,7 +217,7 @@ class FormContainer extends Component {
         });
 
         if (this.state.address && this.state.address.length > 0) {
-            let url = `http://localhost:8080/api/v1/locations/byAddress/${this.state.address}`;
+            let url = API_BASE_URL + `/locations/byAddress/${this.state.address}`;
             axios.get(url)
                 .then(response => {
                     const data = response.data;
@@ -253,7 +253,7 @@ class FormContainer extends Component {
             return {};
         }
 
-        fetch("http://localhost:8080/api/v1/events", {
+        fetch(API_BASE_URL + "/events", {
             method: "POST",
             body: JSON.stringify(eventData),
             headers: {
@@ -298,8 +298,8 @@ class FormContainer extends Component {
         this.setState({locationId: locationId});
     };
     saveUserPhoto = () => {
-        const uploadUrl = apiUrl + '/storage/uploadFile/';
-        const addImageUrl = apiUrl + '/images/';
+        const uploadUrl = API_BASE_URL + '/storage/uploadFile/';
+        const addImageUrl = API_BASE_URL + '/images/';
         const requestTimeout = 30000;
         axios
             .post(uploadUrl, this.state.imageData, {

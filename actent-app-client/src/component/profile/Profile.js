@@ -3,8 +3,9 @@ import axios from 'axios';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
 import {Redirect} from 'react-router-dom';
+import {API_BASE_URL} from "../../constants/apiConstants";
 
-export const apiUrl = 'http://localhost:8080/api/v1';
+export const apiUrl = 'http://localhost:8080/api/v1'; //переробити на урлу амазону
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -39,7 +40,7 @@ export default class Profile extends React.Component {
     }
 
     getProfile = () => {
-        const profileUrl = apiUrl + '/users/' + this.state.userId;
+        const profileUrl = API_BASE_URL + '/users/' + this.state.userId;
 
         axios
             .get(profileUrl)

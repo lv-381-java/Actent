@@ -5,6 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions/index';
 import DialogTitle from '@material-ui/core/DialogTitle/index';
 import DialogContent from "@material-ui/core/DialogContent";
 import Axios from 'axios';
+import {API_BASE_URL} from "../../../constants/apiConstants";
 
 function
 formatDate(n) {
@@ -25,7 +26,7 @@ class Spectator extends React.Component {
         let eventId = this.props.eventId
         let eventUser = {userId, eventId, eventUserType: 'SPECTATOR'}
 
-        Axios.post(`http://localhost:8080/api/v1/eventsUsers`, eventUser).then(eve => {
+        Axios.post(API_BASE_URL + `/eventsUsers`, eventUser).then(eve => {
             this.props.setAssigneIdInButton(eve.data.id);
         }).catch(error => {
             console.log(error);
@@ -33,7 +34,7 @@ class Spectator extends React.Component {
     };
 
     unassigneUser = () => {
-        Axios.delete(`http://localhost:8080/api/v1/eventsUsers/${this.props.assID}`)
+        Axios.delete(API_BASE_URL + `/eventsUsers/${this.props.assID}`)
             .then(eve => {
                 }
             ).catch(error => {
@@ -110,7 +111,7 @@ class Spectator extends React.Component {
                     <div>
                         <Button className='btn btn-primary' variant="outlined" color="primary"
                                 onClick={this.handleClickOpen}>
-                            Unassigne as spectator
+                            Unassign as spectator
                         </Button>
 
                         <Dialog
@@ -137,7 +138,7 @@ class Spectator extends React.Component {
                     <div>
                         <Button className='btn btn-primary' variant="outlined" color="primary"
                                 onClick={this.handleClickOpen}>
-                            Assigne as spectator
+                            Assign as spectator
                         </Button>
 
                         <Dialog

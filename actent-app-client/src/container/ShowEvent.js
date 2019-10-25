@@ -2,6 +2,7 @@ import React from 'react';
 import Show from '../component/show/Show.jsx';
 import Axios from 'axios';
 import {getCurrentUser} from '../util/apiUtils';
+import {API_BASE_URL} from "../constants/apiConstants";
 
 class ShowEvent extends React.Component {
     
@@ -64,7 +65,7 @@ class ShowEvent extends React.Component {
     };
 
     getEvent = () => {
-        Axios.get(`http://localhost:8080/api/v1/events/${this.state.eventId}`)
+        Axios.get(API_BASE_URL + `/events/${this.state.eventId}`)
             .then(eve => {
                 this.setState({
                     title: eve.data['title'],
@@ -89,7 +90,7 @@ class ShowEvent extends React.Component {
     };
 
     getParticipants = () => {
-        Axios.get(`http://localhost:8080/api/v1/eventsUsers/events/${this.state.eventId}`).then(res => {
+        Axios.get(API_BASE_URL + `/eventsUsers/events/${this.state.eventId}`).then(res => {
           let eventUserList = res.data;
           this.setState({ eventUserList }, () => this.setCurrentUserId());
         });

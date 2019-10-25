@@ -2,9 +2,9 @@ import React from 'react';
 import Dropzone from 'react-dropzone';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import {s3Root} from "../profile/ProfileView";
 import DialogContent from '@material-ui/core/DialogContent';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import {AMAZON_S3_URL} from "../../constants/apiConstants";
 
 const maxSize = 1048576;
 
@@ -14,7 +14,7 @@ export default class DownloadImage extends React.Component{
         super(props);
         this.state = {
             imageName: '',
-            imageUrl: s3Root + 'actent-res',
+            imageUrl: AMAZON_S3_URL + 'actent-images',
             open: false,
         };
     }
