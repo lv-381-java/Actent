@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4d47045a.chunk.css",
+    "main.js": "/static/js/main.61c6249e.chunk.js",
+    "main.js.map": "/static/js/main.61c6249e.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.bd67fc17.js",
+    "runtime-main.js.map": "/static/js/runtime-main.bd67fc17.js.map",
+    "static/css/2.e68d8339.chunk.css": "/static/css/2.e68d8339.chunk.css",
+    "static/js/2.bcdb1bb3.chunk.js": "/static/js/2.bcdb1bb3.chunk.js",
+    "static/js/2.bcdb1bb3.chunk.js.map": "/static/js/2.bcdb1bb3.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.52511498f0d79dd0a822b81e6989a608.js": "/precache-manifest.52511498f0d79dd0a822b81e6989a608.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.e68d8339.chunk.css.map": "/static/css/2.e68d8339.chunk.css.map",
+    "static/css/main.4d47045a.chunk.css.map": "/static/css/main.4d47045a.chunk.css.map",
+    "static/media/mdb.css": "/static/media/arrow_right.8ef6a08c.svg",
+    "static/media/all.min.css": "/static/media/fa-solid-900.c2801fb4.svg",
+    "static/media/google-logo.png": "/static/media/google-logo.36158af3.png",
+    "static/media/notifications.css": "/static/media/notification.c0d3c94c.eot"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bd67fc17.js",
+    "static/css/2.e68d8339.chunk.css",
+    "static/js/2.bcdb1bb3.chunk.js",
+    "static/css/main.4d47045a.chunk.css",
+    "static/js/main.61c6249e.chunk.js"
+  ]
+}
